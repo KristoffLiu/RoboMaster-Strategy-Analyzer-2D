@@ -1,13 +1,9 @@
 package com.kristoff.robomaster_simulator.systems.costmap;
 
-import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker;
 import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
-import com.kristoff.robomaster_simulator.robomasters.types.ShanghaiTechMasterIII;
 import com.kristoff.robomaster_simulator.systems.Systems;
-import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
-import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.utils.Position;

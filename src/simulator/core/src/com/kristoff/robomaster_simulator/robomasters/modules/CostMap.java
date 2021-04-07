@@ -5,7 +5,7 @@ import com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker;
 import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
 import com.kristoff.robomaster_simulator.robomasters.types.ShanghaiTechMasterIII;
 import com.kristoff.robomaster_simulator.systems.Systems;
-import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
+import com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.systems.costmap.PositionCost;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator;

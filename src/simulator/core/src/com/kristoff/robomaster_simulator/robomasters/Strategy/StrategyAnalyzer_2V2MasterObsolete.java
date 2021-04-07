@@ -3,7 +3,7 @@ package com.kristoff.robomaster_simulator.robomasters.Strategy;
 import com.kristoff.robomaster_simulator.robomasters.modules.Property;
 import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
 import com.kristoff.robomaster_simulator.systems.Systems;
-import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
+import com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator;
 import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator;
 import com.kristoff.robomaster_simulator.utils.Position;

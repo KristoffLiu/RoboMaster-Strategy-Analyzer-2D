@@ -18,22 +18,22 @@ java_import(gateway.jvm,'java.util.*') #导入java中的类的方法
 
 blue1 = entrypoint.getRoboMaster("Blue1")
 
-plt.figure(figsize=(20,20), dpi = 80)
+plt.figure(figsize=(10,10), dpi = 80)
 plt.ion()
 
+# 定义x, y
+x = np.arange(0, 900,20)
+y = np.arange(0, 900,20)
+
+# 生成网格数据
+X, Y = np.meshgrid(y, x)
+
 while(True):
-    # 定义x, y
-    x = np.arange(0, 900,30)
-    y = np.arange(0, 900,30)
-
-    # 生成网格数据
-    X, Y = np.meshgrid(y, x)
-
-    b = []
     begintime = time.time()
-    for i in range(0,900,30):
+    b = []
+    for i in range(0,900,20):
         a = []
-        for j in range(0,900,30):
+        for j in range(0,900,20):
             if i > (900 - 849) / 2 and i < 849 + (900 - 849) / 2 and  j > (900 - 489) / 2 and  j < 489 + (900 - 489) / 2 :    
                 m = int(i - (900 - 849) / 2 + 1)
                 n = int(j - (900 - 489) / 2 + 1)
@@ -52,7 +52,10 @@ while(True):
     ax = plt.axes(projection='3d')
     ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
                     cmap="rainbow", edgecolor='none')
+    ax.view_init(elev=75, azim=-45)
     ax.set_title('surface')
-
-    plt.pause(0.2)
+    
+    endtime = time.time()
+    print(endtime - begintime)
+    plt.pause(0.01)
     

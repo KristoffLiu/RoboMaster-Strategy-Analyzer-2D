@@ -2,7 +2,7 @@ package com.kristoff.robomaster_simulator.systems.refree;
 
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.kristoff.robomaster_simulator.systems.Systems;
-import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
+import com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 
@@ -13,6 +13,9 @@ public class Refree extends LoopThread {
     public GameStatus gameStatus;
     public int remainingTime;
     public int buffRoundIndex = 0;
+    public int totalTime = 300;
+    public int startTime = 0;
+
     List<BuffZone> buffZones = new LinkedList<>();
 
     public Refree(){

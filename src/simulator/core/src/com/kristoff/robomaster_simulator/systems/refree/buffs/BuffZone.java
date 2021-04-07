@@ -1,4 +1,4 @@
-package com.kristoff.robomaster_simulator.systems.buffs;
+package com.kristoff.robomaster_simulator.systems.refree.buffs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.objects.TextureMapObject;

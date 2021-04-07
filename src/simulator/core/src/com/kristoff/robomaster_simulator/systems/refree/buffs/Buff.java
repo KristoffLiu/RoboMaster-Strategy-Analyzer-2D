@@ -1,4 +1,4 @@
-package com.kristoff.robomaster_simulator.systems.buffs;
+package com.kristoff.robomaster_simulator.systems.refree.buffs;
 
 public enum Buff {
     NotActivated        ,
