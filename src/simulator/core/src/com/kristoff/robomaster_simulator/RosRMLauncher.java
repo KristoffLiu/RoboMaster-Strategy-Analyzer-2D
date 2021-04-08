@@ -65,12 +65,12 @@ public class RosRMLauncher {
     }
 
     public void buffZoneDemoTest(){
-        BuffZone.updateBuffZone(0,1, false);
-        BuffZone.updateBuffZone(1,5, false);
-        BuffZone.updateBuffZone(2,4, false);
-        BuffZone.updateBuffZone(3,2, false);
-        BuffZone.updateBuffZone(4,6, false);
-        BuffZone.updateBuffZone(5,3, false);
+        BuffZone.updateBuffZone(0,1, true);
+        BuffZone.updateBuffZone(1,5, true);
+        BuffZone.updateBuffZone(2,4, true);
+        BuffZone.updateBuffZone(3,2, true);
+        BuffZone.updateBuffZone(4,6, true);
+        BuffZone.updateBuffZone(5,3, true);
     }
 
     public void setAsRoamer(String roboName){

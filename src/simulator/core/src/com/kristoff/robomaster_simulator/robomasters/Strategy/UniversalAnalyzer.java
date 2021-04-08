@@ -35,14 +35,14 @@ public class UniversalAnalyzer implements StrategyAnalyzer {
     }
 
     public boolean isTheSurroundingAreaAvailable(Position centrePosition){
+        int centreCost = getCostMap().getCost(centrePosition.x, centrePosition.y);
         for(int i = 0; i < Property.widthUnit ; i++){
             for(int j = 0; j < Property.heightUnit ; j++){
                 int x = centrePosition.x + i - Property.widthUnit / 2;
                 int y = centrePosition.y + j - Property.heightUnit / 2;
-                int centreCost = getCostMap().getCost(centrePosition.x, centrePosition.y);
                 if(   !(x>=0 && x<849)
                         || !(y>=0 && y<489)
-                        || getCostMap().getCost(x, y) > 150
+                        || Math.abs(centreCost - getCostMap().getCost(x, y)) > 150
 //                        || Math.abs(CostMapGenerator.getCost(x, y) - centreCost) > 10
                 ){
                     return false;

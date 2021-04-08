@@ -80,16 +80,14 @@ public class StrategyAnalyzer_2V2Master extends UniversalAnalyzer {
             pathNodes.add(node);
             node = node.parentNode;
         }
-//        if(roboMaster == Team.blue2) {
-//            System.out.println(resultNode.position.getX() + " " + resultNode.position.getY());
-//            System.out.println(targetCost);
-//        }
         this.strategyMaker.update(resultNode, tempVisitedGrid, resultNodes, pathNodes);
     }
 
     public boolean isAvailable(Position centre, int targetCost, Position target){
-        return Math.abs(getCostMap().getCost(centre.getX(), centre.getY()) - targetCost) < 30 ||
-                centre.x == target.x && centre.y == target.y;
+        return (Math.abs(getCostMap().getCost(centre.getX(), centre.getY()) - targetCost) < 30 ||
+                centre.x == target.x && centre.y == target.y)
+                //&& isTheSurroundingAreaAvailable(centre)
+        ;
     }
 
     //查找并生成子节点，并返回队列对象

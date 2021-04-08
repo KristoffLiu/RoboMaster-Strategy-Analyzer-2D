@@ -263,14 +263,49 @@ public class PointSimulator extends Simulator {
     }
 
     private void addBlock(int x, int y, int width, int height, float radian){
-        for(int i = x; i < x + width ; i ++){
-            for(int j = y ;j < y + height; j ++){
-                setHighStaticObjectPoint(i, j);
+        if(radian == 0){
+            for(int i = x; i < x + width ; i ++){
+                for(int j = y ;j < y + height; j ++){
+                    setHighStaticObjectPoint(i, j);
+                }
             }
         }
-        for(int i = x - 25; i < x + width + 25 ; i ++){
-            for(int j = y - 25;j < y + height + 25; j ++){
-                setObstaclePoint(i, j);
+        else{
+            for(int i = 0; i <= (25 * Math.sqrt(2)); i++){
+                if(i <= (25 / Math.sqrt(2))){
+                    for(int j = 0; j <= i ; j++){
+                        setHighStaticObjectPoint(i, j);
+                    }
+                }
+                else{
+                    for(int j = 0; j <= 25 * Math.sqrt(2) - i; j++){
+                        setHighStaticObjectPoint(i, j);
+                    }
+                }
+            }
+        }
+
+        if(radian == 0){
+            for(int i = x - 25; i < x + width + 25 ; i ++){
+                for(int j = y - 25;j < y + height + 25; j ++){
+                    setObstaclePoint(i, j);
+                }
+            }
+        }
+        else{
+            for(int i = 0; i <= (60 * Math.sqrt(2)); i++){
+                if(i <= (60 / Math.sqrt(2))){
+                    for(int j = 0; j <= i ; j++){
+                        setObstaclePoint(i + 382, 245 + j);
+                        setObstaclePoint(i + 382, 245 - j);
+                    }
+                }
+                else{
+                    for(int j = 0; j <= 60 * Math.sqrt(2) - i; j++){
+                        setObstaclePoint(i + 382, 245 + j);
+                        setObstaclePoint(i + 382, 245 - j);
+                    }
+                }
             }
         }
     }

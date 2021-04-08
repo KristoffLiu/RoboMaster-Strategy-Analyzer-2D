@@ -57,7 +57,7 @@ class Brain:
         self._control_rate = control_rate
 
         entrypoint.setAsRoamer("blue1")
-        entrypoint.isOurTeamBlue(False)
+        entrypoint.isOurTeamBlue(True)
 
         self.Red1 = entrypoint.getRoboMaster("Red1") 
         self.Red2 = entrypoint.getRoboMaster("Red2") 
@@ -79,6 +79,7 @@ class Brain:
         
         self._vis_pub = [rospy.Publisher("/CAR1/visualization_marker", Marker, queue_size=10),
                          rospy.Publisher("/CAR2/visualization_marker", Marker, queue_size=10)]
+        
 
 
     def ownPositionCB0(self, msg):
@@ -193,7 +194,7 @@ class Brain:
         goal.pose.orientation.y,
         goal.pose.orientation.z] = self._createQuaternionFromYaw(yaw_angle)
 
-        # self._decision_pub[0].publish(goal)
+        self._decision_pub[0].publish(goal)
         print("blue 1  -> send")
 
         mark = Marker()
@@ -246,7 +247,7 @@ class Brain:
         goal.pose.orientation.y,
         goal.pose.orientation.z] = self._createQuaternionFromYaw(yaw_angle)
         
-        # self._decision_pub[1].publish(goal)
+        self._decision_pub[1].publish(goal)
 
         mark = Marker()
         mark.header.frame_id = "/map"
@@ -286,9 +287,10 @@ if __name__ == '__main__':
         beginTime = time.time()
 
         while not rospy.core.is_shutdown():
-            if (brain.is_game_start == True or count > 30):
+            if (brain.is_game_start == True):
                 brain.get_next_position1()
                 brain.get_next_position2()
+                print("game has started")
             currenttime = time.time()
             temp = currenttime - beginTime
             beginTime = currenttime

@@ -12,6 +12,6 @@ entrypoint = gateway.entry_point #获取服务器桥的入口
 
 java_import(gateway.jvm,'java.util.*') #导入java中的类的方法
 
-entrypoint.setAsRoamer("blue1")
-entrypoint.isOurTeamBlue(False)
+entrypoint.setAsRoamer("blue2")
+entrypoint.isOurTeamBlue(True)
 entrypoint.buffZoneDemoTest()

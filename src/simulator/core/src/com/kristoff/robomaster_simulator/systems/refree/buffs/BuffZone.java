@@ -127,7 +127,7 @@ public class BuffZone {
         int cost = 0;
 
         for(BuffZone buffZone : Systems.refree.getBuffZones()){
-            if(buffZone.isActive) continue;
+            if(!buffZone.isActive) continue;
             if(buffZone.buff == Buff.BlueHPRecovery && !isHPRecoveryNeeded(roboMaster))
                 continue;
             else if(buffZone.buff == Buff.BlueBulletSupply && !isBulletSupplyNeeded(roboMaster))
