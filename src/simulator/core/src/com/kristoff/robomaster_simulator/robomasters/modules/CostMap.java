@@ -5,6 +5,7 @@ import com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker;
 import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
 import com.kristoff.robomaster_simulator.robomasters.types.ShanghaiTechMasterIII;
 import com.kristoff.robomaster_simulator.systems.Systems;
+import com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator;
 import com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.systems.costmap.PositionCost;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
@@ -35,6 +36,13 @@ public class CostMap extends LoopThread {
     public void start(){
         super.start();
         this.strategyMaker = roboMaster.strategyMaker;
+        for(int i = 0; i < 849; i ++){
+            for(int j = 0; j < 489; j ++){
+                if(PointSimulator.isPointOverTheMap(i, j)){
+                    costmap[i][j] = 999;
+                }
+            }
+        }
     }
 
     public void generateCostMap(){

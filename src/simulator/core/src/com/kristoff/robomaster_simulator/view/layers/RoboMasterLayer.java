@@ -107,8 +107,8 @@ public class RoboMasterLayer extends VisualLayer {
         costMapShapeRenderer.setProjectionMatrix(environment.view.getOrthographicCamera().combined);
         costMapShapeRenderer.setAutoShapeType(true);
         costMapShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for(int i = 20; i < 829; i+=10){
-            for(int j = 20; j < 469; j+=10){
+        for(int i = 0; i < 849; i+=10){
+            for(int j = 0; j < 489; j+=10){
                 int x = i * 10;
                 int y = j * 10;
                 int cost = RoboMasters.getRoboMaster("Blue2").costMap.getCostMap()[i][j];

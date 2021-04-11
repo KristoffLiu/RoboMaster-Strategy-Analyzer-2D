@@ -155,30 +155,28 @@ com/kristoff/robomaster_simulator/view/ui/controls/UIElement.java
  com.kristoff.robomaster_simulator.view.ui.controls.UIElement$VerticalAlignment
 com/kristoff/robomaster_simulator/teams/enemyobservations/EnemiesObservationPoint.java
  com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationPoint
-com/kristoff/robomaster_simulator/view/layers/BuffLayer.java
- com.kristoff.robomaster_simulator.view.layers.BuffLayer
+com/kristoff/robomaster_simulator/robomasters/modules/Actor.java
+ com.kristoff.robomaster_simulator.robomasters.modules.Actor
 com/kristoff/robomaster_simulator/view/layers/RenderedLayer.java
  com.kristoff.robomaster_simulator.view.layers.RenderedLayer
-com/kristoff/robomaster_simulator/systems/refree/Refree.java
- com.kristoff.robomaster_simulator.systems.refree.Refree
+com/kristoff/robomaster_simulator/systems/pointsimulator/PointSimulator.java
+ com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator
 com/kristoff/robomaster_simulator/view/layers/BlocksLayer.java
  com.kristoff.robomaster_simulator.view.layers.BlocksLayer
-com/kristoff/robomaster_simulator/systems/refree/buffs/BuffZone.java
- com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone
- com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone$1
- com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone$2
-com/kristoff/robomaster_simulator/robomasters/modules/InView.java
- com.kristoff.robomaster_simulator.robomasters.modules.InView
-com/kristoff/robomaster_simulator/robomasters/modules/Renderer.java
- com.kristoff.robomaster_simulator.robomasters.modules.Renderer
-com/kristoff/robomaster_simulator/view/layers/DebugLayer.java
- com.kristoff.robomaster_simulator.view.layers.DebugLayer
+com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyAnalyzer_2V2Ranger.java
+ com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyAnalyzer_2V2Ranger
+com/kristoff/robomaster_simulator/systems/refree/Refree.java
+ com.kristoff.robomaster_simulator.systems.refree.Refree
+com/kristoff/robomaster_simulator/core/Simulator.java
+ com.kristoff.robomaster_simulator.core.Simulator
 com/kristoff/robomaster_simulator/view/io/GlobalInputEventHandler.java
  com.kristoff.robomaster_simulator.view.io.GlobalInputEventHandler
-com/kristoff/robomaster_simulator/view/layers/PhysicsDebugLayer.java
- com.kristoff.robomaster_simulator.view.layers.PhysicsDebugLayer
-com/kristoff/robomaster_simulator/robomasters/types/AlexanderMasterII.java
- com.kristoff.robomaster_simulator.robomasters.types.AlexanderMasterII
+com/kristoff/robomaster_simulator/view/layers/DebugLayer.java
+ com.kristoff.robomaster_simulator.view.layers.DebugLayer
+com/kristoff/robomaster_simulator/robomasters/Strategy/RRT.java
+ com.kristoff.robomaster_simulator.robomasters.Strategy.RRT
+com/kristoff/robomaster_simulator/view/renderers/Renderer.java
+ com.kristoff.robomaster_simulator.view.renderers.Renderer
 com/kristoff/robomaster_simulator/robomasters/modules/Module.java
  com.kristoff.robomaster_simulator.robomasters.modules.Module
 com/kristoff/robomaster_simulator/robomasters/modules/RendererInputListener.java
@@ -187,88 +185,90 @@ com/kristoff/robomaster_simulator/teams/enemyobservations/EnemiesObservationSimu
  com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator
  com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator$1
  com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator$Mode
-com/kristoff/robomaster_simulator/view/renderers/EnvRenderer.java
- com.kristoff.robomaster_simulator.view.renderers.EnvRenderer
- com.kristoff.robomaster_simulator.view.renderers.EnvRenderer$1
-com/kristoff/robomaster_simulator/teams/Team.java
- com.kristoff.robomaster_simulator.teams.Team
-com/kristoff/robomaster_simulator/robomasters/modules/Weapon.java
- com.kristoff.robomaster_simulator.robomasters.modules.Weapon
+com/kristoff/robomaster_simulator/view/layers/BuffLayer.java
+ com.kristoff.robomaster_simulator.view.layers.BuffLayer
+com/kristoff/robomaster_simulator/robomasters/modules/LidarObservation.java
+ com.kristoff.robomaster_simulator.robomasters.modules.LidarObservation
+com/kristoff/robomaster_simulator/systems/costmap/UniversalCostMap.java
+ com.kristoff.robomaster_simulator.systems.costmap.UniversalCostMap
 com/kristoff/robomaster_simulator/view/layers/LidarPointCloudLayer.java
  com.kristoff.robomaster_simulator.view.layers.LidarPointCloudLayer
-com/kristoff/robomaster_simulator/view/layers/Layer.java
- com.kristoff.robomaster_simulator.view.layers.Layer
+com/kristoff/robomaster_simulator/teams/enemyobservations/EnemyObservation.java
+ com.kristoff.robomaster_simulator.teams.enemyobservations.EnemyObservation
 com/kristoff/robomaster_simulator/robomasters/judgement/JudgeModule.java
  com.kristoff.robomaster_simulator.robomasters.judgement.JudgeModule
-com/kristoff/robomaster_simulator/teams/RoboMasters.java
- com.kristoff.robomaster_simulator.teams.RoboMasters
+com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyAnalyzer_2V2RangerObsolete.java
+ com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyAnalyzer_2V2RangerObsolete
 com/kristoff/robomaster_simulator/robomasters/types/ShanghaiTechMasterIII.java
  com.kristoff.robomaster_simulator.robomasters.types.ShanghaiTechMasterIII
 com/kristoff/robomaster_simulator/robomasters/modules/MultiThreadModule.java
  com.kristoff.robomaster_simulator.robomasters.modules.MultiThreadModule
 com/kristoff/robomaster_simulator/systems/simulators/PhysicalSimulator.java
  com.kristoff.robomaster_simulator.systems.simulators.PhysicalSimulator
-com/kristoff/robomaster_simulator/robomasters/modules/Dynamics.java
- com.kristoff.robomaster_simulator.robomasters.modules.Dynamics
+com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyMaker.java
+ com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker
+ com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker$1
 com/kristoff/robomaster_simulator/view/layers/VisualLayer.java
  com.kristoff.robomaster_simulator.view.layers.VisualLayer
  com.kristoff.robomaster_simulator.view.layers.VisualLayer$1
-com/kristoff/robomaster_simulator/teams/friendobservations/FriendsObservationSimulator.java
- com.kristoff.robomaster_simulator.teams.friendobservations.FriendsObservationSimulator
- com.kristoff.robomaster_simulator.teams.friendobservations.FriendsObservationSimulator$Mode
+com/kristoff/robomaster_simulator/robomasters/modules/CostMap.java
+ com.kristoff.robomaster_simulator.robomasters.modules.CostMap
 com/kristoff/robomaster_simulator/systems/maps/Map.java
  com.kristoff.robomaster_simulator.systems.maps.Map
 com/kristoff/robomaster_simulator/robomasters/types/Enemy.java
  com.kristoff.robomaster_simulator.robomasters.types.Enemy
-com/kristoff/robomaster_simulator/view/layers/FloorLayer.java
- com.kristoff.robomaster_simulator.view.layers.FloorLayer
+com/kristoff/robomaster_simulator/systems/Systems.java
+ com.kristoff.robomaster_simulator.systems.Systems
+ com.kristoff.robomaster_simulator.systems.Systems$1
 com/kristoff/robomaster_simulator/robomasters/modules/RMPhysicalSimulation.java
  com.kristoff.robomaster_simulator.robomasters.modules.RMPhysicalSimulation
 com/kristoff/robomaster_simulator/robomasters/Strategy/UniversalAnalyzer.java
  com.kristoff.robomaster_simulator.robomasters.Strategy.UniversalAnalyzer
-com/kristoff/robomaster_simulator/teams/InfoAnalyzer.java
- com.kristoff.robomaster_simulator.teams.InfoAnalyzer
- com.kristoff.robomaster_simulator.teams.InfoAnalyzer$1
-com/kristoff/robomaster_simulator/view/layers/HUD.java
- com.kristoff.robomaster_simulator.view.layers.HUD
+com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyAnalyzer_2V2Master.java
+ com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyAnalyzer_2V2Master
+com/kristoff/robomaster_simulator/RosRMLauncher.java
+ com.kristoff.robomaster_simulator.RosRMLauncher
+com/kristoff/robomaster_simulator/view/layers/RoboMasterLayer.java
+ com.kristoff.robomaster_simulator.view.layers.RoboMasterLayer
 com/kristoff/robomaster_simulator/robomasters/RoboMaster.java
  com.kristoff.robomaster_simulator.robomasters.RoboMaster
  com.kristoff.robomaster_simulator.robomasters.RoboMaster$1
-com/kristoff/robomaster_simulator/view/layers/RoboMasterLayer.java
- com.kristoff.robomaster_simulator.view.layers.RoboMasterLayer
-com/kristoff/robomaster_simulator/robomasters/modules/Actor.java
- com.kristoff.robomaster_simulator.robomasters.modules.Actor
-com/kristoff/robomaster_simulator/systems/Systems.java
- com.kristoff.robomaster_simulator.systems.Systems
- com.kristoff.robomaster_simulator.systems.Systems$1
-com/kristoff/robomaster_simulator/systems/pointsimulator/PointSimulator.java
- com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator
-com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyAnalyzer_2V2Ranger.java
- com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyAnalyzer_2V2Ranger
-com/kristoff/robomaster_simulator/RosRMLauncher.java
- com.kristoff.robomaster_simulator.RosRMLauncher
-com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyMaker.java
- com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker
- com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker$1
-com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyAnalyzer_2V2Master.java
- com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyAnalyzer_2V2Master
-com/kristoff/robomaster_simulator/core/Simulator.java
- com.kristoff.robomaster_simulator.core.Simulator
-com/kristoff/robomaster_simulator/robomasters/Strategy/RRT.java
- com.kristoff.robomaster_simulator.robomasters.Strategy.RRT
-com/kristoff/robomaster_simulator/view/renderers/Renderer.java
- com.kristoff.robomaster_simulator.view.renderers.Renderer
-com/kristoff/robomaster_simulator/teams/friendobservations/FriendObservation.java
- com.kristoff.robomaster_simulator.teams.friendobservations.FriendObservation
+com/kristoff/robomaster_simulator/view/layers/FloorLayer.java
+ com.kristoff.robomaster_simulator.view.layers.FloorLayer
+com/kristoff/robomaster_simulator/view/layers/Layer.java
+ com.kristoff.robomaster_simulator.view.layers.Layer
+com/kristoff/robomaster_simulator/view/renderers/EnvRenderer.java
+ com.kristoff.robomaster_simulator.view.renderers.EnvRenderer
+ com.kristoff.robomaster_simulator.view.renderers.EnvRenderer$1
+com/kristoff/robomaster_simulator/robomasters/modules/Weapon.java
+ com.kristoff.robomaster_simulator.robomasters.modules.Weapon
+com/kristoff/robomaster_simulator/robomasters/modules/Dynamics.java
+ com.kristoff.robomaster_simulator.robomasters.modules.Dynamics
 com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyAnalyzer_2V2MasterObsolete.java
  com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyAnalyzer_2V2MasterObsolete
-com/kristoff/robomaster_simulator/robomasters/modules/CostMap.java
- com.kristoff.robomaster_simulator.robomasters.modules.CostMap
-com/kristoff/robomaster_simulator/robomasters/modules/LidarObservation.java
- com.kristoff.robomaster_simulator.robomasters.modules.LidarObservation
-com/kristoff/robomaster_simulator/systems/costmap/UniversalCostMap.java
- com.kristoff.robomaster_simulator.systems.costmap.UniversalCostMap
-com/kristoff/robomaster_simulator/teams/enemyobservations/EnemyObservation.java
- com.kristoff.robomaster_simulator.teams.enemyobservations.EnemyObservation
-com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyAnalyzer_2V2RangerObsolete.java
- com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyAnalyzer_2V2RangerObsolete
+com/kristoff/robomaster_simulator/teams/Team.java
+ com.kristoff.robomaster_simulator.teams.Team
+com/kristoff/robomaster_simulator/robomasters/types/AlexanderMasterII.java
+ com.kristoff.robomaster_simulator.robomasters.types.AlexanderMasterII
+com/kristoff/robomaster_simulator/view/layers/PhysicsDebugLayer.java
+ com.kristoff.robomaster_simulator.view.layers.PhysicsDebugLayer
+com/kristoff/robomaster_simulator/systems/refree/buffs/BuffZone.java
+ com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone
+ com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone$1
+ com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone$2
+com/kristoff/robomaster_simulator/teams/RoboMasters.java
+ com.kristoff.robomaster_simulator.teams.RoboMasters
+com/kristoff/robomaster_simulator/robomasters/modules/Renderer.java
+ com.kristoff.robomaster_simulator.robomasters.modules.Renderer
+com/kristoff/robomaster_simulator/robomasters/modules/InView.java
+ com.kristoff.robomaster_simulator.robomasters.modules.InView
+com/kristoff/robomaster_simulator/teams/InfoAnalyzer.java
+ com.kristoff.robomaster_simulator.teams.InfoAnalyzer
+ com.kristoff.robomaster_simulator.teams.InfoAnalyzer$1
+com/kristoff/robomaster_simulator/teams/friendobservations/FriendObservation.java
+ com.kristoff.robomaster_simulator.teams.friendobservations.FriendObservation
+com/kristoff/robomaster_simulator/view/layers/HUD.java
+ com.kristoff.robomaster_simulator.view.layers.HUD
+com/kristoff/robomaster_simulator/teams/friendobservations/FriendsObservationSimulator.java
+ com.kristoff.robomaster_simulator.teams.friendobservations.FriendsObservationSimulator
+ com.kristoff.robomaster_simulator.teams.friendobservations.FriendsObservationSimulator$Mode

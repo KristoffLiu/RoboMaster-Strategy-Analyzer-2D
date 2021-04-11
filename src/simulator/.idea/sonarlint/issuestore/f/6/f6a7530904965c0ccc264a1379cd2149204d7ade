@@ -1,0 +1,31 @@
+
+n
+java:S1104"SMake costmap a static final constant or non-public and provide accessors if needed.(¸³€Êøÿÿÿÿ
+P
+java:S3400Þ"9Remove this method and declare a constant for this value.(”·³›
+t
+java:S1104"YMake strategyMaker a static final constant or non-public and provide accessors if needed.(ð–·¹ÿÿÿÿÿ
+Q	java:S125J"<This block of commented-out lines of code should be removed.(½¬ëÚ
+q
+java:S1104"VMake roboMaster a static final constant or non-public and provide accessors if needed.(¥Æóïúÿÿÿÿ
+=
+java:S1172Ý"&Remove these unused method parameters.(Ó¤ðÉ
+G
+java:S1481K",Remove this unused "endTime" local variable.(Ò¯ì®øÿÿÿÿ
+V
+java:S4973g"9Use the "equals" method if value comparison was intended.(¯ªŽ»8·µœ€Œ/
+v
+java:S1104"[Make minPositionCost a static final constant or non-public and provide accessors if needed.(«ÚÀ›üÿÿÿÿ
+R	java:S125Ð"<This block of commented-out lines of code should be removed.(¹Ë¤Ý
+^
+java:S11173"CRename "minPositionCost" which hides the field declared at line 20.(á¢Äµùÿÿÿÿ
+R
+java:S18542"=Remove this useless assignment to local variable "startTime".(±Üª 
+C
+java:S14812".Remove this unused "startTime" local variable.(±Üª 
+^
+java:S3551$"IMake this method "synchronized" to match the parent class implementation.(ú¡­,
+V
+java:S1854K";Remove this useless assignment to local variable "endTime".(Ò¯ì®øÿÿÿÿ
+1
+java:S1700"Rename field "costmap"(¸³€Êøÿÿÿÿ
