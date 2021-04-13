@@ -22,7 +22,7 @@ def calculateAngleOfProjection(u, Sx, Sy, g, inRadian = True):
     result = math.atan((-b + math.sqrt(delta)) / (2 * a))
     return result if inRadian else math.degrees(result)
 
-
 beginTime = time.time()
 print(calculateAngleOfProjection(25, 2.0, 0.25, 9.81, False))
-print(time.time() - beginTime)
+delta = time.time() - beginTime
+print(delta.real)

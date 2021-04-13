@@ -9,3 +9,7 @@ Kcore/src/com/kristoff/robomaster_simulator/view/layers/RoboMasterLayer.java,0\
 Kcore/src/com/kristoff/robomaster_simulator/systems/costmap/BuffCostMap.java,0\2\02c815a3bc7ad6c2161eceb209ade7d48cf541fc
 {
 Kcore/src/com/kristoff/robomaster_simulator/robomasters/modules/CostMap.java,f\6\f6a7530904965c0ccc264a1379cd2149204d7ade
+m
+=core/src/com/kristoff/robomaster_simulator/RosRMLauncher.java,0\6\0608e712f94cdad881f0093c0a73850a6b04ef4a
+v
+Fcore/src/com/kristoff/robomaster_simulator/robomasters/RoboMaster.java,b\7\b7648388c0b3bf210dc6c769e4ae6ea692571d91

@@ -126,5 +126,4 @@ public class RoboMasterLayer extends VisualLayer {
         }
         costMapShapeRenderer.end();
     }
-
 }

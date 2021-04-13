@@ -2,6 +2,7 @@ package com.kristoff.robomaster_simulator.robomasters;
 
 import com.badlogic.gdx.math.Vector2;
 import com.kristoff.robomaster_simulator.core.Simulator;
+import com.kristoff.robomaster_simulator.robomasters.Strategy.SearchNode;
 import com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
 import com.kristoff.robomaster_simulator.teams.Team;
@@ -189,8 +190,17 @@ public abstract class RoboMaster {
     public int[][] getCostMap(){
         return costMap.getCostMap();
     }
+
     public int getCost(int x, int y){
         return costMap.getCost(x, y);
+    }
+
+    public Position[] getStrategyPath(){
+        Position[] results = new Position[strategyMaker.pathNodes.size()];
+        for(int i = 0; i < strategyMaker.pathNodes.size(); i++){
+            results[i] = strategyMaker.pathNodes.get(i).position;
+        }
+        return results;
     }
 
 }

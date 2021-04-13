@@ -3,6 +3,7 @@ package com.kristoff.robomaster_simulator.view.layers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.kristoff.robomaster_simulator.systems.Systems;
+import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationPoint;
 import com.kristoff.robomaster_simulator.teams.friendobservations.FriendsObservationPoint;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.StatePoint;
@@ -108,7 +109,7 @@ public class LidarPointCloudLayer extends VisualLayer {
 //            for(int j = 0; j < 489; j += 1){
 //                switch (Team.getEnemiesObservationGrid()[i][j]){
 //                    case 1 ->{
-//                        shapeRenderer3.setColor(0.45f,0.45f,0.45f,1.0f);
+//                        shapeRenderer3.setColor(0.5f,0.5f,0.5f,1.0f);
 //                        shapeRenderer3.circle(
 //                                i / 100f,
 //                                j / 100f,
@@ -132,39 +133,39 @@ public class LidarPointCloudLayer extends VisualLayer {
 //
 //            }
 //        }
-
-//        for(EnemiesObservationPoint position : RoboMasters.teamBlue.enemiesObservationSimulator.getDangerousZone()){
-//            int x = position.x;
-//            int y = position.y;
-//            switch (position.observationStatus){
-//                case 1 ->{
-//                    shapeRenderer3.setColor(0.45f,0.45f,0.45f,1.0f);
-//                }
-//                case 2 ->{
-//                    shapeRenderer3.setColor(0.6f,0.6f,0.6f,1.0f);
-//                }
-//                case 3 ->{
-//                    shapeRenderer3.setColor(0.6f,0f,0f,1.0f);
-//                }
-//            }
-//            shapeRenderer3.circle(
-//                    x / 100f,
-//                    y / 100f,
-//                    0.025f,10);
-//        }
-//        for(FriendsObservationPoint position : RoboMasters.teamBlue.friendsObservationSimulator.getDangerousZone()){
-//            int x = position.x;
-//            int y = position.y;
-//            switch (position.observationStatus){
-//                case 3 ->{
-//                    shapeRenderer3.setColor(0f,0.7f,0f,1.0f);
-//                }
-//            }
-//            shapeRenderer3.circle(
-//                    (x+5) / 100f,
-//                    (y+5) / 100f,
-//                    0.025f,10);
-//        }
+//
+////        for(EnemiesObservationPoint position : RoboMasters.teamBlue.enemiesObservationSimulator.getDangerousZone()){
+////            int x = position.x;
+////            int y = position.y;
+////            switch (position.observationStatus){
+////                case 1 ->{
+////                    shapeRenderer3.setColor(0.45f,0.45f,0.45f,1.0f);
+////                }
+////                case 2 ->{
+////                    shapeRenderer3.setColor(0.6f,0.6f,0.6f,1.0f);
+////                }
+////                case 3 ->{
+////                    shapeRenderer3.setColor(0.6f,0f,0f,1.0f);
+////                }
+////            }
+////            shapeRenderer3.circle(
+////                    x / 100f,
+////                    y / 100f,
+////                    0.025f,10);
+////        }
+////        for(FriendsObservationPoint position : RoboMasters.teamBlue.friendsObservationSimulator.getDangerousZone()){
+////            int x = position.x;
+////            int y = position.y;
+////            switch (position.observationStatus){
+////                case 3 ->{
+////                    shapeRenderer3.setColor(0f,0.7f,0f,1.0f);
+////                }
+////            }
+////            shapeRenderer3.circle(
+////                    (x+5) / 100f,
+////                    (y+5) / 100f,
+////                    0.025f,10);
+////        }
 //        shapeRenderer3.end();
 
         shapeRenderer.setProjectionMatrix(environment.view.getOrthographicCamera().combined);

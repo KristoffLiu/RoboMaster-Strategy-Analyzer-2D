@@ -1,10 +1,10 @@
 
+V	java:S125:"<This block of commented-out lines of code should be removed.(ÊİØ´ûÿÿÿÿ
+œ
+java:S1186%"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¥ôÀ’ûÿÿÿÿ
+E
+java:S1481+"*Remove this unused "scale" local variable.(ü¬áûÿÿÿÿ
 d
 java:S1128	"NRemove this unused import 'com.kristoff.robomaster_simulator.systems.Systems'.(®‹¯õ
 T
 java:S1854+"9Remove this useless assignment to local variable "scale".(ü¬áûÿÿÿÿ
-œ
-java:S1186%"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¥ôÀ’ûÿÿÿÿ
-V	java:S125:"<This block of commented-out lines of code should be removed.(ÊİØ´ûÿÿÿÿ
-E
-java:S1481+"*Remove this unused "scale" local variable.(ü¬áûÿÿÿÿ
