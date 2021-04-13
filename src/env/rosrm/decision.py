@@ -81,7 +81,6 @@ class Brain:
                          rospy.Publisher("/CAR2/visualization_marker", Marker, queue_size=10)]
         
 
-
     def ownPositionCB0(self, msg):
         self.robots[0].x = msg.pose.position.x
         self.robots[0].y = msg.pose.position.y

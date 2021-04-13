@@ -90,6 +90,8 @@ public class CostMap extends LoopThread {
             else if(EnemiesObservationSimulator.isOutOfBothEnemiesView(x, y))
                 cost = 0;
             else if(EnemiesObservationSimulator.isInBothEnemiesView(x, y)) {
+                //cost += costOfLockedEnemyDistance(x, y);
+                //cost += costOfUnlockedEnemyDistance(x, y) * 2;
                 cost = costOfBothEnemyDistance(x, y);
             }
         }
@@ -138,7 +140,7 @@ public class CostMap extends LoopThread {
     public int costOfLockedEnemyDistance(int x, int y){
         int maxRange = EnemiesObservationSimulator.getRadius();
         int minShootingRange = 80;
-        int maxShootingRange = 160;
+        int maxShootingRange = 600;
         int peekVal = 64;
         int troughVal = - 100;
         int troughVal2 = - 128;
@@ -161,7 +163,7 @@ public class CostMap extends LoopThread {
 
     public int costOfUnlockedEnemyDistance(int x, int y){
         int maxRange = EnemiesObservationSimulator.getRadius();
-        int peekVal = 64;
+        int peekVal = 128;
         float distanceToEnemy = Enemy.getUnlockedEnemy().getPointPosition().distanceTo(x,y);
         float cost = 0;
         if(distanceToEnemy <= 65){
@@ -178,7 +180,7 @@ public class CostMap extends LoopThread {
             return 0;
         }
         int maxRange = EnemiesObservationSimulator.getRadius();
-        int peekVal = 128;
+        int peekVal = 64;
         float distanceToEnemy = Enemy.getLockedEnemy().getPointPosition().distanceTo(x,y);
         float distanceToEnemy2 = Enemy.getUnlockedEnemy().getPointPosition().distanceTo(x,y);
         float cost = 0;

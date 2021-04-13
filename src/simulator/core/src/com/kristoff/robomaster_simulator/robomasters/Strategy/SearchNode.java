@@ -51,4 +51,8 @@ public class SearchNode {
                             { 0, -1, 1},          {-1, -1, 2},
                             {-1, 1, 2},{1, -1, 2},{1, 1, 2}
                     };
+
+    public boolean isInSamePosition(SearchNode node){
+        return this.position.equals(node.position);
+    }
 }

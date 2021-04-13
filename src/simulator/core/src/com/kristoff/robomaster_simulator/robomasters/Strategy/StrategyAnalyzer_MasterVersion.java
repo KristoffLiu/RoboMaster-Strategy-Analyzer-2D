@@ -7,12 +7,13 @@ import com.kristoff.robomaster_simulator.systems.costmap.UniversalCostMap;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator;
 import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.utils.Position;
+import org.w3c.dom.Node;
 
 import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class StrategyAnalyzer_2V2Master extends UniversalAnalyzer {
-    public StrategyAnalyzer_2V2Master(StrategyMaker strategyMaker){
+public class StrategyAnalyzer_MasterVersion extends UniversalAnalyzer {
+    public StrategyAnalyzer_MasterVersion(StrategyMaker strategyMaker){
         super(strategyMaker);
         resultNode = new SearchNode();
     }
@@ -65,15 +66,15 @@ public class StrategyAnalyzer_2V2Master extends UniversalAnalyzer {
                     break;
                 }
                 generateChildrenNodes(resultNode, tempVisitedGrid);
+                setNodeHasBeenVisited(resultNode, tempVisitedGrid);
             }
             if(Math.abs(targetCost - getCostMap().getCost(resultNode.position.getX(),resultNode.position.getY())) >= 30){
-                targetCost += 5;
+                targetCost += 30;
             }
             else {
                 is_find = true;
             }
         }
-
         SearchNode node = resultNode;
         pathNodes.clear();
         while (true && node.parentNode != null){
@@ -84,10 +85,12 @@ public class StrategyAnalyzer_2V2Master extends UniversalAnalyzer {
     }
 
     public boolean isAvailable(Position centre, int targetCost, Position target){
-        return (Math.abs(getCostMap().getCost(centre.getX(), centre.getY()) - targetCost) < 30 ||
-                centre.x == target.x && centre.y == target.y)
-                //&& isTheSurroundingAreaAvailable(centre)
-        ;
+        if(Math.abs(getCostMap().getCost(centre.getX(), centre.getY()) - targetCost) < 30 ||
+                centre.x == target.x && centre.y == target.y){
+            return true;
+            //isTheSurroundingAreaAvailable(centre);
+        }
+        return false;
     }
 
     //查找并生成子节点，并返回队列对象
@@ -102,8 +105,22 @@ public class StrategyAnalyzer_2V2Master extends UniversalAnalyzer {
             double delta = nextCost - currentCost;
             double stepCost = Math.sqrt(SearchNode.childrenNodesFindingCost[i][2]);
             double totalCost = node.cost + delta + stepCost;
-            if(hasThisNodeNotBeenVisited(x, y, visitedGrid) ){
+            if(!hasThisNodeBeenVisited(x, y, visitedGrid) ){
                 SearchNode childNode = new SearchNode(x,y,node.index + 1, totalCost,node);
+                boolean shouldSkip = false;
+                for (SearchNode nodeInQueue : queue){
+                    if(nodeInQueue.isInSamePosition(childNode)){
+                        if(nodeInQueue.cost > childNode.cost){
+                            nodeInQueue.cost = childNode.cost;
+                            nodeInQueue.index = childNode.index;
+                            nodeInQueue.parentNode = childNode.parentNode;
+                        }
+                        shouldSkip = true;
+                    }
+                }
+                if(shouldSkip){
+                    continue;
+                }
                 if(currentCost > 400 || nextCost < 400){
                     node.childrenNodes.add(childNode);
                     queue.offer(childNode);

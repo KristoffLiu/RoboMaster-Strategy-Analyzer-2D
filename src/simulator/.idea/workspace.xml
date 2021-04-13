@@ -23,24 +23,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e66a52a5-9eca-43c0-9183-6d45976dbbcf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../env/rosrm/demo/setroamer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../env/rosrm/demo/setroamer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../env/rosrm/visualization/costmap3dvisualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/../env/rosrm/visualization/costmap3dvisualization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../env/rosrm/visualization/costmap3dvisualization_strings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../env/rosrm/visualization/costmap3dvisualization_strings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/6/065d5bca657291095a4dde888644ced6acde838f" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/6/065d5bca657291095a4dde888644ced6acde838f" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/9/b9ee1d0345f9b43ea0690a925e060f29d57b7558" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/9/b9ee1d0345f9b43ea0690a925e060f29d57b7558" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/6/f6a7530904965c0ccc264a1379cd2149204d7ade" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/6/f6a7530904965c0ccc264a1379cd2149204d7ade" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/d/fdbc20491bd6bf53947f48f7cb82be4337dde759" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/d/fdbc20491bd6bf53947f48f7cb82be4337dde759" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../env/rosrm/decision.py" beforeDir="false" afterPath="$PROJECT_DIR$/../env/rosrm/decision.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.7/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/core/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/RoboMaster$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/RoboMaster$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/RoboMaster.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/RoboMaster.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/view/layers/LidarPointCloudLayer.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/view/layers/LidarPointCloudLayer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/Strategy/SearchNode.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/Strategy/SearchNode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyAnalyzer_2V2Master.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyMaker.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyMaker.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/Strategy/UniversalAnalyzer.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/Strategy/UniversalAnalyzer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/modules/CostMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/com/kristoff/robomaster_simulator/robomasters/modules/CostMap.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/robomasters/RoboMaster.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/robomasters/RoboMaster.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/view/layers/LidarPointCloudLayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/view/layers/LidarPointCloudLayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/view/layers/RoboMasterLayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/view/layers/RoboMasterLayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/robomasters/Strategy/SearchNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/robomasters/Strategy/SearchNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyAnalyzer_2V2Master.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyAnalyzer_MasterVersion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyMaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/robomasters/Strategy/StrategyMaker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/robomasters/Strategy/UniversalAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/robomasters/Strategy/UniversalAnalyzer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/robomasters/modules/CostMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/com/kristoff/robomaster_simulator/robomasters/modules/CostMap.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,34 +174,34 @@
       <screen x="0" y="24" width="1920" height="1056" />
     </state>
     <state x="768" y="259" width="374" height="599" key="#com.intellij.ide.util.MemberChooser/0.24.1920.1056@0.24.1920.1056" timestamp="1616869467700" />
-    <state x="745" y="24" width="1165" height="1056" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1617097326339">
+    <state x="745" y="24" width="1165" height="1056" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1618297949575">
       <screen x="0" y="24" width="1920" height="1056" />
     </state>
-    <state x="745" y="24" width="1165" height="1056" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.24.1920.1056@0.24.1920.1056" timestamp="1617097326339" />
+    <state x="745" y="24" width="1165" height="1056" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.24.1920.1056@0.24.1920.1056" timestamp="1618297949575" />
     <state width="505" height="506" key="DebuggerActiveHint" timestamp="1616849299552">
       <screen x="0" y="24" width="1920" height="1056" />
     </state>
     <state width="505" height="506" key="DebuggerActiveHint/0.24.1920.1056@0.24.1920.1056" timestamp="1616849299552" />
-    <state width="1678" height="304" key="GridCell.Tab.0.bottom" timestamp="1618205805398">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1874" height="189" key="GridCell.Tab.0.bottom" timestamp="1618311600102">
+      <screen x="0" y="24" width="1920" height="1056" />
     </state>
     <state width="1678" height="304" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1618205805398" />
-    <state width="1874" height="223" key="GridCell.Tab.0.bottom/0.24.1920.1056@0.24.1920.1056" timestamp="1617874163670" />
-    <state width="1678" height="304" key="GridCell.Tab.0.center" timestamp="1618205805398">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1874" height="189" key="GridCell.Tab.0.bottom/0.24.1920.1056@0.24.1920.1056" timestamp="1618311600102" />
+    <state width="1874" height="189" key="GridCell.Tab.0.center" timestamp="1618311600101">
+      <screen x="0" y="24" width="1920" height="1056" />
     </state>
     <state width="1678" height="304" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1618205805398" />
-    <state width="1874" height="223" key="GridCell.Tab.0.center/0.24.1920.1056@0.24.1920.1056" timestamp="1617874163669" />
-    <state width="1678" height="304" key="GridCell.Tab.0.left" timestamp="1618205805398">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1874" height="189" key="GridCell.Tab.0.center/0.24.1920.1056@0.24.1920.1056" timestamp="1618311600101" />
+    <state width="1874" height="189" key="GridCell.Tab.0.left" timestamp="1618311600101">
+      <screen x="0" y="24" width="1920" height="1056" />
     </state>
     <state width="1678" height="304" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1618205805398" />
-    <state width="1874" height="223" key="GridCell.Tab.0.left/0.24.1920.1056@0.24.1920.1056" timestamp="1617874163669" />
-    <state width="1678" height="304" key="GridCell.Tab.0.right" timestamp="1618205805398">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1874" height="189" key="GridCell.Tab.0.left/0.24.1920.1056@0.24.1920.1056" timestamp="1618311600101" />
+    <state width="1874" height="189" key="GridCell.Tab.0.right" timestamp="1618311600102">
+      <screen x="0" y="24" width="1920" height="1056" />
     </state>
     <state width="1678" height="304" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1618205805398" />
-    <state width="1874" height="223" key="GridCell.Tab.0.right/0.24.1920.1056@0.24.1920.1056" timestamp="1617874163670" />
+    <state width="1874" height="189" key="GridCell.Tab.0.right/0.24.1920.1056@0.24.1920.1056" timestamp="1618311600102" />
     <state width="1678" height="375" key="GridCell.Tab.1.bottom" timestamp="1618141148536">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>

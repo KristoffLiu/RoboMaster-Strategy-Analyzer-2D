@@ -42,7 +42,7 @@ public class UniversalAnalyzer implements StrategyAnalyzer {
                 int y = centrePosition.y + j - Property.heightUnit / 2;
                 if(   !(x>=0 && x<849)
                         || !(y>=0 && y<489)
-                        || Math.abs(centreCost - getCostMap().getCost(x, y)) > 150
+                        || Math.abs(centreCost - getCostMap().getCost(x, y)) > 30
 //                        || Math.abs(CostMapGenerator.getCost(x, y) - centreCost) > 10
                 ){
                     return false;
@@ -66,6 +66,24 @@ public class UniversalAnalyzer implements StrategyAnalyzer {
         else {
             return true;
         }
+    }
+
+    //检查节点可访问性
+    public boolean hasThisNodeBeenVisited(int x, int y, boolean[][] nodeGrid){
+        if(x>=0 && x<849 && y>=0 && y<489){
+            return nodeGrid[x][y];
+        }
+        else {
+            return false;
+        }
+    }
+
+    public void setNodeHasBeenVisited(SearchNode node, boolean[][] nodeGrid){
+        setNodeHasBeenVisited(node.position.x, node.position.y, nodeGrid);
+    }
+
+    public void setNodeHasBeenVisited(int x, int y, boolean[][] nodeGrid){
+        nodeGrid[x][y] = true;
     }
 
     @Override

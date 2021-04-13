@@ -31,7 +31,7 @@ public class StrategyMaker extends LoopThread {
     //int counterState = -1;
     Position decisionMade;
 
-    StrategyAnalyzer_2V2Master strategyAnalyzer_2V2Master;
+    StrategyAnalyzer_MasterVersion strategyAnalyzer_MasterVersion;
     StrategyAnalyzer_2V2Ranger strategyAnalyzer_2V2Ranger;
     StrategyAnalyzer_2V2MasterObsolete strategyAnalyzer_2V2MasterObsolete;
     StrategyAnalyzer_2V2RangerObsolete strategyAnalyzer_2V2RangerObsolete;
@@ -65,7 +65,7 @@ public class StrategyMaker extends LoopThread {
         resultNodes            = new CopyOnWriteArrayList<SearchNode>();
         pathNodes              = new CopyOnWriteArrayList<SearchNode>();
 
-        strategyAnalyzer_2V2Master = new StrategyAnalyzer_2V2Master(this);
+        strategyAnalyzer_MasterVersion = new StrategyAnalyzer_MasterVersion(this);
         strategyAnalyzer_2V2Ranger = new StrategyAnalyzer_2V2Ranger(this);
         strategyAnalyzer_2V2MasterObsolete = new StrategyAnalyzer_2V2MasterObsolete(this);
         strategyAnalyzer_2V2RangerObsolete = new StrategyAnalyzer_2V2RangerObsolete(this);
@@ -90,7 +90,7 @@ public class StrategyMaker extends LoopThread {
     }
 
     public void switchAnalyzer(){
-        strategyAnalyzer = strategyAnalyzer_2V2Master;
+        strategyAnalyzer = strategyAnalyzer_MasterVersion;
 //        switch (counterState){
 //            case OneVSOne -> strategyAnalyzer = strategyAnalyzer_2V2Master;
 //            case OneVSTwo -> strategyAnalyzer = strategyAnalyzer_2V2Master;
