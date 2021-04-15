@@ -43,7 +43,6 @@ public class StrategyAnalyzer_MasterVersion extends UniversalAnalyzer {
         int targetCost = target.cost;
         resultNode = new SearchNode();
 
-
         boolean is_find = false;
         while(!is_find){
             queue.clear();

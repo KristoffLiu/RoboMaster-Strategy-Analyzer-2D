@@ -70,6 +70,13 @@ public class Actor extends LoopThread {
         this.rotation = rotation;
     }
 
+    public void updateFromRM(int x, int y, float degree){
+        this.x = x;
+        this.y = y;
+        float filter = degree + 180;
+        this.rotation = (float) Math.toRadians(filter);
+    }
+
 //    float currentAngle = thisRoboMaster.RMPhysicalSimulation.body.getTransform().getRotation();
 //        if(currentAngle > 2*PI){
 //        currentAngle = (float)(currentAngle % (2*PI));

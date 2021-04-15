@@ -1,7 +1,7 @@
 package com.kristoff.robomaster_simulator.systems.refree.buffs;
 
 public enum Buff {
-    NotActivated        ,
+    Unknown,
     RedHPRecovery       ,
     RedBulletSupply     ,
     BlueHPRecovery      ,

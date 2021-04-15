@@ -119,6 +119,11 @@ public abstract class RoboMaster {
         this.actor.update(x, y, rotation);
     }
 
+    public void setPositionFromRM(int x, int y, float degree) {
+        this.actor.updateFromRM(x, y, degree);
+    }
+
+
     public Position getPosition() {
         return new Position(this.actor.x,this.actor.y);
     }

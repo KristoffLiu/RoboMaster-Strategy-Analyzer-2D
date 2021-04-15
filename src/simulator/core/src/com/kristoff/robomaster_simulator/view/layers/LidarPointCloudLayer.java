@@ -82,7 +82,7 @@ public class LidarPointCloudLayer extends VisualLayer {
         shapeRenderer2.setProjectionMatrix(environment.view.getOrthographicCamera().combined);
         shapeRenderer2.setAutoShapeType(true);
         shapeRenderer2.begin(ShapeRenderer.ShapeType.Line);
-        for(RoboMaster roboMaster : RoboMasters.all){
+        for(RoboMaster roboMaster : RoboMasters.teamBlue){
             float x = roboMaster.getPosition().x / 1000f;
             float y = roboMaster.getPosition().y / 1000f;
             shapeRenderer2.setColor(1.0f,0,0,1.0f);
@@ -102,37 +102,37 @@ public class LidarPointCloudLayer extends VisualLayer {
 
 
 
-//        shapeRenderer3.setProjectionMatrix(environment.view.getOrthographicCamera().combined);
-//        shapeRenderer3.setAutoShapeType(true);
-//        shapeRenderer3.begin(ShapeRenderer.ShapeType.Filled);
-//        for(int i = 0; i < 849; i += 1){
-//            for(int j = 0; j < 489; j += 1){
-//                switch (Team.getEnemiesObservationGrid()[i][j]){
-//                    case 1 ->{
-//                        shapeRenderer3.setColor(0.5f,0.5f,0.5f,1.0f);
-//                        shapeRenderer3.circle(
-//                                i / 100f,
-//                                j / 100f,
-//                                0.025f,10);
-//                    }
-//                    case 2 ->{
-//                        shapeRenderer3.setColor(0.6f,0.6f,0.6f,1.0f);
-//                        shapeRenderer3.circle(
-//                                i / 100f,
-//                                j / 100f,
-//                                0.025f,10);
-//                    }
-//                    case 3 ->{
-//                        shapeRenderer3.setColor(0.6f,0f,0f,1.0f);
-//                        shapeRenderer3.circle(
-//                                i / 100f,
-//                                j / 100f,
-//                                0.025f,10);
-//                    }
-//                }
-//
-//            }
-//        }
+        shapeRenderer3.setProjectionMatrix(environment.view.getOrthographicCamera().combined);
+        shapeRenderer3.setAutoShapeType(true);
+        shapeRenderer3.begin(ShapeRenderer.ShapeType.Filled);
+        for(int i = 0; i < 849; i += 10){
+            for(int j = 0; j < 489; j += 10){
+                switch (Team.getEnemiesObservationGrid()[i][j]){
+                    case 1 ->{
+                        shapeRenderer3.setColor(0.5f,0.5f,0.5f,1.0f);
+                        shapeRenderer3.circle(
+                                i / 100f,
+                                j / 100f,
+                                0.025f,10);
+                    }
+                    case 2 ->{
+                        shapeRenderer3.setColor(0.6f,0.6f,0.6f,1.0f);
+                        shapeRenderer3.circle(
+                                i / 100f,
+                                j / 100f,
+                                0.025f,10);
+                    }
+                    case 3 ->{
+                        shapeRenderer3.setColor(0.2f,0.2f,0.2f,1.0f);
+                        shapeRenderer3.circle(
+                                i / 100f,
+                                j / 100f,
+                                0.025f,10);
+                    }
+                }
+
+            }
+        }
 //
 ////        for(EnemiesObservationPoint position : RoboMasters.teamBlue.enemiesObservationSimulator.getDangerousZone()){
 ////            int x = position.x;
@@ -166,7 +166,7 @@ public class LidarPointCloudLayer extends VisualLayer {
 ////                    (y+5) / 100f,
 ////                    0.025f,10);
 ////        }
-//        shapeRenderer3.end();
+        shapeRenderer3.end();
 
         shapeRenderer.setProjectionMatrix(environment.view.getOrthographicCamera().combined);
         shapeRenderer.setAutoShapeType(true);

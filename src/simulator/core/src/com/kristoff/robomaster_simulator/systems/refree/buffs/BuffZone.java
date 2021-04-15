@@ -39,7 +39,7 @@ public class BuffZone {
         this.name = textureMapObject.getName();
         this.isActive = false;
         buffImage = new Image();
-        updateBuff(Buff.NotActivated);
+        updateBuff(Buff.Unknown, false);
         this.textureMapObject = textureMapObject;
         float scale = 1f / 1000f;
         this.actor = new CustomActor(textureMapObject.getTextureRegion());
@@ -101,7 +101,7 @@ public class BuffZone {
 
     public static boolean isInDebuffZone(int x, int y){
         for(BuffZone buffZone : Systems.refree.getBuffZones()){
-            if(buffZone.getBuff() != Buff.NotActivated &&
+            if(buffZone.getBuff() != Buff.Unknown &&
                     buffZone.getBuff() != Buff.BlueBulletSupply &&
                 buffZone.getBuff() != Buff.BlueHPRecovery){
                 if(isInBuffZone(x, y, buffZone)){
@@ -137,7 +137,7 @@ public class BuffZone {
             float maxDis = 150;
 
             switch (buffZone.buff){
-                case NotActivated     -> cost = 0;
+                case Unknown -> cost = 0;
                 case RedHPRecovery    -> {
                     if(isEnemyHPRecoveryNeeded(roboMaster)) {
                         if(buffZone.isInBuffZone(x, y, true)) cost = -197;
@@ -258,77 +258,82 @@ public class BuffZone {
             if(buffZone.getName().equals("F" + (buffZoneNo + 1))){
                 switch (buffType){
                     case 0 -> {
-                        buffZone.updateBuff(Buff.NotActivated);
+                        buffZone.updateBuff(Buff.Unknown, isActive);
                         NotActivated = buffZone;
                     }
                     case 1 -> {
                         if(Team.isOurTeamBlue){
-                            buffZone.updateBuff(Buff.RedHPRecovery);
+                            buffZone.updateBuff(Buff.RedHPRecovery, isActive);
                             RedHPRecovery = buffZone;
                         }
                         else {
-                            buffZone.updateBuff(Buff.BlueHPRecovery);
+                            buffZone.updateBuff(Buff.BlueHPRecovery, isActive);
                             BlueHPRecovery = buffZone;
                         }
                     }
                     case 2 -> {
                         if(Team.isOurTeamBlue) {
-                            buffZone.updateBuff(Buff.RedBulletSupply);
+                            buffZone.updateBuff(Buff.RedBulletSupply, isActive);
                             RedBulletSupply = buffZone;
                         }
                         else {
-                            buffZone.updateBuff(Buff.BlueBulletSupply);
+                            buffZone.updateBuff(Buff.BlueBulletSupply, isActive);
                             BlueBulletSupply = buffZone;
                         }
                     }
                     case 3 -> {
                         if(Team.isOurTeamBlue) {
-                            buffZone.updateBuff(Buff.BlueHPRecovery);
+                            buffZone.updateBuff(Buff.BlueHPRecovery, isActive);
                             BlueHPRecovery = buffZone;
                         }
                         else {
-                            buffZone.updateBuff(Buff.RedHPRecovery);
+                            buffZone.updateBuff(Buff.RedHPRecovery, isActive);
                             RedHPRecovery = buffZone;
                         }
                     }
                     case 4 -> {
                         if(Team.isOurTeamBlue) {
-                            buffZone.updateBuff(Buff.BlueBulletSupply);
+                            buffZone.updateBuff(Buff.BlueBulletSupply, isActive);
                             BlueBulletSupply = buffZone;
                         }
                         else {
-                            buffZone.updateBuff(Buff.RedBulletSupply);
+                            buffZone.updateBuff(Buff.RedBulletSupply, isActive);
                             RedBulletSupply = buffZone;
                         }
                     }
                     case 5 -> {
-                        buffZone.updateBuff(Buff.DisableShooting);
+                        buffZone.updateBuff(Buff.DisableShooting, isActive);
                         DisableShooting = buffZone;
                     }
                     case 6 -> {
-                        buffZone.updateBuff(Buff.DisableMovement);
+                        buffZone.updateBuff(Buff.DisableMovement, isActive);
                         DisableMovement = buffZone;
                     }
                 }
-                buffZone.isActive = isActive;
                 break;
             }
         }
     }
 
 
-    public void updateBuff(Buff buff){
+    public void updateBuff(Buff buff, boolean isActive){
         this.buff = buff;
         String pathHeader = "Systems/BuffZones/";
-        switch (buff){
-            case NotActivated      -> pathHeader += "NotActivated.png";
-            case RedHPRecovery     -> pathHeader += "HealingRed.png";
-            case DisableShooting   -> pathHeader += "ShootingForbidden.png";
-            case BlueBulletSupply  -> pathHeader += "BulletSupplyBlue.png";
-            case BlueHPRecovery    -> pathHeader += "HealingBlue.png";
-            case DisableMovement   -> pathHeader += "MovementForbidden.png";
-            case RedBulletSupply   -> pathHeader += "BulletSupplyRed.png";
+        if(isActive || this.buff == Buff.Unknown){
+            switch (buff){
+                case Unknown -> pathHeader += "Unknown.png";
+                case RedHPRecovery     -> pathHeader += "HealingRed.png";
+                case DisableShooting   -> pathHeader += "ShootingForbidden.png";
+                case BlueBulletSupply  -> pathHeader += "BulletSupplyBlue.png";
+                case BlueHPRecovery    -> pathHeader += "HealingBlue.png";
+                case DisableMovement   -> pathHeader += "MovementForbidden.png";
+                case RedBulletSupply   -> pathHeader += "BulletSupplyRed.png";
+            }
         }
+        else {
+            pathHeader += "NotActivated.png";
+        }
+        this.isActive = isActive;
         String finalPathHeader = pathHeader;
         Gdx.app.postRunnable(new Runnable()
         {

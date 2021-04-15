@@ -56,7 +56,7 @@ class Brain:
         self.cnt = 1
         self._control_rate = control_rate
 
-        entrypoint.setAsRoamer("blue1")
+        entrypoint.setAsRoamer("blue2")
         entrypoint.isOurTeamBlue(True)
 
         self.Red1 = entrypoint.getRoboMaster("Red1") 
@@ -89,7 +89,7 @@ class Brain:
                                  msg.pose.orientation.z,
                                  msg.pose.orientation.w]).as_euler('zyx', degrees=True)
         self.robots[0].yaw = y
-        self.Blue1.setPosition(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
+        self.Blue1.setPositionFromRM(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
 
     def ownPositionCB1(self, msg):
         self.robots[1].x = msg.pose.position.x
@@ -99,32 +99,34 @@ class Brain:
                                  msg.pose.orientation.z,
                                  msg.pose.orientation.w]).as_euler('zyx', degrees=True)
         self.robots[1].yaw = y
-        self.Blue2.setPosition(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
+        self.Blue2.setPositionFromRM(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
 
         def ownPositionCB2(self, msg):
             [y, p, r] = R.from_quat([msg.pose.orientation.x,
                                         msg.pose.orientation.y,
                                         msg.pose.orientation.z,
                                         msg.pose.orientation.w]).as_euler('zyx', degrees=True)
-            self.Red1.setPosition(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
+            self.Red1.setPositionFromRM(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
 
     def enemyInfo(self, data):
         enemy = data.circles
         if len(enemy) == 1:
-            self.Red1.setPosition(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
+            pass
+            # self.Red1.setPositionFromRM(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
         elif len(enemy) == 2:
-            self.Red1.setPosition(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
-            self.Red2.setPosition(int(enemy[1].center.x*1000), int(enemy[1].center.y*1000),float(1.57))
+            pass
+            # self.Red1.setPositionFromRM(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
+            # self.Red2.setPositionFromRM(int(enemy[1].center.x*1000), int(enemy[1].center.y*1000),float(1.57))
 
     def robotHP(self, data):
         # print(data.blue1)
         # print(data.blue2)
         # print(data.red1)
         # print(data.red2)
-        self.Blue1.setHealth(data.blue1)
-        self.Blue2.setHealth(data.blue2)
-        self.Red1.setHealth(data.red1)
-        self.Red2.setHealth(data.red2)
+        self.Blue1.setHealth(2000)
+        self.Blue2.setHealth(2000)
+        self.Red1.setHealth(2000)
+        self.Red2.setHealth(2000)
 
     def gameState(self, data):
         print(data.game_status)
