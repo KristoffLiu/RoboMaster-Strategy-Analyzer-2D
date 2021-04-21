@@ -14,4 +14,3 @@ java_import(gateway.jvm,'java.util.*') #导入java中的类的方法
 
 entrypoint.setAsRoamer("blue2")
 entrypoint.isOurTeamBlue(True)
-entrypoint.buffZoneDemoTest()

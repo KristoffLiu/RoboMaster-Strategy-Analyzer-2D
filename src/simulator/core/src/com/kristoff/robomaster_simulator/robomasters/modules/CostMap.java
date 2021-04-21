@@ -140,7 +140,7 @@ public class CostMap extends LoopThread {
     public int costOfLockedEnemyDistance(int x, int y){
         int maxRange = EnemiesObservationSimulator.getRadius();
         int minShootingRange = 80;
-        int maxShootingRange = 600;
+        int maxShootingRange = 200;
         int peekVal = 64;
         int troughVal = - 100;
         int troughVal2 = - 128;

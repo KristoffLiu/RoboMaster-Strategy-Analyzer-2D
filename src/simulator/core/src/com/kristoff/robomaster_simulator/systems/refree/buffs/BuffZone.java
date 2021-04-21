@@ -62,7 +62,7 @@ public class BuffZone {
         if(RedHPRecovery == null){
             isRedHPRecoveryNecessary = 0;
         }
-        else if(!RedHPRecovery.isActive){
+        else if(RedHPRecovery.isActive){
             if((Enemy.getLockedEnemy().getHealth() >= 1900 || !Enemy.getLockedEnemy().isAlive) &&
                     (Enemy.getUnlockedEnemy().getHealth() >= 1900 || !Enemy.getUnlockedEnemy().isAlive)){
                 isRedHPRecoveryNecessary = 2;
@@ -140,7 +140,10 @@ public class BuffZone {
                 case Unknown -> cost = 0;
                 case RedHPRecovery    -> {
                     if(isEnemyHPRecoveryNeeded(roboMaster)) {
-                        if(buffZone.isInBuffZone(x, y, true)) cost = -197;
+                        if(distance <= 10){
+                            cost += (maxDis - distance) / maxDis * -150;
+                        }
+                       //if(buffZone.isInBuffZone(x, y, true)) cost = -197;
                     }
                     else{
                         if(buffZone.isInBuffZone(x, y, false)) cost = 999;
@@ -156,9 +159,12 @@ public class BuffZone {
                     }
                 }
                 case BlueBulletSupply -> {
-                    if(buffZone.isInBuffZone(x, y, true)) cost = -150;
-                    else if(distance <= maxDis){
-                        cost += (maxDis - distance) / maxDis * -127;
+//                    if(buffZone.isInBuffZone(x, y, true)) cost = -150;
+//                    else if(distance <= maxDis){
+//                        cost += (maxDis - distance) / maxDis * -127;
+//                    }
+                    if(distance <= 10){
+                        cost += (maxDis - distance) / maxDis * -150;
                     }
                 }
                 case DisableShooting  -> {

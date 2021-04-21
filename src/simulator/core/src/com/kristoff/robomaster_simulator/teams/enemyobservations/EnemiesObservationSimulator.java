@@ -15,7 +15,7 @@ public class EnemiesObservationSimulator extends LoopThread {
     Mode mode;
 
     public static int getRadius(){
-        return 450;
+        return 250;
     }
     public Array<StatePoint> eoArrayList;
 

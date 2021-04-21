@@ -70,7 +70,7 @@ class Brain:
                         rospy.Publisher("/CAR2/move_base_simple/goal", PoseStamped, queue_size=10)]
         self._robots_subscriber = [rospy.Subscriber("/CAR1/amcl_pose", PoseStamped, self.ownPositionCB0),
                                    rospy.Subscriber("/CAR2/amcl_pose", PoseStamped, self.ownPositionCB1)]
-
+        #nav_msgs/path [[]]
         self._enemies_subscriber = rospy.Subscriber("/obstacle_preprocessed", Obstacles, self.enemyInfo)
 
         self._hp_subscriber = rospy.Subscriber("/CAR1/game_robot_hp", GameRobotHP, self.robotHP)
@@ -84,6 +84,9 @@ class Brain:
     def ownPositionCB0(self, msg):
         self.robots[0].x = msg.pose.position.x
         self.robots[0].y = msg.pose.position.y
+        # print(type(msg))
+        # print(type(msg.pose))
+        # print(type(msg.pose.orientation))
         [y, p, r] = R.from_quat([msg.pose.orientation.x,
                                  msg.pose.orientation.y,
                                  msg.pose.orientation.z,
@@ -111,12 +114,10 @@ class Brain:
     def enemyInfo(self, data):
         enemy = data.circles
         if len(enemy) == 1:
-            pass
-            # self.Red1.setPositionFromRM(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
+            self.Red1.setPositionFromRM(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
         elif len(enemy) == 2:
-            pass
-            # self.Red1.setPositionFromRM(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
-            # self.Red2.setPositionFromRM(int(enemy[1].center.x*1000), int(enemy[1].center.y*1000),float(1.57))
+            self.Red1.setPositionFromRM(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
+            self.Red2.setPositionFromRM(int(enemy[1].center.x*1000), int(enemy[1].center.y*1000),float(1.57))
 
     def robotHP(self, data):
         # print(data.blue1)
