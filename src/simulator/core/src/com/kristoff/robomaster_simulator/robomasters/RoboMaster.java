@@ -208,5 +208,9 @@ public abstract class RoboMaster {
         return results;
     }
 
+    public StrategyMaker getStrategyMaker(){
+        return this.strategyMaker;
+    }
+
 }
 

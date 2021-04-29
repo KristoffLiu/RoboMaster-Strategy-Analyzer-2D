@@ -253,5 +253,12 @@ public class StrategyMaker extends LoopThread {
         return this.roboMaster.costMap.minPositionCost;
     }
 
+    public boolean isOn(){
+        return this.isStep;
+    }
 
+    public boolean isOn(boolean bool){
+        this.isStep = bool;
+        return this.isStep;
+    }
 }

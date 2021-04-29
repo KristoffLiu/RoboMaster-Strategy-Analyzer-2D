@@ -2,3 +2,4 @@
 src/simulator/.gradle
 src/simulator/.idea
 src/simulator/core/build
+.vscode/settings.json
