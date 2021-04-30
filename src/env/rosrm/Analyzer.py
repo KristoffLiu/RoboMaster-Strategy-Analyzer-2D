@@ -7,8 +7,9 @@ See Wikipedia article (https://en.wikipedia.org/wiki/Breadth-first_search)
 from py4j.java_gateway import JavaGateway
 from py4j.java_gateway import java_import
 
-class SimulatorHelper:
-    class RoboMaster:
+class Analyzer:
+    class RoboMaster():
+        self.
 
 
 
@@ -22,4 +23,4 @@ class SimulatorHelper:
         self.RoboMaster2 = entrypoint.getEne
 
     def __init__(self):
-        self.4
+        self.
