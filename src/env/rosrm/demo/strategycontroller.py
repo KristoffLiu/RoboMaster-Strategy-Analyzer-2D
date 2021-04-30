@@ -9,3 +9,4 @@ java_import(gateway.jvm,'java.util.*') #导入java中的类的方法
 Blue1 = entrypoint.getRoboMaster("Blue1")
 strategy = Blue1.getStrategyMaker()
 print(strategy.isOn())
+print(strategy.isOn(True))
