@@ -27,6 +27,7 @@ from roborts_msgs.msg import GameStatus
 from roborts_msgs.msg import GameRobotBullet
 from roborts_msgs.msg import RobotDamage
 from visualization_msgs.msg import Marker
+from actionlib_msgs.msg import GoalStatusArray
 from scipy.spatial.transform import Rotation as R
 import threading
 import math
@@ -56,8 +57,8 @@ class Brain:
         self.cnt = 1
         self._control_rate = control_rate
 
-        entrypoint.setAsRoamer("blue2")
-        entrypoint.isOurTeamBlue(True)
+        entrypoint.setAsRoamer("blue1")
+        entrypoint.isOurTeamBlue(False)
 
         self.Red1 = entrypoint.getRoboMaster("Red1") 
         self.Red2 = entrypoint.getRoboMaster("Red2") 
@@ -70,7 +71,7 @@ class Brain:
                         rospy.Publisher("/CAR2/move_base_simple/goal", PoseStamped, queue_size=10)]
         self._robots_subscriber = [rospy.Subscriber("/CAR1/amcl_pose", PoseStamped, self.ownPositionCB0),
                                    rospy.Subscriber("/CAR2/amcl_pose", PoseStamped, self.ownPositionCB1)]
-        #nav_msgs/path [[]]
+
         self._enemies_subscriber = rospy.Subscriber("/obstacle_preprocessed", Obstacles, self.enemyInfo)
 
         self._hp_subscriber = rospy.Subscriber("/CAR1/game_robot_hp", GameRobotHP, self.robotHP)
@@ -79,20 +80,32 @@ class Brain:
         
         self._vis_pub = [rospy.Publisher("/CAR1/visualization_marker", Marker, queue_size=10),
                          rospy.Publisher("/CAR2/visualization_marker", Marker, queue_size=10)]
-        
+
+        self._is_goal_reach_subscribers = [rospy.Subscriber("/CAR1/global_planner_node_action/status", GoalStatusArray, self.enable_decision1),
+                                           rospy.Subscriber("/CAR2/global_planner_node_action/status", GoalStatusArray, self.enable_decision2)]
+
+    def enable_decision1(self, msg):
+        if msg.status_list[0].status == 1 :
+            pass #  disable zhikang's decision
+        elif msg.status_list[0].status == 3:
+            pass #  enable zhikang's decision
+
+    def enable_decision2(self, msg):
+        if msg.status_list[0].status == 1 :
+            pass #  disable zhikang's decision
+        elif msg.status_list[0].status == 3:
+            pass #  enable zhikang's decision
+
 
     def ownPositionCB0(self, msg):
         self.robots[0].x = msg.pose.position.x
         self.robots[0].y = msg.pose.position.y
-        # print(type(msg))
-        # print(type(msg.pose))
-        # print(type(msg.pose.orientation))
         [y, p, r] = R.from_quat([msg.pose.orientation.x,
                                  msg.pose.orientation.y,
                                  msg.pose.orientation.z,
                                  msg.pose.orientation.w]).as_euler('zyx', degrees=True)
         self.robots[0].yaw = y
-        self.Blue1.setPositionFromRM(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
+        self.Blue1.setPosition(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
 
     def ownPositionCB1(self, msg):
         self.robots[1].x = msg.pose.position.x
@@ -102,32 +115,32 @@ class Brain:
                                  msg.pose.orientation.z,
                                  msg.pose.orientation.w]).as_euler('zyx', degrees=True)
         self.robots[1].yaw = y
-        self.Blue2.setPositionFromRM(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
+        self.Blue2.setPosition(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
 
         def ownPositionCB2(self, msg):
             [y, p, r] = R.from_quat([msg.pose.orientation.x,
                                         msg.pose.orientation.y,
                                         msg.pose.orientation.z,
                                         msg.pose.orientation.w]).as_euler('zyx', degrees=True)
-            self.Red1.setPositionFromRM(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
+            self.Red1.setPosition(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
 
     def enemyInfo(self, data):
         enemy = data.circles
         if len(enemy) == 1:
-            self.Red1.setPositionFromRM(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
+            self.Red1.setPosition(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
         elif len(enemy) == 2:
-            self.Red1.setPositionFromRM(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
-            self.Red2.setPositionFromRM(int(enemy[1].center.x*1000), int(enemy[1].center.y*1000),float(1.57))
+            self.Red1.setPosition(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
+            self.Red2.setPosition(int(enemy[1].center.x*1000), int(enemy[1].center.y*1000),float(1.57))
 
     def robotHP(self, data):
         # print(data.blue1)
         # print(data.blue2)
         # print(data.red1)
         # print(data.red2)
-        self.Blue1.setHealth(2000)
-        self.Blue2.setHealth(2000)
-        self.Red1.setHealth(2000)
-        self.Red2.setHealth(2000)
+        self.Blue1.setHealth(data.blue1)
+        self.Blue2.setHealth(data.blue2)
+        self.Red1.setHealth(data.red1)
+        self.Red2.setHealth(data.red2)
 
     def gameState(self, data):
         print(data.game_status)
@@ -279,7 +292,7 @@ if __name__ == '__main__':
     try: 
         print(__file__ + " start!!")
         rospy.init_node('decision_node', anonymous=True)
-        control_rate = 2
+        control_rate = 1
         rate = rospy.Rate(1.0 / control_rate)
         brain = Brain(control_rate)
         print(brain)
@@ -289,10 +302,9 @@ if __name__ == '__main__':
         beginTime = time.time()
 
         while not rospy.core.is_shutdown():
-            if (brain.is_game_start == True):
-                brain.get_next_position1()
-                brain.get_next_position2()
-                print("game has started")
+            # if (brain.is_game_start == True or count > 30):
+            brain.get_next_position1()
+            brain.get_next_position2()
             currenttime = time.time()
             temp = currenttime - beginTime
             beginTime = currenttime
