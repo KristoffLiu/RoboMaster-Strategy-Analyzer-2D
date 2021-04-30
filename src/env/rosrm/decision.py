@@ -13,11 +13,6 @@ from py4j.java_gateway import JavaGateway
 from py4j.java_gateway import java_import
 import time
 
-gateway = JavaGateway() #启动py4j服务器
-entrypoint = gateway.entry_point #获取服务器桥的入口
-
-java_import(gateway.jvm,'java.util.*') #导入java中的类的方法
-
 import rospy
 from geometry_msgs.msg import PoseStamped
 from obstacle_detector.msg import Obstacles
@@ -58,7 +53,7 @@ class Brain:
         self._control_rate = control_rate
 
         entrypoint.setAsRoamer("blue1")
-        entrypoint.isOurTeamBlue(False)
+        entrypoint.isOurTeamBlue(True)
 
         self.Red1 = entrypoint.getRoboMaster("Red1") 
         self.Red2 = entrypoint.getRoboMaster("Red2") 
@@ -86,16 +81,19 @@ class Brain:
 
     def enable_decision1(self, msg):
         if msg.status_list[0].status == 1 :
-            pass #  disable zhikang's decision
+            strategyMaker = self.Blue1.getStrategyMaker()
+            strategyMaker.isOn(False)
         elif msg.status_list[0].status == 3:
-            pass #  enable zhikang's decision
+            strategyMaker = self.Blue1.getStrategyMaker()
+            strategyMaker.isOn(True)
 
     def enable_decision2(self, msg):
         if msg.status_list[0].status == 1 :
-            pass #  disable zhikang's decision
+            strategyMaker = self.Blue2.getStrategyMaker()
+            strategyMaker.isOn(False)
         elif msg.status_list[0].status == 3:
-            pass #  enable zhikang's decision
-
+            strategyMaker = self.Blue2.getStrategyMaker()
+            strategyMaker.isOn(True)
 
     def ownPositionCB0(self, msg):
         self.robots[0].x = msg.pose.position.x
@@ -150,6 +148,8 @@ class Brain:
         # if (data.game_status == roborts_msgs.msg.GAME):
         if (data.game_status == 4):
             self.is_game_start = True
+        else:
+            self.is_game_start = False
         
         # uint8 READY = 0
         # uint8 PREPARATION = 1
@@ -282,14 +282,15 @@ class Brain:
         mark.lifetime = rospy.Duration(self._control_rate, 0)
         self._vis_pub[1].publish(mark)
 
-
-
 def call_rosspin():
     rospy.spin()
 
-
 if __name__ == '__main__':
-    try: 
+    try:
+        gateway = JavaGateway() #启动py4j服务器
+        entrypoint = gateway.entry_point #获取服务器桥的入口
+        java_import(gateway.jvm,'java.util.*') #导入java中的类的方法
+
         print(__file__ + " start!!")
         rospy.init_node('decision_node', anonymous=True)
         control_rate = 1
@@ -298,19 +299,11 @@ if __name__ == '__main__':
         print(brain)
         spin_thread = threading.Thread(target=call_rosspin).start()
 
-        count = 0
-        beginTime = time.time()
-
         while not rospy.core.is_shutdown():
-            # if (brain.is_game_start == True or count > 30):
-            brain.get_next_position1()
-            brain.get_next_position2()
-            currenttime = time.time()
-            temp = currenttime - beginTime
-            beginTime = currenttime
-            count += temp
+            if (brain.is_game_start == True):
+                brain.get_next_position1()
+                brain.get_next_position2()
             rate.sleep()
 
     except rospy.ROSInterruptException:
         pass
-
