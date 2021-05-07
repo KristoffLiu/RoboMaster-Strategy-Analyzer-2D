@@ -53,18 +53,24 @@ class Brain:
         self._is_goal_reach_subscribers = [rospy.Subscriber("/CAR1/global_planner_node_action/status", GoalStatusArray, self.enable_decision1),
                                            rospy.Subscriber("/CAR2/global_planner_node_action/status", GoalStatusArray, self.enable_decision2)]
 
+        self.decision_1_activate = True
+        self.decision_2_activate = True
 
     def enable_decision1(self, msg):
-        if msg.status_list[0].status == 1 :
-            self.analyzer.allies1.setStrategyMaker(False)
-        elif msg.status_list[0].status == 3:
-            self.analyzer.allies1.setStrategyMaker(True)
+        isOn = True
+        for i in range(len(msg.status_list)):
+            if(msg.status_list[i].status) == 1:
+                isOn = False
+                break
+        self.analyzer.allies1.setStrategyMaker(isOn)
 
     def enable_decision2(self, msg):
-        if msg.status_list[0].status == 1 :
-            self.analyzer.allies2.setStrategyMaker(False)
-        elif msg.status_list[0].status == 3:
-            self.analyzer.allies2.setStrategyMaker(True)
+        isOn = True
+        for i in range(len(msg.status_list)):
+            if(msg.status_list[i].status) == 1:
+                isOn = False
+                break
+        self.analyzer.allies2.setStrategyMaker(isOn)
 
     def ownPositionCB0(self, msg):
         [y, p, r] = R.from_quat([msg.pose.orientation.x,
@@ -83,10 +89,10 @@ class Brain:
     def enemyInfo(self, data):
         enemy = data.circles
         if len(enemy) == 1:
-            self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(1.57))
+            self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
         elif len(enemy) == 2:
-            self.analyzer.enemy1.setPosition(enemy[0].center.x*1000, enemy[0].center.y*1000,float(1.57))
-            self.analyzer.enemy2.setPosition(enemy[1].center.x*1000, enemy[1].center.y*1000,float(1.57))
+            self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
+            self.analyzer.enemy2.setPosition(enemy[1].center.x, enemy[1].center.y,float(0))
 
     def robotHP(self, data):
         self.analyzer.allies1.setHealth(data.blue1)
@@ -95,7 +101,7 @@ class Brain:
         self.analyzer.enemy2.setHealth(data.red2)
 
     def gameState(self, data):
-        self.analyzer.updateGameStatus(data.game_status, data.remaining_time)        
+        self.analyzer.updateGameStatus(data.game_status, data.remaining_time)   
         # uint8 READY = 0
         # uint8 PREPARATION = 1
         # uint8 INITIALIZE = 2
@@ -105,8 +111,10 @@ class Brain:
 
     def gameZone(self, data):
         for i, d in enumerate(data.zone):
-            self.analyzer.updateBuffZone(i, d.type, d.active)
-            
+            # self.analyzer.updateBuffZone(i, d.type, d.active)
+            self.analyzer.updateBuffZone(i, 0, False)
+
+
     def _createQuaternionFromYaw(self, yaw):
         # input: r p y
         r = R.from_euler('zyx', [0, 0, yaw], degrees=False).as_quat()
@@ -114,101 +122,104 @@ class Brain:
         return [r[3], r[2], r[1], r[0]]
 
     def get_next_position1(self):
-        # pos = self.Blue2.getPointAvoidingFacingEnemies()
-        [rx, ry] = self.analyzer.allies1.getDecisionMade()
+        if self.analyzer.allies1.isStrategyMakerOn:
+            # pos = self.Blue2.getPointAvoidingFacingEnemies()
+            [rx, ry] = self.analyzer.allies1.getDecisionMade()
 
-        enemy = self.analyzer.entrypoint.getLockedEnemy()
-        enemyPosition = enemy.getPointPosition()
-        gx = enemyPosition.getX() / 100.0
-        gy = enemyPosition.getY() / 100.0
+            enemy = self.analyzer.entrypoint.getLockedEnemy()
+            enemyPosition = enemy.getPointPosition()
+            gx = enemyPosition.getX() / 100.0
+            gy = enemyPosition.getY() / 100.0
 
-        eDistance = math.dist([self.robots[0].old_goal_x, self.robots[0].old_goal_y], [rx, ry]) 
-        if (eDistance < 0.15):
-            self.robots[0].old_goal_x, self.robots[0].old_goal_y = rx, ry
-            return
+            eDistance = math.dist([self.analyzer.allies1.old_goal_x, self.analyzer.allies1.old_goal_y], [rx, ry]) 
+            if (eDistance < 0.15):
+                self.analyzer.allies1.old_goal_x, self.analyzer.allies1.old_goal_y = rx, ry
+                return
 
-        self.cnt = self.cnt+1
+            self.cnt = self.cnt+1
 
-        yaw_angle = math.atan2(gy - ry, gx - rx)
+            yaw_angle = math.atan2(gy - ry, gx - rx)
 
-        goal = PoseStamped()
-        goal.header.frame_id = "/map"
-        goal.pose.position.x, goal.pose.position.y = rx, ry
+            goal = PoseStamped()
+            goal.header.frame_id = "/map"
+            goal.pose.position.x, goal.pose.position.y = rx, ry
 
-        [goal.pose.orientation.w,
-        goal.pose.orientation.x,
-        goal.pose.orientation.y,
-        goal.pose.orientation.z] = self._createQuaternionFromYaw(yaw_angle)
+            [goal.pose.orientation.w,
+            goal.pose.orientation.x,
+            goal.pose.orientation.y,
+            goal.pose.orientation.z] = self._createQuaternionFromYaw(yaw_angle)
 
-        self._decision_pub[0].publish(goal)
+            self._decision_pub[0].publish(goal)
 
-        mark = Marker()
-        mark.header.frame_id = "/map"
-        mark.header.stamp = rospy.Time.now()
-        mark.ns = "showen_point"
-        mark.id = 0
-        mark.type = Marker().ARROW
-        mark.action = Marker().ADD
-        mark.pose = goal.pose
-        mark.scale.x = 0.4
-        mark.scale.y = 0.05
-        mark.scale.z = 0.05
-        mark.color.a = 1.0
-        mark.color.r = 0.2
-        mark.color.g = 1.0
-        mark.color.b = 0.3
-        mark.lifetime = rospy.Duration(self._control_rate, 0)
-        self._vis_pub[0].publish(mark)
+            mark = Marker()
+            mark.header.frame_id = "/map"
+            mark.header.stamp = rospy.Time.now()
+            mark.ns = "showen_point"
+            mark.id = 0
+            mark.type = Marker().ARROW
+            mark.action = Marker().ADD
+            mark.pose = goal.pose
+            mark.scale.x = 0.4
+            mark.scale.y = 0.05
+            mark.scale.z = 0.05
+            mark.color.a = 1.0
+            mark.color.r = 0.2
+            mark.color.g = 1.0
+            mark.color.b = 0.3
+            mark.lifetime = rospy.Duration(self._control_rate, 0)
+            self._vis_pub[0].publish(mark)
 
     def get_next_position2(self):
-        # pos = self.Blue2.getPointAvoidingFacingEnemies()
-        [rx, ry] = self.analyzer.allies2.getDecisionMade()
+        if self.analyzer.allies2.isStrategyMakerOn:
+            # pos = self.Blue2.getPointAvoidingFacingEnemies()
+            [rx, ry] = self.analyzer.allies2.getDecisionMade()
 
-        enemy = entrypoint.getLockedEnemy()
-        enemyPosition = enemy.getPointPosition()
-        gx = enemyPosition.getX() / 100.0
-        gy = enemyPosition.getY() / 100.0
+            enemy = self.analyzer.entrypoint.getLockedEnemy()
+            enemyPosition = enemy.getPointPosition()
+            gx = enemyPosition.getX() / 100.0
+            gy = enemyPosition.getY() / 100.0
 
-        eDistance = math.dist([self.robots[1].old_goal_x, self.robots[1].old_goal_y], [rx, ry]) 
-        if (eDistance < 0.15):
-            self.robots[1].old_goal_x, self.robots[1].old_goal_y = rx, ry
-            return
+            eDistance = math.dist([self.analyzer.allies2.old_goal_x, self.analyzer.allies2.old_goal_y], [rx, ry]) 
+            if (eDistance < 0.15):
+                self.analyzer.allies2.old_goal_x, self.analyzer.allies2.old_goal_y = rx, ry
+                return
 
-        self.cnt = self.cnt+1
+            self.cnt = self.cnt+1
 
-        yaw_angle = math.atan2(gy - ry, gx - rx)
+            yaw_angle = math.atan2(gy - ry, gx - rx)
 
-        goal = PoseStamped()
-        goal.header.frame_id = "/map"
-        goal.pose.position.x, goal.pose.position.y = rx, ry
+            goal = PoseStamped()
+            goal.header.frame_id = "/map"
+            goal.pose.position.x, goal.pose.position.y = rx, ry
 
-        [goal.pose.orientation.w,
-        goal.pose.orientation.x,
-        goal.pose.orientation.y,
-        goal.pose.orientation.z] = self._createQuaternionFromYaw(yaw_angle)
-        
-        self._decision_pub[1].publish(goal)
+            [goal.pose.orientation.w,
+            goal.pose.orientation.x,
+            goal.pose.orientation.y,
+            goal.pose.orientation.z] = self._createQuaternionFromYaw(yaw_angle)
+            
+            self._decision_pub[1].publish(goal)
 
-        mark = Marker()
-        mark.header.frame_id = "/map"
-        mark.header.stamp = rospy.Time.now()
-        mark.ns = "showen_point"
-        mark.id = 1
-        mark.type = Marker().ARROW
-        mark.action = Marker().ADD
-        mark.pose = goal.pose
-        mark.scale.x = 0.4
-        mark.scale.y = 0.05
-        mark.scale.z = 0.05
-        mark.color.a = 1.0
-        mark.color.r = 0.2
-        mark.color.g = 1.0
-        mark.color.b = 0.3
-        mark.lifetime = rospy.Duration(self._control_rate, 0)
-        self._vis_pub[1].publish(mark)
+            mark = Marker()
+            mark.header.frame_id = "/map"
+            mark.header.stamp = rospy.Time.now()
+            mark.ns = "showen_point"
+            mark.id = 1
+            mark.type = Marker().ARROW
+            mark.action = Marker().ADD
+            mark.pose = goal.pose
+            mark.scale.x = 0.4
+            mark.scale.y = 0.05
+            mark.scale.z = 0.05
+            mark.color.a = 1.0
+            mark.color.r = 0.2
+            mark.color.g = 1.0
+            mark.color.b = 0.3
+            mark.lifetime = rospy.Duration(self._control_rate, 0)
+            self._vis_pub[1].publish(mark)
 
     def display(self):
         self.analyzer.displayOnce()
+        
 
 def call_rosspin():
     rospy.spin()
@@ -225,7 +236,8 @@ if __name__ == '__main__':
 
         while not rospy.core.is_shutdown():
             brain.display()
-            if (brain.analyzer.game_status == Analyzer.GameStatus.GAME):
+            # if (brain.analyzer.game_status == Analyzer.GameStatus.GAME):
+            if True:
                 brain.get_next_position1()
                 brain.get_next_position2()
             rate.sleep()

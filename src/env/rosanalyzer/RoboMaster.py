@@ -45,22 +45,19 @@ class Allies(RoboMaster):
     def __init__(self, alliesObject):
         super(Allies, self).__init__(alliesObject)
         self.strategyMaker = self._object.getStrategyMaker()
-        self.isStrategyMakerOn = self.isStrategyMakerOn()
+        self.isStrategyMakerOn = True
     
     def __str__(self):
-        boolstr = "is working" if self.isStrategyMakerOn else {"not working"}
+        boolstr = "is working" if self.isStrategyMakerOn else "not working"
         str = "\n      StrategyMaker Status: {}".format(boolstr)
         return super(Allies, self).__str__() + str
     
     def getDecisionMade(self):
-        pos = self.Blue1.getDecisionMade()
+        pos = self._object.getDecisionMade()
         return pos.getX() / 100.0, pos.getY() / 100.0
     
-    def isStrategyMakerOn(self):
-        return self.strategyMaker.isOn()
-    
     def setStrategyMaker(self, bool):
-        return self.strategyMaker.isOn(bool)
+        self.isStrategyMakerOn = bool
 
 
 class Enemy(RoboMaster):

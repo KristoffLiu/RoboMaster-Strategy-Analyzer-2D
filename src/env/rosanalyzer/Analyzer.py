@@ -32,13 +32,13 @@ class Analyzer:
         #self.enemy2 = Enemy(self.entrypoint.getEnemy(1))
         self.allies1 = Allies(self.entrypoint.getRoboMaster("Blue1"))
         self.allies2 = Allies(self.entrypoint.getRoboMaster("Blue2"))
-        self.enemy1 = Enemy(self.entrypoint.getRoboMaster("Red1"))
-        self.enemy2 = Enemy(self.entrypoint.getRoboMaster("Red2"))
+        self.enemy1 = Enemy(self.entrypoint.getEnemy("Red1"))
+        self.enemy2 = Enemy(self.entrypoint.getEnemy("Red2"))
 
         self.buff_zones = [self.BuffZone(i, self.BuffZone.BuffType.UNKNOWN, False) for i in range(6)]
 
     def updateGameStatus(self, game_status, remaining_time):
-        self.game_status = game_status
+        self.game_status = self.GameStatus(game_status)
         self.remaining_time = remaining_time
         self.entrypoint.updateRemainingTime(remaining_time)
 
@@ -73,7 +73,7 @@ class Analyzer:
     def display_game_status(self):
         print("Game Status: {}".format(self.game_status))
         if(self.game_status == self.GameStatus.GAME):
-            print(    "还剩 {d} 秒".format(self.remaining_time))
+            print(    "还剩 {:d} 秒".format(self.remaining_time))
         print("")
 
     
