@@ -13,6 +13,7 @@ from enum import Enum
 from threading import Timer
 import sys
 import os
+
 class Analyzer:
     def __init__(self):
         self.gateway = JavaGateway() #启动py4j服务器
@@ -30,13 +31,11 @@ class Analyzer:
         #self.enemy1 = Enemy(self.entrypoint.getEnemy(0))
         #self.enemy2 = Enemy(self.entrypoint.getEnemy(1))
         self.allies1 = Allies(self.entrypoint.getRoboMaster("Blue1"))
-        self.allies2 = Allies(self.entrypoint.getRoboMaster("Blue1"))
+        self.allies2 = Allies(self.entrypoint.getRoboMaster("Blue2"))
         self.enemy1 = Enemy(self.entrypoint.getRoboMaster("Red1"))
         self.enemy2 = Enemy(self.entrypoint.getRoboMaster("Red2"))
 
         self.buff_zones = [self.BuffZone(i, self.BuffZone.BuffType.UNKNOWN, False) for i in range(6)]
-
-        self.display()
 
     def updateGameStatus(self, game_status, remaining_time):
         self.game_status = game_status
@@ -52,17 +51,24 @@ class Analyzer:
 
     def display(self):
         def displayInfo():
-            os.system('cls')
+            os.system('clear')
             print("RoboMaster 分析器, 版本 v{}".format("1.0"))
             self.display_game_status()
             self.display_robo_status()
             self.display_buff_zones()
             global tr
-            tr = Timer(1,displayInfo)
+            tr = Timer(0.5,displayInfo)
             tr.start()
 
         tr = Timer(1,displayInfo)
         tr.start()
+
+    def displayOnce(self):
+        os.system('clear')
+        print("RoboMaster 分析器, 版本 v{}".format("1.0"))
+        self.display_game_status()
+        self.display_robo_status()
+        self.display_buff_zones()
     
     def display_game_status(self):
         print("Game Status: {}".format(self.game_status))
@@ -150,7 +156,7 @@ class Analyzer:
             self.is_active = is_active
         
         def setBuffZone(self, buff_type, is_active):
-            self.type = self.BuffType(buff_type)
+            self.type = self.BuffType(buff_type - 1)
             self.is_active = is_active
         
         def __str__(self) -> str:

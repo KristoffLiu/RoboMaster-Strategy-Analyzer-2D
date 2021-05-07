@@ -1,3 +1,5 @@
+import math
+
 class RoboMaster:
     x, y, yaw = 0.0, 0.0, 0.0
     old_goal_x, old_goal_y = 0.0, 0.0
@@ -11,7 +13,8 @@ class RoboMaster:
 
     def setPosition(self, x, y, yaw):
         self.x, self.y, self.yaw = x, y, yaw
-        self._object.setPosition(int(x*1000), int(y*1000), yaw)
+        radian = math.radians(self.yaw + 180)
+        self._object.setPosition(int(x*1000), int(y*1000), radian)
 
     def setHealth(self, health):
         self.health = health
@@ -20,7 +23,7 @@ class RoboMaster:
         self.numOfBullets = numOfBullets
 
     def __str__(self):
-        return "   %s - position: %.2f, %.2f" % (self.name, self.x, self.y) + self.display_health() + self.display_num_of_bullets()
+        return "   %s - position: %.2f, %.2f, %2f" % (self.name, self.x, self.y, self.yaw) + self.display_health() + self.display_num_of_bullets()
 
     def display_health(self):
         str = "\n      HP: ["
@@ -49,10 +52,9 @@ class Allies(RoboMaster):
         str = "\n      StrategyMaker Status: {}".format(boolstr)
         return super(Allies, self).__str__() + str
     
-    def getNextPosition(self):
+    def getDecisionMade(self):
         pos = self.Blue1.getDecisionMade()
-        rx = pos.getX() / 100.0
-        ry = pos.getY() / 100.0
+        return pos.getX() / 100.0, pos.getY() / 100.0
     
     def isStrategyMakerOn(self):
         return self.strategyMaker.isOn()

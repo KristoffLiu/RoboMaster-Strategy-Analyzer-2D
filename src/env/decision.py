@@ -13,9 +13,12 @@ import threading
 import math
 import matplotlib.pyplot as plt
 import numpy as np
-import _thread
+import sys
+import os
 
-from rosanalyzer.Analyzer import Analyzer
+sys.path.append(os.getcwd().rstrip("env"))
+# os.path.abspath()
+from env.rosanalyzer.Analyzer import Analyzer
 
 import rospy
 from geometry_msgs.msg import PoseStamped
@@ -27,7 +30,7 @@ from roborts_msgs.msg import GameRobotBullet
 from roborts_msgs.msg import RobotDamage
 from visualization_msgs.msg import Marker
 from actionlib_msgs.msg import GoalStatusArray
-
+from scipy.spatial.transform import Rotation as R
 
 class Brain:
     def __init__(self, control_rate):
@@ -52,79 +55,47 @@ class Brain:
 
 
     def enable_decision1(self, msg):
-        self.analyzer
-
         if msg.status_list[0].status == 1 :
-            strategyMaker = self.Blue1.getStrategyMaker()
-            strategyMaker.isOn(False)
+            self.analyzer.allies1.setStrategyMaker(False)
         elif msg.status_list[0].status == 3:
-            strategyMaker = self.Blue1.getStrategyMaker()
-            strategyMaker.isOn(True)
+            self.analyzer.allies1.setStrategyMaker(True)
 
     def enable_decision2(self, msg):
         if msg.status_list[0].status == 1 :
-            strategyMaker = self.Blue2.getStrategyMaker()
-            strategyMaker.isOn(False)
+            self.analyzer.allies2.setStrategyMaker(False)
         elif msg.status_list[0].status == 3:
-            strategyMaker = self.Blue2.getStrategyMaker()
-            strategyMaker.isOn(True)
+            self.analyzer.allies2.setStrategyMaker(True)
 
     def ownPositionCB0(self, msg):
-        self.robots[0].x = msg.pose.position.x
-        self.robots[0].y = msg.pose.position.y
         [y, p, r] = R.from_quat([msg.pose.orientation.x,
                                  msg.pose.orientation.y,
                                  msg.pose.orientation.z,
                                  msg.pose.orientation.w]).as_euler('zyx', degrees=True)
-        self.robots[0].yaw = y
-        self.Blue1.setPosition(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
+        self.analyzer.allies1.setPosition(msg.pose.position.x, msg.pose.position.y,float(y))
 
     def ownPositionCB1(self, msg):
-        self.robots[1].x = msg.pose.position.x
-        self.robots[1].y = msg.pose.position.y
         [y, p, r] = R.from_quat([msg.pose.orientation.x,
                                  msg.pose.orientation.y,
                                  msg.pose.orientation.z,
                                  msg.pose.orientation.w]).as_euler('zyx', degrees=True)
-        self.robots[1].yaw = y
-        self.Blue2.setPosition(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
-
-        def ownPositionCB2(self, msg):
-            [y, p, r] = R.from_quat([msg.pose.orientation.x,
-                                        msg.pose.orientation.y,
-                                        msg.pose.orientation.z,
-                                        msg.pose.orientation.w]).as_euler('zyx', degrees=True)
-            self.Red1.setPosition(int(msg.pose.position.x*1000), int(msg.pose.position.y*1000),float(y))
+        self.analyzer.allies2.setPosition(msg.pose.position.x, msg.pose.position.y,float(y))
 
     def enemyInfo(self, data):
         enemy = data.circles
         if len(enemy) == 1:
-            self.Red1.setPosition(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
+            self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(1.57))
         elif len(enemy) == 2:
-            self.Red1.setPosition(int(enemy[0].center.x*1000), int(enemy[0].center.y*1000),float(1.57))
-            self.Red2.setPosition(int(enemy[1].center.x*1000), int(enemy[1].center.y*1000),float(1.57))
+            self.analyzer.enemy1.setPosition(enemy[0].center.x*1000, enemy[0].center.y*1000,float(1.57))
+            self.analyzer.enemy2.setPosition(enemy[1].center.x*1000, enemy[1].center.y*1000,float(1.57))
 
     def robotHP(self, data):
-        # print(data.blue1)
-        # print(data.blue2)
-        # print(data.red1)
-        # print(data.red2)
-        self.Blue1.setHealth(data.blue1)
-        self.Blue2.setHealth(data.blue2)
-        self.Red1.setHealth(data.red1)
-        self.Red2.setHealth(data.red2)
+        self.analyzer.allies1.setHealth(data.blue1)
+        self.analyzer.allies2.setHealth(data.blue2)
+        self.analyzer.enemy1.setHealth(data.red1)
+        self.analyzer.enemy2.setHealth(data.red2)
 
     def gameState(self, data):
-        print(data.game_status)
-        print(data.remaining_time)
-        entrypoint.updateRemainingTime(data.remaining_time)
-
-        # if (data.game_status == roborts_msgs.msg.GAME):
-        if (data.game_status == 4):
-            self.is_game_start = True
-        else:
-            self.is_game_start = False
-        
+        self.analyzer.updateGameStatus(data.game_status, data.remaining_time)        
         # uint8 READY = 0
         # uint8 PREPARATION = 1
         # uint8 INITIALIZE = 2
@@ -133,17 +104,8 @@ class Brain:
         # uint8 END = 5
 
     def gameZone(self, data):
-        print("****")
-        # print("0, " + str(data.zone[0]))
-        # print("1, " + str(data.zone[1]))
-        # print("2, " + str(data.zone[2]))
-        # print("3, " + str(data.zone[3]))
-        # print("4, " + str(data.zone[4]))
-        # print("5, " + str(data.zone[5]))
-
         for i, d in enumerate(data.zone):
-            print(str(i) + " " + str(d.type) + " " + str(d.active))
-            entrypoint.updateBuffZone(i, d.type, d.active)
+            self.analyzer.updateBuffZone(i, d.type, d.active)
             
     def _createQuaternionFromYaw(self, yaw):
         # input: r p y
@@ -153,11 +115,9 @@ class Brain:
 
     def get_next_position1(self):
         # pos = self.Blue2.getPointAvoidingFacingEnemies()
-        pos = self.Blue1.getDecisionMade()
-        rx = pos.getX() / 100.0
-        ry = pos.getY() / 100.0
+        [rx, ry] = self.analyzer.allies1.getDecisionMade()
 
-        enemy = entrypoint.getLockedEnemy()
+        enemy = self.analyzer.entrypoint.getLockedEnemy()
         enemyPosition = enemy.getPointPosition()
         gx = enemyPosition.getX() / 100.0
         gy = enemyPosition.getY() / 100.0
@@ -167,10 +127,7 @@ class Brain:
             self.robots[0].old_goal_x, self.robots[0].old_goal_y = rx, ry
             return
 
-        print("------Blue1", self.cnt)
         self.cnt = self.cnt+1
-        print("x: ", rx)
-        print("y: ", ry)
 
         yaw_angle = math.atan2(gy - ry, gx - rx)
 
@@ -184,7 +141,6 @@ class Brain:
         goal.pose.orientation.z] = self._createQuaternionFromYaw(yaw_angle)
 
         self._decision_pub[0].publish(goal)
-        print("blue 1  -> send")
 
         mark = Marker()
         mark.header.frame_id = "/map"
@@ -206,9 +162,7 @@ class Brain:
 
     def get_next_position2(self):
         # pos = self.Blue2.getPointAvoidingFacingEnemies()
-        pos = self.Blue2.getDecisionMade()
-        rx = pos.getX() / 100.0
-        ry = pos.getY() / 100.0
+        [rx, ry] = self.analyzer.allies2.getDecisionMade()
 
         enemy = entrypoint.getLockedEnemy()
         enemyPosition = enemy.getPointPosition()
@@ -220,10 +174,7 @@ class Brain:
             self.robots[1].old_goal_x, self.robots[1].old_goal_y = rx, ry
             return
 
-        print("------Blue2", self.cnt)
         self.cnt = self.cnt+1
-        print("x: ", rx)
-        print("y: ", ry)
 
         yaw_angle = math.atan2(gy - ry, gx - rx)
 
@@ -256,23 +207,25 @@ class Brain:
         mark.lifetime = rospy.Duration(self._control_rate, 0)
         self._vis_pub[1].publish(mark)
 
+    def display(self):
+        self.analyzer.displayOnce()
+
 def call_rosspin():
     rospy.spin()
 
+
 if __name__ == '__main__':
     try:
-        Analyzer = 
-
         print(__file__ + " start!!")
         rospy.init_node('decision_node', anonymous=True)
         control_rate = 1
         rate = rospy.Rate(1.0 / control_rate)
         brain = Brain(control_rate)
-        print(brain)
         spin_thread = threading.Thread(target=call_rosspin).start()
 
         while not rospy.core.is_shutdown():
-            if (brain.is_game_start == True):
+            brain.display()
+            if (brain.analyzer.game_status == Analyzer.GameStatus.GAME):
                 brain.get_next_position1()
                 brain.get_next_position2()
             rate.sleep()
