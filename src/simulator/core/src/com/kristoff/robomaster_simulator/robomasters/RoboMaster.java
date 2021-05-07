@@ -106,6 +106,10 @@ public abstract class RoboMaster {
         this.actor.startToFormMatrix();
     }
 
+    public String getName() {
+        return name;
+    }
+
     //API
     public float getRotation() {
         return this.actor.rotation;
