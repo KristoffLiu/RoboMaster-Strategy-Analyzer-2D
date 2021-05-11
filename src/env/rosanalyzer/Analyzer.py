@@ -1,7 +1,4 @@
 """
-Breadth-First grid planning
-author: Erwin Lejeune (@spida_rwin)
-See Wikipedia article (https://en.wikipedia.org/wiki/Breadth-first_search)
 """
 
 from py4j.java_gateway import JavaGateway
@@ -52,7 +49,7 @@ class Analyzer:
     def display(self):
         def displayInfo():
             os.system('clear')
-            print("RoboMaster 分析器, 版本 v{}".format("1.0"))
+            self.display_title()
             self.display_game_status()
             self.display_robo_status()
             self.display_buff_zones()
@@ -65,10 +62,13 @@ class Analyzer:
 
     def displayOnce(self):
         os.system('clear')
-        print("RoboMaster 分析器, 版本 v{}".format("1.0"))
+        self.display_title()
         self.display_game_status()
         self.display_robo_status()
         self.display_buff_zones()
+
+    def display_title(self):
+        print("RoboMaster 分析器, 版本 v{}".format("1.3"))
     
     def display_game_status(self):
         print("Game Status: {}".format(self.game_status))

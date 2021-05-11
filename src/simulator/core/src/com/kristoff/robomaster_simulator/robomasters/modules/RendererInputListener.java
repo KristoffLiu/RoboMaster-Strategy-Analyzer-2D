@@ -128,13 +128,6 @@ public class RendererInputListener extends InputListener implements ControllerLi
         Position position = new Position(current.x, current.y);
         int xOffset = 0;
         int yOffset = 0;
-        if(axisCode == XBox360Pad.AXIS_RIGHT_X) {
-            xOffset += value * 10;
-            System.out.println("x" + xOffset);
-        }
-        if(axisCode == XBox360Pad.AXIS_LEFT_Y)
-            yOffset += value * 10;
-        System.out.println("y" + yOffset);
         this.roboMaster.setPosition(position.x + xOffset, position.y + yOffset);
         return false;
     }

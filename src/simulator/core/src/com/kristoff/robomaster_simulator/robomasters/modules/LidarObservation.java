@@ -1,15 +1,12 @@
 package com.kristoff.robomaster_simulator.robomasters.modules;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
-import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.StatePoint;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator;
-import com.kristoff.robomaster_simulator.utils.Position;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 

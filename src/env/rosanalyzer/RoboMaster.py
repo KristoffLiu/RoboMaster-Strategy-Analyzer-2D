@@ -18,6 +18,7 @@ class RoboMaster:
 
     def setHealth(self, health):
         self.health = health
+        self._object.setHealth(health)
     
     def setNumOfBullets(self, numOfBullets):
         self.numOfBullets = numOfBullets

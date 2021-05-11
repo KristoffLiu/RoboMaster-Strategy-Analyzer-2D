@@ -32,6 +32,15 @@ public class Position {
         return (float)Math.hypot((this.x - x), (this.y - y));
     }
 
+    public float manhattanDistanceTo(Position position){
+        return manhattanDistanceTo(position.x, position.y);
+    }
+
+    public float manhattanDistanceTo(int x, int y){
+        // |X1-X2|+|Y1-Y2|
+        return Math.abs(this.x - x) +  Math.abs(this.y - y);
+    }
+
     public boolean isInsideTheMap(){
         return (x > 205 && x < 8285 && y > 205 && y < 4685);
     }

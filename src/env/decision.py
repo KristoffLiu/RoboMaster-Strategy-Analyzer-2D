@@ -236,8 +236,7 @@ if __name__ == '__main__':
 
         while not rospy.core.is_shutdown():
             brain.display()
-            # if (brain.analyzer.game_status == Analyzer.GameStatus.GAME):
-            if True:
+            if (brain.analyzer.game_status == Analyzer.GameStatus.GAME):
                 brain.get_next_position1()
                 brain.get_next_position2()
             rate.sleep()

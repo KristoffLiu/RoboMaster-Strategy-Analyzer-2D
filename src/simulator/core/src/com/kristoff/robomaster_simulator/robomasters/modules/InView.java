@@ -1,6 +1,6 @@
 package com.kristoff.robomaster_simulator.robomasters.modules;
 
-import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
+import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 
 public class InView extends LoopThread {

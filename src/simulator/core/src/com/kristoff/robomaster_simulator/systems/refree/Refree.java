@@ -2,7 +2,7 @@ package com.kristoff.robomaster_simulator.systems.refree;
 
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.kristoff.robomaster_simulator.systems.Systems;
-import com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone;
+import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 
@@ -60,7 +60,6 @@ public class Refree extends LoopThread {
         BuffZone.setHPRecoveryNeeded();
         BuffZone.setBulletSupplyNeeded();
         BuffZone.setEnemyHPRecoveryNeeded();
-        System.out.println(remainingTime);
     }
 
     public boolean isRoboMasterAlive(RoboMaster Robomaster){

@@ -2,11 +2,10 @@ package com.kristoff.robomaster_simulator.teams.friendobservations;
 
 import com.badlogic.gdx.utils.Array;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
-import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
+import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.StatePoint;
-import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.utils.Position;
 

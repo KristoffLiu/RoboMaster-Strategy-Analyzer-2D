@@ -2,11 +2,11 @@ package com.kristoff.robomaster_simulator.robomasters.modules;
 
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker;
-import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
-import com.kristoff.robomaster_simulator.robomasters.types.ShanghaiTechMasterIII;
+import com.kristoff.robomaster_simulator.robomasters.Enemy;
+import com.kristoff.robomaster_simulator.robomasters.Allies;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator;
-import com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone;
+import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.systems.costmap.PositionCost;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator;
@@ -14,13 +14,13 @@ import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.utils.Position;
 
 public class CostMap extends LoopThread {
-    public ShanghaiTechMasterIII roboMaster;
+    public Allies roboMaster;
     public StrategyMaker strategyMaker;
     public int[][] costmap;
     public PositionCost minPositionCost;
 
     public CostMap(RoboMaster roboMaster){
-        this.roboMaster = (ShanghaiTechMasterIII) roboMaster;
+        this.roboMaster = (Allies) roboMaster;
         this.costmap = new int[849][489];
         isStep = true;
         delta = 1/10f;
@@ -71,9 +71,6 @@ public class CostMap extends LoopThread {
                 }
             }
             this.minPositionCost = minPositionCost;
-            //System.out.println(this.minPositionCost.x + " " + this.minPositionCost.y + " " + this.minPositionCost.cost);
-            long endTime = System.currentTimeMillis();    //获取结束时间
-            //System.out.println("程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
         }
     }
 
@@ -124,7 +121,7 @@ public class CostMap extends LoopThread {
         if(this.roboMaster.isRoamer()){
             float outerRange = 100;
             float outerPeek = 45;
-            float distanceToFriendDecision = this.strategyMaker.getFriendDecision().position.distanceTo(x, y);
+            float distanceToFriendDecision = this.strategyMaker.getFriendDecision().position.manhattanDistanceTo(x, y);
             float cost = 0;
             if(distanceToFriendDecision <= 65){
                 cost = 999;

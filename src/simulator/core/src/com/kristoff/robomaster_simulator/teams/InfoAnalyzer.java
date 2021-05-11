@@ -2,11 +2,8 @@ package com.kristoff.robomaster_simulator.teams;
 
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Strategy.CounterState;
-import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
+import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /***
  *

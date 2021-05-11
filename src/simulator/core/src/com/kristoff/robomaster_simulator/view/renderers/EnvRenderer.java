@@ -107,8 +107,6 @@ public class EnvRenderer implements Screen {
         blocksLayer.act();
         blocksLayer.draw();
 
-
-
         HUD.act(delta);
         HUD.draw();
 

@@ -3,8 +3,8 @@ package com.kristoff.robomaster_simulator.robomasters.Strategy;
 import com.badlogic.gdx.math.Vector2;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.modules.CostMap;
-import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
-import com.kristoff.robomaster_simulator.robomasters.types.ShanghaiTechMasterIII;
+import com.kristoff.robomaster_simulator.robomasters.Enemy;
+import com.kristoff.robomaster_simulator.robomasters.Allies;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
@@ -18,7 +18,7 @@ import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class StrategyMaker extends LoopThread {
-    public ShanghaiTechMasterIII roboMaster;
+    public Allies roboMaster;
     StrategyAnalyzer strategyAnalyzer;
 
     /***
@@ -32,9 +32,6 @@ public class StrategyMaker extends LoopThread {
     Position decisionMade;
 
     StrategyAnalyzer_MasterVersion strategyAnalyzer_MasterVersion;
-    StrategyAnalyzer_2V2Ranger strategyAnalyzer_2V2Ranger;
-    StrategyAnalyzer_2V2MasterObsolete strategyAnalyzer_2V2MasterObsolete;
-    StrategyAnalyzer_2V2RangerObsolete strategyAnalyzer_2V2RangerObsolete;
 
     SearchNode friendDecision;
 
@@ -53,7 +50,7 @@ public class StrategyMaker extends LoopThread {
     public TacticState tacticState = TacticState.MOVING;
 
     public StrategyMaker(RoboMaster roboMaster){
-        this.roboMaster = (ShanghaiTechMasterIII)roboMaster;
+        this.roboMaster = (Allies)roboMaster;
         visitedGrid = new boolean[849][489];
 
         rootNode                = new SearchNode();
@@ -66,13 +63,10 @@ public class StrategyMaker extends LoopThread {
         pathNodes              = new CopyOnWriteArrayList<SearchNode>();
 
         strategyAnalyzer_MasterVersion = new StrategyAnalyzer_MasterVersion(this);
-        strategyAnalyzer_2V2Ranger = new StrategyAnalyzer_2V2Ranger(this);
-        strategyAnalyzer_2V2MasterObsolete = new StrategyAnalyzer_2V2MasterObsolete(this);
-        strategyAnalyzer_2V2RangerObsolete = new StrategyAnalyzer_2V2RangerObsolete(this);
 
         costMap = roboMaster.costMap;
 
-        this.strategyAnalyzer = strategyAnalyzer_2V2MasterObsolete;
+        this.strategyAnalyzer = strategyAnalyzer_MasterVersion;
         this.delta = 2f;
         this.isStep = true;
     }
@@ -91,12 +85,6 @@ public class StrategyMaker extends LoopThread {
 
     public void switchAnalyzer(){
         strategyAnalyzer = strategyAnalyzer_MasterVersion;
-//        switch (counterState){
-//            case OneVSOne -> strategyAnalyzer = strategyAnalyzer_2V2Master;
-//            case OneVSTwo -> strategyAnalyzer = strategyAnalyzer_2V2Master;
-//            case TwoVSOne -> strategyAnalyzer = this.roboMaster.isRoamer() ? strategyAnalyzer_2V2Ranger : strategyAnalyzer_2V2Master;
-//            case TwoVSTwo -> strategyAnalyzer = this.roboMaster.isRoamer() ? strategyAnalyzer_2V2Ranger : strategyAnalyzer_2V2Master;
-//        }
     }
 
     public void update(SearchNode resultNode,
@@ -118,7 +106,6 @@ public class StrategyMaker extends LoopThread {
         else{
             tacticState = TacticState.MOVING;
         }
-        if(this.roboMaster.name == "Blue2") System.out.println(this.tacticState);
     }
 
     private void decide(){

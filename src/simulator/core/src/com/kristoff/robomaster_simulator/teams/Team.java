@@ -1,7 +1,7 @@
 package com.kristoff.robomaster_simulator.teams;
 
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
-import com.kristoff.robomaster_simulator.robomasters.types.ShanghaiTechMasterIII;
+import com.kristoff.robomaster_simulator.robomasters.Allies;
 import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator;
 import com.kristoff.robomaster_simulator.teams.friendobservations.FriendsObservationSimulator;
 
@@ -9,8 +9,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Team extends CopyOnWriteArrayList<RoboMaster> {
     public static boolean isOurTeamBlue = true;
-    public static ShanghaiTechMasterIII friend1;
-    public static ShanghaiTechMasterIII friend2;
+    public static Allies friend1;
+    public static Allies friend2;
 
     String name;
     public FriendsObservationSimulator friendsObservationSimulator; //敌军视野模拟

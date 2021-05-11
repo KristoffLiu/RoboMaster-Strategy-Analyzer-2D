@@ -2,12 +2,10 @@ package com.kristoff.robomaster_simulator.robomasters;
 
 import com.badlogic.gdx.math.Vector2;
 import com.kristoff.robomaster_simulator.core.Simulator;
-import com.kristoff.robomaster_simulator.robomasters.Strategy.SearchNode;
 import com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
 import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
-import com.kristoff.robomaster_simulator.robomasters.judgement.JudgeModule;
 import com.kristoff.robomaster_simulator.robomasters.modules.*;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.StatePoint;
 import com.kristoff.robomaster_simulator.utils.Position;
@@ -35,9 +33,8 @@ public abstract class RoboMaster {
     public Renderer                  renderer;                  //渲染器 Renderer
     public LidarObservation          lidarObservation;          //激光雷达Lidar发生器 Lidar Sensor Simulator
     public Dynamics                  dynamics;                  //动力系统 Dynamic System
-    public JudgeModule               judgeModule;               //裁判系统 Global Judge System
-    public StrategyMaker             strategyMaker;               //决策器 Decision System
-    public CostMap                   costMap;               //决策器 Decision System
+    public StrategyMaker             strategyMaker;             //决策器 Decision System
+    public CostMap                   costMap;                   //决策器 Decision System
 
     public String name;
     public int No;
@@ -68,7 +65,6 @@ public abstract class RoboMaster {
         actor = new Actor(this);
         renderer = new Renderer(textureRegionPath,this);
         weapon = new Weapon(this);
-        judgeModule = new JudgeModule(this);
         lidarObservation = new LidarObservation(this);
 
         if(this.team == RoboMasters.teamBlue){
@@ -106,27 +102,32 @@ public abstract class RoboMaster {
         this.actor.startToFormMatrix();
     }
 
-    public String getName() {
-        return name;
-    }
-
     //API
     public float getRotation() {
         return this.actor.rotation;
     }
 
     public void setPosition(int x, int y) {
+        for(RoboMaster roboMaster : RoboMasters.all){
+            if(this != roboMaster){
+                if(roboMaster.getPointPosition().distanceTo(x / 10,y / 10) < 50){
+                    return;
+                }
+            }
+        }
         this.actor.update(x, y);
     }
 
     public void setPosition(int x, int y, float rotation) {
+        for(RoboMaster roboMaster : RoboMasters.all){
+            if(this != roboMaster){
+                if(roboMaster.getPointPosition().distanceTo(x / 10,y / 10) < 50){
+                    return;
+                }
+            }
+        }
         this.actor.update(x, y, rotation);
     }
-
-    public void setPositionFromRM(int x, int y, float degree) {
-        this.actor.updateFromRM(x, y, degree);
-    }
-
 
     public Position getPosition() {
         return new Position(this.actor.x,this.actor.y);
@@ -180,7 +181,9 @@ public abstract class RoboMaster {
 
     public void setHealth(int value){
         this.health = this.health > 0 ? value : 0;
-        if(this.health <= 0) this.isAlive = false;
+        if(this.health <= 0)
+            this.isAlive = false;
+        else this.isAlive = true;
     }
 
     public void loseHealth(int healthLost){
@@ -199,22 +202,17 @@ public abstract class RoboMaster {
     public int[][] getCostMap(){
         return costMap.getCostMap();
     }
-
     public int getCost(int x, int y){
         return costMap.getCost(x, y);
     }
 
-    public Position[] getStrategyPath(){
-        Position[] results = new Position[strategyMaker.pathNodes.size()];
-        for(int i = 0; i < strategyMaker.pathNodes.size(); i++){
-            results[i] = strategyMaker.pathNodes.get(i).position;
-        }
-        return results;
-    }
 
     public StrategyMaker getStrategyMaker(){
         return this.strategyMaker;
     }
 
+    public String getName() {
+        return name;
+    }
 }
 

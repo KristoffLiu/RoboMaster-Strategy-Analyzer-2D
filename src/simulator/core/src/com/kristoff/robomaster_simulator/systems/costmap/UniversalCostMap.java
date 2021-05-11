@@ -1,7 +1,7 @@
 package com.kristoff.robomaster_simulator.systems.costmap;
 
 import com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker;
-import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
+import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator;
@@ -55,9 +55,6 @@ public class UniversalCostMap extends LoopThread {
                 }
             }
             this.minPositionCost = minPositionCost;
-            System.out.println(this.minPositionCost.x + " " + this.minPositionCost.y + " " + this.minPositionCost.cost);
-            long endTime = System.currentTimeMillis();    //获取结束时间
-            //System.out.println("程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
         }
     }
 

@@ -4,8 +4,8 @@ import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.kristoff.robomaster_simulator.core.SimulatorConfiguration;
 import com.kristoff.robomaster_simulator.robomasters.modules.Actor;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
-import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
-import com.kristoff.robomaster_simulator.robomasters.types.ShanghaiTechMasterIII;
+import com.kristoff.robomaster_simulator.robomasters.Enemy;
+import com.kristoff.robomaster_simulator.robomasters.Allies;
 import com.kristoff.robomaster_simulator.systems.Systems;
 
 public class RoboMasters{
@@ -22,8 +22,8 @@ public class RoboMasters{
 
     public static void init(){
         if(all.size() == 0){
-            Team.friend1 = new ShanghaiTechMasterIII(teamBlue,"Blue1");
-            Team.friend2 = new ShanghaiTechMasterIII(teamBlue,"Blue2");
+            Team.friend1 = new Allies(teamBlue,"Blue1");
+            Team.friend2 = new Allies(teamBlue,"Blue2");
             teamBlue.add(Team.friend1);
             teamBlue.add(Team.friend2);
             Enemy lockedEnemy = new Enemy(teamRed,"Red1");

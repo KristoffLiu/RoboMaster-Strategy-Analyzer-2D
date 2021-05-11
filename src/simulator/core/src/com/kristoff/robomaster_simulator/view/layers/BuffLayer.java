@@ -1,7 +1,7 @@
 package com.kristoff.robomaster_simulator.view.layers;
 
 import com.kristoff.robomaster_simulator.systems.Systems;
-import com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone;
+import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.view.renderers.EnvRenderer;
 import com.kristoff.robomaster_simulator.view.ui.pages.UIPage;
 

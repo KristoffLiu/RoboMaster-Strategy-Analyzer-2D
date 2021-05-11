@@ -1,7 +1,7 @@
-package com.kristoff.robomaster_simulator.robomasters.types;
+package com.kristoff.robomaster_simulator.robomasters;
 
-import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.modules.*;
+import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.teams.Team;
 
 /***
@@ -40,8 +40,8 @@ public class Enemy extends RoboMaster {
 
     @Override
     public void setPosition(int x, int y, float rotation) {
-        if(isInTheView && this.getPosition().distanceTo(x, y) > 500 && count < 5){
-            count ++;
+        if(isInTheView && this.getPosition().distanceTo(x, y) > 500 && count < 200) {
+            count++;
             return;
         }
         count = 0;

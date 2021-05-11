@@ -3,10 +3,10 @@ package com.kristoff.robomaster_simulator.robomasters;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.teams.Team;
 
-public class ShanghaiTechMasterIII extends RoboMaster {
+public class Allies extends RoboMaster {
     boolean isRoamer = false;
 
-    public ShanghaiTechMasterIII(Team team, String name){
+    public Allies(Team team, String name){
         super("RoboMasters/AlexanderMaster.png",
                 team, name);
 

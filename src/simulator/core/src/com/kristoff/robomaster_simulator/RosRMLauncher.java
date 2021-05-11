@@ -4,8 +4,8 @@ import com.kristoff.robomaster_simulator.core.Simulator;
 import com.kristoff.robomaster_simulator.core.SimulatorConfiguration;
 import com.kristoff.robomaster_simulator.core.SimulatorMode;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
-import com.kristoff.robomaster_simulator.robomasters.types.Enemy;
-import com.kristoff.robomaster_simulator.systems.refree.buffs.BuffZone;
+import com.kristoff.robomaster_simulator.robomasters.Enemy;
+import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.systems.Systems;
@@ -56,6 +56,10 @@ public class RosRMLauncher {
         return roboMaster;
     }
 
+    public Enemy getEnemy(String name){
+        return (Enemy)RoboMasters.getRoboMaster(name);
+    }
+
     public void updateBuffZone(int buffZoneNo, int buffType, boolean isActive){
         BuffZone.updateBuffZone(buffZoneNo, buffType, isActive);
     }
@@ -65,12 +69,12 @@ public class RosRMLauncher {
     }
 
     public void buffZoneDemoTest(){
-        BuffZone.updateBuffZone(0,1, true);
-        BuffZone.updateBuffZone(1,5, true);
-        BuffZone.updateBuffZone(2,4, true);
-        BuffZone.updateBuffZone(3,2, true);
-        BuffZone.updateBuffZone(4,6, true);
-        BuffZone.updateBuffZone(5,3, true);
+        BuffZone.updateBuffZone(0,1, false);
+        BuffZone.updateBuffZone(1,5, false);
+        BuffZone.updateBuffZone(2,4, false);
+        BuffZone.updateBuffZone(3,2, false);
+        BuffZone.updateBuffZone(4,6, false);
+        BuffZone.updateBuffZone(5,3, false);
     }
 
     public void setAsRoamer(String roboName){
