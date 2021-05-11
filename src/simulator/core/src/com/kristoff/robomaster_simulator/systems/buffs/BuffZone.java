@@ -74,8 +74,8 @@ public class BuffZone {
     }
 
     public static int setPriority(BuffZone buffZone){
-        float distanceToBlue1 = buffZone.centrePosition.distanceTo(Team.friend1.getPointPosition());
-        float distanceToBlue2 = buffZone.centrePosition.distanceTo(Team.friend2.getPointPosition());
+        float distanceToBlue1 = buffZone.centrePosition.distanceTo(Team.allies1.getPointPosition());
+        float distanceToBlue2 = buffZone.centrePosition.distanceTo(Team.allies2.getPointPosition());
         if(distanceToBlue1 < distanceToBlue2){
             return 1;
         }
@@ -86,7 +86,7 @@ public class BuffZone {
 
     public static boolean isEnemyHPRecoveryNeeded(Allies roboMaster){
         if(isRedHPRecoveryNecessary == 0) return false;
-        if(roboMaster == Team.friend1){
+        if(roboMaster == Team.allies1){
             return isRedHPRecoveryNecessary == 1;
         }
         else {
@@ -211,7 +211,7 @@ public class BuffZone {
 
     public static boolean isHPRecoveryNeeded(Allies roboMaster){
         if(isHPRecoveryNeeded == 0) return false;
-        if(roboMaster == Team.friend1){
+        if(roboMaster == Team.allies1){
             return isHPRecoveryNeeded == 1;
         }
         else {
@@ -223,10 +223,10 @@ public class BuffZone {
         if(BlueHPRecovery == null){
             isHPRecoveryNeeded = 0;
         }
-        if (Team.friend1.getHealth() > 1800 && Team.friend2.getHealth() > 1800) {
+        if (Team.allies1.getHealth() > 1800 && Team.allies2.getHealth() > 1800) {
             isHPRecoveryNeeded = 0;
         }
-        else if(Team.friend1.getHealth() > 1000 && Team.friend2.getHealth() > 1000){
+        else if(Team.allies1.getHealth() > 1000 && Team.allies2.getHealth() > 1000){
             isHPRecoveryNeeded = 0;
         }
         else{
@@ -236,7 +236,7 @@ public class BuffZone {
 
     public static boolean isBulletSupplyNeeded(Allies roboMaster){
         if(isBulletSupplyNeeded == 0) return false;
-        if(roboMaster == Team.friend1){
+        if(roboMaster == Team.allies1){
             return isBulletSupplyNeeded == 1;
         }
         else {

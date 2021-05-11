@@ -22,10 +22,10 @@ public class RoboMasters{
 
     public static void init(){
         if(all.size() == 0){
-            Team.friend1 = new Allies(teamBlue,"Blue1");
-            Team.friend2 = new Allies(teamBlue,"Blue2");
-            teamBlue.add(Team.friend1);
-            teamBlue.add(Team.friend2);
+            Team.allies1 = new Allies(teamBlue,"Blue1");
+            Team.allies2 = new Allies(teamBlue,"Blue2");
+            teamBlue.add(Team.allies1);
+            teamBlue.add(Team.allies2);
             Enemy lockedEnemy = new Enemy(teamRed,"Red1");
             lockedEnemy.lock();
             teamRed.add(lockedEnemy);

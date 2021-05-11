@@ -79,10 +79,10 @@ public class RosRMLauncher {
 
     public void setAsRoamer(String roboName){
         if(roboName.equals("blue1")){
-            Team.friend1.setAsRoamer();
+            Team.allies1.setAsRoamer();
         }
         else{
-            Team.friend2.setAsRoamer();
+            Team.allies2.setAsRoamer();
         }
     }
 

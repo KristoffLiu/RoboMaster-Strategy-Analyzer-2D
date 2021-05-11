@@ -1,6 +1,5 @@
 package com.kristoff.robomaster_simulator.robomasters;
 
-import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.teams.Team;
 
 public class Allies extends RoboMaster {
@@ -13,7 +12,7 @@ public class Allies extends RoboMaster {
     }
 
     public boolean isRoamer(){
-        return isRoamer && Team.friend1.isAlive;
+        return isRoamer && Team.allies1.isAlive;
     }
     public void setAsRoamer(){
          isRoamer = true;

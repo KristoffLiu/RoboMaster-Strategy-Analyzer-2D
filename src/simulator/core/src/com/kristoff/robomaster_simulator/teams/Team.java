@@ -9,8 +9,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Team extends CopyOnWriteArrayList<RoboMaster> {
     public static boolean isOurTeamBlue = true;
-    public static Allies friend1;
-    public static Allies friend2;
+    public static Allies allies1;
+    public static Allies allies2;
 
     String name;
     public FriendsObservationSimulator friendsObservationSimulator; //敌军视野模拟
