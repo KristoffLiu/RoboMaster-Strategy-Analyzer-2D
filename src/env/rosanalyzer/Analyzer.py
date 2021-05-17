@@ -46,6 +46,21 @@ class Analyzer:
     def __str__(self) -> str:
         pass
 
+    def displayWindows(self):
+        def displayInfo():
+            os.system('cls')
+            self.display_title()
+            self.display_game_status()
+            self.display_robo_status()
+            self.display_buff_zones()
+            global tr
+            tr = Timer(0.5,displayInfo)
+            tr.start()
+
+        tr = Timer(1,displayInfo)
+        tr.start()
+
+
     def display(self):
         def displayInfo():
             os.system('clear')
@@ -68,7 +83,7 @@ class Analyzer:
         self.display_buff_zones()
 
     def display_title(self):
-        print("RoboMaster 分析器, 版本 v{}".format("1.3"))
+        print("RoboMaster 分析器, 版本 v{}".format("1.51"))
     
     def display_game_status(self):
         print("Game Status: {}".format(self.game_status))

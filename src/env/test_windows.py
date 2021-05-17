@@ -7,7 +7,7 @@ from env.rosanalyzer.Analyzer import Analyzer
 
 if __name__ == '__main__':
     analyzer = Analyzer()
-    analyzer.display()
+    analyzer.displayWindows()
     analyzer.updateBuffZone(0, 6, True)
     analyzer.updateBuffZone(5, 5, True)
 
