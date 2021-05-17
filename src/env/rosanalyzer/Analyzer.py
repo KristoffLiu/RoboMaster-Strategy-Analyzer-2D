@@ -27,15 +27,10 @@ class Analyzer:
         #self.allies2 = Allies(self.entrypoint.getAllies(1))
         #self.enemy1 = Enemy(self.entrypoint.getEnemy(0))
         #self.enemy2 = Enemy(self.entrypoint.getEnemy(1))
-        self.allies1 = Allies(self.entrypoint.getRoboMaster("Blue1"), self.entrypoint)
-        self.allies2 = Allies(self.entrypoint.getRoboMaster("Blue2"), self.entrypoint)
-        self.enemy1 = Enemy(self.entrypoint.getEnemy("Red1"), self.entrypoint)
-        self.enemy2 = Enemy(self.entrypoint.getEnemy("Red2"), self.entrypoint)
-        self.ally1 = Allies(self.entrypoint.getRoboMaster("Ally1"))
-        self.ally2 = Allies(self.entrypoint.getRoboMaster("Ally2"))
-        self.enemy1 = Enemy(self.entrypoint.getEnemy("Enemy2"))
-        self.enemy2 = Enemy(self.entrypoint.getEnemy("Enemy2"))
-
+        self.ally1 = Allies(self.entrypoint.getRoboMaster("Ally1"), self.entrypoint)
+        self.ally2 = Allies(self.entrypoint.getRoboMaster("Ally2"), self.entrypoint)
+        self.enemy1 = Enemy(self.entrypoint.getEnemy("Enemy2"), self.entrypoint)
+        self.enemy2 = Enemy(self.entrypoint.getEnemy("Enemy2"), self.entrypoint)
         self.buff_zones = [self.BuffZone(i, self.BuffZone.BuffType.UNKNOWN, False) for i in range(6)]
 
     def updateGameStatus(self, game_status, remaining_time):

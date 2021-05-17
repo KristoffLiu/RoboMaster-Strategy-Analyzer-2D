@@ -141,8 +141,8 @@ public class CostMap extends LoopThread {
         int minShootingRange = 80;
         int maxShootingRange = 200;
         int peekVal = 64;
-        int troughVal = - 100;
-        int troughVal2 = - 128;
+        int troughVal = - 75;
+        int troughVal2 = - 100;
         float distanceToEnemy = Enemy.getLockedEnemy().getPointPosition().distanceTo(x,y);
         float cost = 0;
         if(distanceToEnemy <= 65){
