@@ -22,5 +22,5 @@ if __name__ == '__main__':
     #     analyzer.allies2.setHealth(2000 - i)
     analyzer.enemy1.setHealth(1000)
     analyzer.enemy2.setHealth(1000)
-    analyzer.allies1.setHealth(1000)
-    analyzer.allies2.setHealth(1000)
+    analyzer.ally1.setHealth(1000)
+    analyzer.ally1.setHealth(1000)
