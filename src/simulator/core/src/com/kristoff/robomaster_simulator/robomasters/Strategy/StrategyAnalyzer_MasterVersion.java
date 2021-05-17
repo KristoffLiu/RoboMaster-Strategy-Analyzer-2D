@@ -67,8 +67,8 @@ public class StrategyAnalyzer_MasterVersion extends UniversalAnalyzer {
                 generateChildrenNodes(resultNode, tempVisitedGrid);
                 setNodeHasBeenVisited(resultNode, tempVisitedGrid);
             }
-            if(Math.abs(targetCost - getCostMap().getCost(resultNode.position.getX(),resultNode.position.getY())) >= 30){
-                targetCost += 30;
+            if(Math.abs(targetCost - getCostMap().getCost(resultNode.position.getX(),resultNode.position.getY())) >= 50){
+                targetCost += 50;
             }
             else {
                 is_find = true;
@@ -84,7 +84,7 @@ public class StrategyAnalyzer_MasterVersion extends UniversalAnalyzer {
     }
 
     public boolean isAvailable(Position centre, int targetCost, Position target){
-        if(Math.abs(getCostMap().getCost(centre.getX(), centre.getY()) - targetCost) < 30 ||
+        if(Math.abs(getCostMap().getCost(centre.getX(), centre.getY()) - targetCost) < 50 ||
                 centre.x == target.x && centre.y == target.y){
             return true;
             //isTheSurroundingAreaAvailable(centre);

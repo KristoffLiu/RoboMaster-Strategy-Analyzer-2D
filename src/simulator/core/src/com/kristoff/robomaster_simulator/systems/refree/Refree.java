@@ -62,6 +62,10 @@ public class Refree extends LoopThread {
         BuffZone.setEnemyHPRecoveryNeeded();
     }
 
+    public void priority(){
+
+    }
+
     public boolean isRoboMasterAlive(RoboMaster Robomaster){
         return Robomaster.property.isAlive;
     }

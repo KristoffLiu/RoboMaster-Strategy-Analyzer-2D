@@ -27,6 +27,10 @@ class Analyzer:
         #self.allies2 = Allies(self.entrypoint.getAllies(1))
         #self.enemy1 = Enemy(self.entrypoint.getEnemy(0))
         #self.enemy2 = Enemy(self.entrypoint.getEnemy(1))
+        self.allies1 = Allies(self.entrypoint.getRoboMaster("Blue1"), self.entrypoint)
+        self.allies2 = Allies(self.entrypoint.getRoboMaster("Blue2"), self.entrypoint)
+        self.enemy1 = Enemy(self.entrypoint.getEnemy("Red1"), self.entrypoint)
+        self.enemy2 = Enemy(self.entrypoint.getEnemy("Red2"), self.entrypoint)
         self.ally1 = Allies(self.entrypoint.getRoboMaster("Ally1"))
         self.ally2 = Allies(self.entrypoint.getRoboMaster("Ally2"))
         self.enemy1 = Enemy(self.entrypoint.getEnemy("Enemy2"))
@@ -88,7 +92,12 @@ class Analyzer:
     def display_game_status(self):
         print("Game Status: {}".format(self.game_status))
         if(self.game_status == self.GameStatus.GAME):
-            print(    "还剩 {:d} 秒".format(self.remaining_time))
+            timeleft = self.remaining_time / 180
+            str = "["
+            for i in range(30):
+                str += "|" if i/30 <= timeleft else " "
+            str += "] 比赛还剩 {:d} 分 {:d} 秒".format(self.remaining_time // 60, self.remaining_time % 60)
+            print(str)
         print("")
 
     

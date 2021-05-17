@@ -22,6 +22,7 @@ from env.rosanalyzer.Analyzer import Analyzer
 
 import rospy
 from geometry_msgs.msg import PoseStamped
+from nav_msgs.msg import Path
 from obstacle_detector.msg import Obstacles
 from roborts_msgs.msg import GameRobotHP
 from roborts_msgs.msg import GameZoneArray
@@ -42,6 +43,10 @@ class Brain:
 
         self._decision_pub = [rospy.Publisher("/CAR1/move_base_simple/goal", PoseStamped, queue_size=10),
                             rospy.Publisher("/CAR2/move_base_simple/goal", PoseStamped, queue_size=10)]
+
+        self._global_planner_pub = [rospy.Publisher("/CAR1/global_planner_node_action", Path, queue_size=10),
+                            rospy.Publisher("/CAR2/decision_global_path", Path, queue_size=10)]
+
         self._robots_subscriber = [rospy.Subscriber("/CAR1/amcl_pose", PoseStamped, self.ownPositionCB0),
                                    rospy.Subscriber("/CAR2/amcl_pose", PoseStamped, self.ownPositionCB1)]
         self._enemies_subscriber = rospy.Subscriber("/obstacle_preprocessed", Obstacles, self.enemyInfo)
@@ -52,6 +57,7 @@ class Brain:
                          rospy.Publisher("/CAR2/visualization_marker", Marker, queue_size=10)]
         self._is_goal_reach_subscribers = [rospy.Subscriber("/CAR1/global_planner_node_action/status", GoalStatusArray, self.enable_decision1),
                                            rospy.Subscriber("/CAR2/global_planner_node_action/status", GoalStatusArray, self.enable_decision2)]
+
 
         self.decision_1_activate = True
         self.decision_2_activate = True
@@ -111,8 +117,8 @@ class Brain:
 
     def gameZone(self, data):
         for i, d in enumerate(data.zone):
-            # self.analyzer.updateBuffZone(i, d.type, d.active)
-            self.analyzer.updateBuffZone(i, 0, False)
+            self.analyzer.updateBuffZone(i, d.type, d.active)
+            # self.analyzer.updateBuffZone(i, 0, False)
 
 
     def _createQuaternionFromYaw(self, yaw):
@@ -217,7 +223,84 @@ class Brain:
             mark.lifetime = rospy.Duration(self._control_rate, 0)
             self._vis_pub[1].publish(mark)
 
+    def get_next_path1(self):
+        if self.analyzer.allies1.isStrategyMakerOn:
+            # pos = self.Blue2.getPointAvoidingFacingEnemies()
+            rawPath = self.analyzer.allies1.getDecisionPath()
+            path = Path()
+            for node in rawPath:
+                goal = PoseStamped()
+                goal.header.frame_id = "/map"
+                goal.pose.position.x, goal.pose.position.y = node.x, node.y
+
+                [goal.pose.orientation.w,
+                goal.pose.orientation.x,
+                goal.pose.orientation.y,
+                goal.pose.orientation.z] = self._createQuaternionFromYaw(node.yaw)
+                path.poses.append(goal)
+
+            print(path)
+            self._global_planner_pub[0].publish(path)
+            
+
+            # mark = Marker()
+            # mark.header.frame_id = "/map"
+            # mark.header.stamp = rospy.Time.now()
+            # mark.ns = "showen_point"
+            # mark.id = 1
+            # mark.type = Marker().ARROW
+            # mark.action = Marker().ADD
+            # mark.pose = goal.pose
+            # mark.scale.x = 0.4
+            # mark.scale.y = 0.05
+            # mark.scale.z = 0.05
+            # mark.color.a = 1.0
+            # mark.color.r = 0.2
+            # mark.color.g = 1.0
+            # mark.color.b = 0.3
+            # mark.lifetime = rospy.Duration(self._control_rate, 0)
+            # self._vis_pub[1].publish(mark)
+
+
+    def get_next_path2(self):
+        if self.analyzer.allies2.isStrategyMakerOn:
+                        # pos = self.Blue2.getPointAvoidingFacingEnemies()
+            rawPath = self.analyzer.allies1.getDecisionPath()
+            path = Path()
+            for node in rawPath:
+                goal = PoseStamped()
+                goal.header.frame_id = "/map"
+                goal.pose.position.x, goal.pose.position.y = node.x, node.y
+
+                [goal.pose.orientation.w,
+                goal.pose.orientation.x,
+                goal.pose.orientation.y,
+                goal.pose.orientation.z] = self._createQuaternionFromYaw(node.yaw)
+                path.poses.append(goal)
+
+            self._global_planner_pub[1].publish(path)
+
+            # mark = Marker()
+            # mark.header.frame_id = "/map"
+            # mark.header.stamp = rospy.Time.now()
+            # mark.ns = "showen_point"
+            # mark.id = 0
+            # mark.type = Marker().ARROW
+            # mark.action = Marker().ADD
+            # mark.pose = goal.pose
+            # mark.scale.x = 0.4
+            # mark.scale.y = 0.05
+            # mark.scale.z = 0.05
+            # mark.color.a = 1.0
+            # mark.color.r = 0.2
+            # mark.color.g = 1.0
+            # mark.color.b = 0.3
+            # mark.lifetime = rospy.Duration(self._control_rate, 0)
+            # self._vis_pub[0].publish(mark)
+
+
     def display(self):
+        # pass
         self.analyzer.displayOnce()
         
 
@@ -239,6 +322,8 @@ if __name__ == '__main__':
             if (brain.analyzer.game_status == Analyzer.GameStatus.GAME):
                 brain.get_next_position1()
                 brain.get_next_position2()
+                # brain.get_next_path1()
+                # brain.get_next_path2()
             rate.sleep()
 
     except rospy.ROSInterruptException:

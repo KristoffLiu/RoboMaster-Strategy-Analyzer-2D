@@ -190,6 +190,9 @@ public abstract class RoboMaster {
     public Position getDecisionMade(){
         return this.strategyMaker.getDecisionMade();
     }
+    public List<Position> getPath(){
+        return this.strategyMaker.getPath();
+    }
 
     public Position getPointPosition(){return new Position(this.actor.x / 10,this.actor.y / 10);};
 
@@ -223,7 +226,6 @@ public abstract class RoboMaster {
     public int getCost(int x, int y){
         return costMap.getCost(x, y);
     }
-
 
     public StrategyMaker getStrategyMaker(){
         return this.strategyMaker;

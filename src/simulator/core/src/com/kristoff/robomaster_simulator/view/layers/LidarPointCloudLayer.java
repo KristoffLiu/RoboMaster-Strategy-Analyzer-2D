@@ -61,15 +61,15 @@ public class LidarPointCloudLayer extends VisualLayer {
 //                            y / 1000f,
 //                            0.15f,10);
 //                }
-//                if(RoboMasters.teamBlue.get(1).strategyMaker.getVisitedGrid()[i][j]){
-//                    int x = i * 10;
-//                    int y = j * 10;
-//                    shapeRenderer5.setColor(0.3f,0.3f,0.3f,0.1f);
-//                    shapeRenderer5.circle(
-//                            x / 1000f,
-//                            y / 1000f,
-//                            0.15f,10);
-//                }
+////                if(RoboMasters.teamBlue.get(1).strategyMaker.getVisitedGrid()[i][j]){
+////                    int x = i * 10;
+////                    int y = j * 10;
+////                    shapeRenderer5.setColor(0.3f,0.3f,0.3f,0.1f);
+////                    shapeRenderer5.circle(
+////                            x / 1000f,
+////                            y / 1000f,
+////                            0.15f,10);
+////                }
 //            }
 //        }
 //        shapeRenderer5.end();

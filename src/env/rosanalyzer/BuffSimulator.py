@@ -13,8 +13,9 @@ class BuffSimulator():
         for sublist in list:
             random.shuffle(sublist)
         random.shuffle(list)
+        
     
-    
+
 
 
     # analyzer.updateBuffZone(0, 6, True)

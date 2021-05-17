@@ -13,7 +13,9 @@ import com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.utils.Position;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -152,6 +154,14 @@ public class StrategyMaker extends LoopThread {
 
     public CopyOnWriteArrayList<SearchNode> getPathNodes(){
         return this.pathNodes;
+    }
+
+    public List<Position> getPath(){
+        List<Position> positions = new ArrayList<>();
+        for (SearchNode searchNode : this.pathNodes){
+            positions.add(searchNode.position);
+        }
+        return positions;
     }
 
     public CopyOnWriteArrayList<SearchNode> getResultNodes(){
