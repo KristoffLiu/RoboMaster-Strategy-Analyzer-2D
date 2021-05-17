@@ -1,7 +1,6 @@
 package com.kristoff.robomaster_simulator.robomasters;
 
 import com.kristoff.robomaster_simulator.robomasters.modules.*;
-import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.teams.Team;
 
 /***
@@ -16,50 +15,51 @@ import com.kristoff.robomaster_simulator.teams.Team;
 public class Enemy extends RoboMaster {
     static Enemy lockedEnemy;
 
-    boolean isInTheView = true;
+    DetectionState detectionState = DetectionState.Initialized;
+
     InView inView;
-    int count = 0;
+    int timerCount = 0;
+    public int count = 0;
 
     public Enemy(Team team, String name){
         super("RoboMasters/AlexanderMaster.png", team, name);
-        inView = new InView(this, 5);
+        inView = new InView(this, 2);
         inView.start();
     }
 
     @Override
     public void setPosition(int x, int y) {
         //System.out.println(this.getPosition().distanceTo(x, y));
-        if(isInTheView && this.getPosition().distanceTo(x, y) > 500 && count < 5){
-            count ++;
+        if(isInTheView() && this.getPosition().distanceTo(x, y) > 500 && timerCount < 5){
+            timerCount++;
             return;
         }
-        count = 0;
+        count ++;
+        timerCount = 0;
         setInTheView();
         super.setPosition(x, y);
     }
 
     @Override
     public void setPosition(int x, int y, float rotation) {
-        if(isInTheView && this.getPosition().distanceTo(x, y) > 500 && count < 200) {
-            count++;
+        if(isInTheView() || isInitialized() && this.getPosition().distanceTo(x, y) > 500 && timerCount < 200) {
+            timerCount++;
             return;
         }
-        count = 0;
+        timerCount = 0;
         setInTheView();
         super.setPosition(x, y, rotation);
     }
 
     public void setInTheView(){
-        isInTheView = true;
+        if(count > 2){
+            detectionState = DetectionState.Locked;
+        }
         inView.resetTimer();
     }
 
     public void setNotInTheView(){
-        isInTheView = false;
-    }
-
-    public boolean isInTheView(){
-        return this.isInTheView;
+        detectionState = DetectionState.Lost;
     }
 
     public void lock(){
@@ -76,5 +76,17 @@ public class Enemy extends RoboMaster {
 
     public static Enemy getUnlockedEnemy(){
         return Team.enemy().get(0) != lockedEnemy ? (Enemy)Team.enemy().get(0) : (Enemy)Team.enemy().get(1);
+    }
+
+    public boolean isAvailable(){
+        return (this.isInTheView() || isInitialized()) && this.isAlive;
+    }
+
+    public boolean isInTheView(){
+        return this.detectionState == DetectionState.Locked;
+    }
+
+    public boolean isInitialized(){
+        return this.detectionState == DetectionState.Initialized;
     }
 }

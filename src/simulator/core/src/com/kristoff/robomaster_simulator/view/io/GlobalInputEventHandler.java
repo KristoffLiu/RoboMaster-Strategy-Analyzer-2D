@@ -41,10 +41,10 @@ public class GlobalInputEventHandler extends InputListener {
                 isLeftAltKeyDown = true;
                 break;
             case Input.Keys.Z:
-                RoboMasters.teamBlue.get(0).RMPhysicalSimulation.cannonRotateCCW();
+                RoboMasters.allies.get(0).RMPhysicalSimulation.cannonRotateCCW();
                 break;
             case Input.Keys.C:
-                RoboMasters.teamBlue.get(0).RMPhysicalSimulation.cannonRotateCW();
+                RoboMasters.allies.get(0).RMPhysicalSimulation.cannonRotateCW();
                 break;
 
             case Input.Keys.H:
@@ -52,28 +52,28 @@ public class GlobalInputEventHandler extends InputListener {
                 break;
 
             case Input.Keys.Q:
-                RoboMasters.teamBlue.get(0).dynamics.rotateCCW();
+                RoboMasters.allies.get(0).dynamics.rotateCCW();
                 break;
             case Input.Keys.E:
-                RoboMasters.teamBlue.get(0).dynamics.rotateCW();
+                RoboMasters.allies.get(0).dynamics.rotateCW();
                 break;
             case Input.Keys.W:
-                RoboMasters.teamBlue.get(0).dynamics.moveForward();
+                RoboMasters.allies.get(0).dynamics.moveForward();
                 break;
             case Input.Keys.A:
-                RoboMasters.teamBlue.get(0).dynamics.moveLeft();
+                RoboMasters.allies.get(0).dynamics.moveLeft();
                 break;
             case Input.Keys.D:
-                RoboMasters.teamBlue.get(0).dynamics.moveRight();
+                RoboMasters.allies.get(0).dynamics.moveRight();
                 break;
             case Input.Keys.S:
-                RoboMasters.teamBlue.get(0).dynamics.moveBehind();
+                RoboMasters.allies.get(0).dynamics.moveBehind();
                 break;
             case Input.Keys.L:
-                RoboMasters.teamBlue.get(0).dynamics.slowDown();
+                RoboMasters.allies.get(0).dynamics.slowDown();
                 break;
             case Input.Keys.J:
-                RoboMasters.teamBlue.get(0).weapon.shoot();
+                RoboMasters.allies.get(0).weapon.shoot();
                 break;
         }
         return false;
@@ -92,13 +92,13 @@ public class GlobalInputEventHandler extends InputListener {
 
             case Input.Keys.Q:
             case Input.Keys.E:
-                RoboMasters.teamBlue.get(0).dynamics.stopRotating();
+                RoboMasters.allies.get(0).dynamics.stopRotating();
                 break;
             case Input.Keys.W:
             case Input.Keys.A:
             case Input.Keys.D:
             case Input.Keys.S:
-                RoboMasters.teamBlue.get(0).dynamics.stopMoving();
+                RoboMasters.allies.get(0).dynamics.stopMoving();
                 break;
         }
         return true;

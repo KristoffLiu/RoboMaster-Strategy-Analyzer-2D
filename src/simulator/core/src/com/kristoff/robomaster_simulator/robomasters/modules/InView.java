@@ -18,7 +18,7 @@ public class InView extends LoopThread {
     @Override
     public void step() {
         timer ++;
-        if(timer > timerLimit) this.thisEnemy.setNotInTheView();
+        if(timer > timerLimit && this.thisEnemy.count > 2) this.thisEnemy.setNotInTheView();
     }
 
     public void resetTimer(){

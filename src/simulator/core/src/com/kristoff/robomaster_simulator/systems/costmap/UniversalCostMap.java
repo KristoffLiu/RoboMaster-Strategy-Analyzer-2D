@@ -143,7 +143,7 @@ public class UniversalCostMap extends LoopThread {
     }
 
     public int costToTheMaster(int x, int y){
-        Position master = RoboMasters.teamBlue.get(0).getPointPosition();
+        Position master = RoboMasters.allies.get(0).getPointPosition();
         int peekVal = 64;
         float distance = master.distanceTo(x,y);
         float maxRange = 952f;

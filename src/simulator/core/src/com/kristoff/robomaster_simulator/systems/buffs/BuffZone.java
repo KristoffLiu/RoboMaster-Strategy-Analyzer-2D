@@ -5,7 +5,7 @@ import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
-import com.kristoff.robomaster_simulator.robomasters.Allies;
+import com.kristoff.robomaster_simulator.robomasters.Ally;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.utils.Position;
@@ -74,8 +74,8 @@ public class BuffZone {
     }
 
     public static int setPriority(BuffZone buffZone){
-        float distanceToBlue1 = buffZone.centrePosition.distanceTo(Team.allies1.getPointPosition());
-        float distanceToBlue2 = buffZone.centrePosition.distanceTo(Team.allies2.getPointPosition());
+        float distanceToBlue1 = buffZone.centrePosition.distanceTo(Team.ally1.getPointPosition());
+        float distanceToBlue2 = buffZone.centrePosition.distanceTo(Team.ally2.getPointPosition());
         if(distanceToBlue1 < distanceToBlue2){
             return 1;
         }
@@ -84,9 +84,9 @@ public class BuffZone {
         }
     }
 
-    public static boolean isEnemyHPRecoveryNeeded(Allies roboMaster){
+    public static boolean isEnemyHPRecoveryNeeded(Ally roboMaster){
         if(isRedHPRecoveryNecessary == 0) return false;
-        if(roboMaster == Team.allies1){
+        if(roboMaster == Team.ally1){
             return isRedHPRecoveryNecessary == 1;
         }
         else {
@@ -134,7 +134,7 @@ public class BuffZone {
         return bounds.contains(x / 100f, y / 100f);
     }
 
-    public static int costOfBuff(int x, int y, Allies roboMaster){
+    public static int costOfBuff(int x, int y, Ally roboMaster){
         int cost = 0;
 
         for(BuffZone buffZone : Systems.refree.getBuffZones()){
@@ -162,7 +162,7 @@ public class BuffZone {
                 case BlueHPRecovery   -> {
                     if(isHPRecoveryNeeded(roboMaster)) {
                         if(distance <= 10){
-                            cost += (maxDis - distance) / maxDis * -150;
+                            cost += (maxDis - distance) / maxDis * -210;
                         }
                         //if(buffZone.isInBuffZone(x, y, true)) cost = -197;
                     }
@@ -181,7 +181,7 @@ public class BuffZone {
 //                    }
                     if(isBulletSupplyNeeded((roboMaster))){
                         if(distance <= 10){
-                            cost += (maxDis - distance) / maxDis * -256;
+                            cost += (maxDis - distance) / maxDis * -200;
                         }
                     }
                 }
@@ -209,9 +209,9 @@ public class BuffZone {
         return true;
     }
 
-    public static boolean isHPRecoveryNeeded(Allies roboMaster){
+    public static boolean isHPRecoveryNeeded(Ally roboMaster){
         if(isHPRecoveryNeeded == 0) return false;
-        if(roboMaster == Team.allies1){
+        if(roboMaster == Team.ally1){
             return isHPRecoveryNeeded == 1;
         }
         else {
@@ -223,10 +223,10 @@ public class BuffZone {
         if(BlueHPRecovery == null){
             isHPRecoveryNeeded = 0;
         }
-        if (Team.allies1.getHealth() > 1800 && Team.allies2.getHealth() > 1800) {
+        if (Team.ally1.getHealth() > 1800 && Team.ally2.getHealth() > 1800) {
             isHPRecoveryNeeded = 0;
         }
-        else if(Team.allies1.getHealth() > 1000 && Team.allies2.getHealth() > 1000){
+        else if(Team.ally1.getHealth() > 1000 && Team.ally2.getHealth() > 1000){
             isHPRecoveryNeeded = 0;
         }
         else{
@@ -234,9 +234,9 @@ public class BuffZone {
         }
     }
 
-    public static boolean isBulletSupplyNeeded(Allies roboMaster){
+    public static boolean isBulletSupplyNeeded(Ally roboMaster){
         if(isBulletSupplyNeeded == 0) return false;
-        if(roboMaster == Team.allies1){
+        if(roboMaster == Team.ally1){
             return isBulletSupplyNeeded == 1;
         }
         else {

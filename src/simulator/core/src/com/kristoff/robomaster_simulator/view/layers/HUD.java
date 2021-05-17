@@ -24,7 +24,7 @@ public class HUD extends UIPage {
         this.envRenderer = envRenderer;
         for(RoboMaster roboMaster : RoboMasters.all){
             Image roboImage = new Image();
-            roboImage.setTextureRegion("RoboMasters/Indicators/" + roboMaster.name + ".png");
+            roboImage.setTextureRegion("RoboMasters/Indicators/" + roboMaster.getTeamColor() + ".png");
             roboImage.setTag(roboMaster);
             roboImage.setScale(0.02f);
             roboMastersIDList.add(roboImage);
@@ -52,7 +52,7 @@ public class HUD extends UIPage {
             this.addUIElement(hpBarIndicatorForeground);
             this.addUIElement(isDeadIndicator);
 
-            if(RoboMasters.teamRed.contains(roboMaster)){
+            if(RoboMasters.enemies.contains(roboMaster)){
                 Image enemyInViewIndicatorImage = new Image();
                 enemyInViewIndicatorImage.setTextureRegion("RoboMasters/Indicators/InView.png");
                 enemyInViewIndicatorImage.setTag(roboMaster);
@@ -101,6 +101,7 @@ public class HUD extends UIPage {
     public void setInViewImage(Image inViewImage){
         Enemy enemy = (Enemy) inViewImage.getTag();
         if(enemy.isInTheView()) inViewImage.setTextureRegion("RoboMasters/Indicators/InView.png");
+        else if (enemy.isInitialized()) inViewImage.setTextureRegion("RoboMasters/Indicators/Initial.png");
         else inViewImage.setTextureRegion("RoboMasters/Indicators/Lost.png");
         inViewImage.setPosition((enemy.getX() + 320f) / 1000f , (enemy.getY() - 220f) / 1000f );
         if(enemy.isLocked()){

@@ -12,14 +12,10 @@ import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.teams.Team;
 import py4j.GatewayServer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RosRMLauncher {
     public Simulator simulator;
     public SimulatorConfiguration config;
     public RoboMaster roboMaster;
-    public List<Integer> demo;
 
     public RosRMLauncher(){
         this.config = new SimulatorConfiguration();
@@ -27,10 +23,6 @@ public class RosRMLauncher {
         this.simulator = new Simulator(config);
         this.simulator.launch();
         this.simulator.init();
-        demo = new ArrayList<>();
-        for(int i = 0; i < 500; i ++){
-            demo.add(i);
-        }
     }
 
     public static void main(String[] args) {
@@ -64,10 +56,6 @@ public class RosRMLauncher {
         BuffZone.updateBuffZone(buffZoneNo, buffType, isActive);
     }
 
-    public List<Integer> getDemoList(){
-        return this.demo;
-    }
-
     public void buffZoneDemoTest(){
         BuffZone.updateBuffZone(0,1, false);
         BuffZone.updateBuffZone(1,5, false);
@@ -79,10 +67,10 @@ public class RosRMLauncher {
 
     public void setAsRoamer(String roboName){
         if(roboName.equals("blue1")){
-            Team.allies1.setAsRoamer();
+            Team.ally1.setAsRoamer();
         }
         else{
-            Team.allies2.setAsRoamer();
+            Team.ally2.setAsRoamer();
         }
     }
 

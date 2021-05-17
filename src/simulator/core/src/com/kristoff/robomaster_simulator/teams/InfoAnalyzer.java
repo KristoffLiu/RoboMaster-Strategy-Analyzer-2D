@@ -37,9 +37,9 @@ public class InfoAnalyzer extends LoopThread {
     @Override
     public void start(){
         super.start();
-        this.enemyTeam = RoboMasters.teamRed;
-        blue1 = RoboMasters.getRoboMaster("Blue1");
-        blue2 = RoboMasters.getRoboMaster("Blue2");
+        this.enemyTeam = RoboMasters.enemies;
+        blue1 = RoboMasters.getRoboMaster("Ally1");
+        blue2 = RoboMasters.getRoboMaster("Ally2");
         blue1.costMap.start();
         blue2.costMap.start();
         blue1.strategyMaker.start();

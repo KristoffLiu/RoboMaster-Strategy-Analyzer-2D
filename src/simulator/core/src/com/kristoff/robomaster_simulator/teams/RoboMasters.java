@@ -5,15 +5,16 @@ import com.kristoff.robomaster_simulator.core.SimulatorConfiguration;
 import com.kristoff.robomaster_simulator.robomasters.modules.Actor;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
-import com.kristoff.robomaster_simulator.robomasters.Allies;
+import com.kristoff.robomaster_simulator.robomasters.Ally;
+import com.kristoff.robomaster_simulator.robomasters.modules.TeamColor;
 import com.kristoff.robomaster_simulator.systems.Systems;
 
 public class RoboMasters{
     static SimulatorConfiguration config;
 
     public static Team all       = new Team();
-    public static Team teamBlue   = new Team("Blue");
-    public static Team teamRed    = new Team("Red");
+    public static Team allies = new Team("Allies");
+    public static Team enemies = new Team("Red");
 
     public RoboMasters(SimulatorConfiguration simulatorConfiguration){
         config = simulatorConfiguration;
@@ -22,17 +23,26 @@ public class RoboMasters{
 
     public static void init(){
         if(all.size() == 0){
-            Team.allies1 = new Allies(teamBlue,"Blue1");
-            Team.allies2 = new Allies(teamBlue,"Blue2");
-            teamBlue.add(Team.allies1);
-            teamBlue.add(Team.allies2);
-            Enemy lockedEnemy = new Enemy(teamRed,"Red1");
+            allies.add(new Ally(allies,"Ally1"));
+            allies.add(new Ally(allies,"Ally2"));
+            Team.ally1 = (Ally)allies.get(0);
+            Team.ally2 = (Ally)allies.get(1);
+            Team.ally1.setTeamColor(TeamColor.BLUE);
+            Team.ally2.setTeamColor(TeamColor.BLUE);
+
+
+            enemies.add(new Enemy(enemies,"Enemy1"));
+            enemies.add(new Enemy(enemies,"Enemy2"));
+            Enemy lockedEnemy = (Enemy) enemies.get(0);
             lockedEnemy.lock();
-            teamRed.add(lockedEnemy);
-            teamRed.add(new Enemy(teamRed,"Red2"));
+            lockedEnemy.setTeamColor(TeamColor.RED);
+            Enemy unlockedEnemy = (Enemy) enemies.get(1);
+            unlockedEnemy.lock();
+            unlockedEnemy.setTeamColor(TeamColor.RED);
+
             //((ShanghaiTechMasterIII)teamBlue.get(1)).setAsRoamer();
-            all.addAll(teamBlue);
-            all.addAll(teamRed);
+            all.addAll(allies);
+            all.addAll(enemies);
         }
     }
 
@@ -41,7 +51,7 @@ public class RoboMasters{
         all.forEach(x->{
             x.start();
         });
-        teamBlue.start();
+        allies.start();
     }
 
     public void initPosition(){
@@ -53,11 +63,11 @@ public class RoboMasters{
             int x = (int)(textureMapObject.getX() + halfWidth);
             int y = (int)(textureMapObject.getY() + halfHeight);
             if(textureMapObject.getProperties().containsKey("blue")){
-                RoboMasters.teamBlue.get(i).actor.update(x, y, (float) (Math.PI));
+                RoboMasters.allies.get(i).actor.update(x, y, (float) (Math.PI));
                 i ++;
             }
             else if(textureMapObject.getProperties().containsKey("red")){
-                RoboMasters.teamRed.get(j).actor.update(x, y, 0f);
+                RoboMasters.enemies.get(j).actor.update(x, y, 0f);
                 j ++;
             }
         }

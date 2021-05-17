@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.modules.CostMap;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
-import com.kristoff.robomaster_simulator.robomasters.Allies;
+import com.kristoff.robomaster_simulator.robomasters.Ally;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
@@ -18,7 +18,7 @@ import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class StrategyMaker extends LoopThread {
-    public Allies roboMaster;
+    public Ally roboMaster;
     StrategyAnalyzer strategyAnalyzer;
 
     /***
@@ -50,7 +50,7 @@ public class StrategyMaker extends LoopThread {
     public TacticState tacticState = TacticState.MOVING;
 
     public StrategyMaker(RoboMaster roboMaster){
-        this.roboMaster = (Allies)roboMaster;
+        this.roboMaster = (Ally)roboMaster;
         visitedGrid = new boolean[849][489];
 
         rootNode                = new SearchNode();
@@ -179,7 +179,7 @@ public class StrategyMaker extends LoopThread {
     }
 
     public RoboMaster getFriendRoboMaster() {
-        for(RoboMaster roboMaster : RoboMasters.teamBlue){
+        for(RoboMaster roboMaster : RoboMasters.allies){
             if(this.roboMaster != roboMaster) return roboMaster;
         }
         return null;
@@ -196,7 +196,7 @@ public class StrategyMaker extends LoopThread {
     }
 
     public SearchNode getDecisionNode() {
-        for(RoboMaster roboMaster : RoboMasters.teamBlue){
+        for(RoboMaster roboMaster : RoboMasters.allies){
             if(this.roboMaster != roboMaster) return roboMaster.strategyMaker.decisionNode;
         }
         return null;

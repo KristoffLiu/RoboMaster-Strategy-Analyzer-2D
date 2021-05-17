@@ -83,8 +83,8 @@ public class FriendsObservationSimulator extends LoopThread {
 
     @Override
     public void start(){
-        friendObservationOne = new FriendObservation(RoboMasters.teamRed.get(0), RoboMasters.teamRed.get(1), this.thisTeam.get(0),1);
-        friendObservationTwo = new FriendObservation(RoboMasters.teamRed.get(0), RoboMasters.teamRed.get(1), this.thisTeam.get(1),2);
+        friendObservationOne = new FriendObservation(RoboMasters.enemies.get(0), RoboMasters.enemies.get(1), this.thisTeam.get(0),1);
+        friendObservationTwo = new FriendObservation(RoboMasters.enemies.get(0), RoboMasters.enemies.get(1), this.thisTeam.get(1),2);
         super.start();
     }
 

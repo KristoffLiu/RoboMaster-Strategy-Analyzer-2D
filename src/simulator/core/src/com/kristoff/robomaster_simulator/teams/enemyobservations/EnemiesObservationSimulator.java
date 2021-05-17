@@ -82,18 +82,18 @@ public class EnemiesObservationSimulator extends LoopThread {
     public void start(){
         switch (mode){
             case self_observation -> {
-                if(thisTeam == RoboMasters.teamBlue)
+                if(thisTeam == RoboMasters.allies)
                 {
-                    enemyObservationOne = new EnemyObservation(thisTeam.get(0), thisTeam.get(1), RoboMasters.teamRed.get(0),1);
-                    enemyObservationTwo = new EnemyObservation(thisTeam.get(0), thisTeam.get(1), RoboMasters.teamRed.get(1),2);
+                    enemyObservationOne = new EnemyObservation(thisTeam.get(0), thisTeam.get(1), RoboMasters.enemies.get(0),1);
+                    enemyObservationTwo = new EnemyObservation(thisTeam.get(0), thisTeam.get(1), RoboMasters.enemies.get(1),2);
                 }
                 else{
-                    enemyObservationOne = new EnemyObservation(thisTeam.get(0), thisTeam.get(1), RoboMasters.teamBlue.get(0),1);
-                    enemyObservationTwo = new EnemyObservation(thisTeam.get(0), thisTeam.get(1), RoboMasters.teamBlue.get(1),2);
+                    enemyObservationOne = new EnemyObservation(thisTeam.get(0), thisTeam.get(1), RoboMasters.allies.get(0),1);
+                    enemyObservationTwo = new EnemyObservation(thisTeam.get(0), thisTeam.get(1), RoboMasters.allies.get(1),2);
                 }
             }
             case global_observation -> {
-                if(thisTeam == RoboMasters.teamBlue)
+                if(thisTeam == RoboMasters.allies)
                 {
 
                 }

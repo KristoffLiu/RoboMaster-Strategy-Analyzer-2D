@@ -2,10 +2,6 @@ package com.kristoff.robomaster_simulator.view.layers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.kristoff.robomaster_simulator.systems.Systems;
-import com.kristoff.robomaster_simulator.teams.Team;
-import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationPoint;
-import com.kristoff.robomaster_simulator.teams.friendobservations.FriendsObservationPoint;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.StatePoint;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.view.renderers.EnvRenderer;
@@ -31,7 +27,7 @@ public class LidarPointCloudLayer extends VisualLayer {
         shapeRenderer5 = new ShapeRenderer();
         //circleRenderer = new ShapeRenderer();
 
-        lidarPointCloudPointsArray = RoboMasters.teamBlue.get(0).lidarObservation.others;
+        lidarPointCloudPointsArray = RoboMasters.allies.get(0).lidarObservation.others;
     }
 
     @Override
@@ -82,7 +78,7 @@ public class LidarPointCloudLayer extends VisualLayer {
         shapeRenderer2.setProjectionMatrix(environment.view.getOrthographicCamera().combined);
         shapeRenderer2.setAutoShapeType(true);
         shapeRenderer2.begin(ShapeRenderer.ShapeType.Line);
-        for(RoboMaster roboMaster : RoboMasters.teamBlue){
+        for(RoboMaster roboMaster : RoboMasters.allies){
             float x = roboMaster.getPosition().x / 1000f;
             float y = roboMaster.getPosition().y / 1000f;
             shapeRenderer2.setColor(1.0f,0,0,1.0f);
@@ -176,8 +172,8 @@ public class LidarPointCloudLayer extends VisualLayer {
             int j = point.y;
             Point a = new Point(i,j);
             Point b = new Point(
-                    (int)(environment.roboMasters.teamBlue.get(0).getLidarPosition().x / 10),
-                    (int)(environment.roboMasters.teamBlue.get(0).getLidarPosition().y / 10));
+                    (int)(environment.roboMasters.allies.get(0).getLidarPosition().x / 10),
+                    (int)(environment.roboMasters.allies.get(0).getLidarPosition().y / 10));
             float distance = (float) a.distance(b);
             float red;
             float green;
@@ -211,8 +207,8 @@ public class LidarPointCloudLayer extends VisualLayer {
             int j = point.y;
             Point a = new Point(i,j);
             Point b = new Point(
-                    (int)(environment.roboMasters.teamBlue.get(1).getLidarPosition().x / 10),
-                    (int)(environment.roboMasters.teamBlue.get(1).getLidarPosition().y / 10));
+                    (int)(environment.roboMasters.allies.get(1).getLidarPosition().x / 10),
+                    (int)(environment.roboMasters.allies.get(1).getLidarPosition().y / 10));
             float distance = (float) a.distance(b);
             float red;
             float green;
@@ -252,10 +248,10 @@ public class LidarPointCloudLayer extends VisualLayer {
     }
 
     public CopyOnWriteArrayList<StatePoint> getLidarPointCloudPointsArray1(){
-        return RoboMasters.teamBlue.get(0).lidarObservation.others;
+        return RoboMasters.allies.get(0).lidarObservation.others;
     }
     public CopyOnWriteArrayList<StatePoint> getLidarPointCloudPointsArray2(){
-        return RoboMasters.teamBlue.get(1).lidarObservation.others;
+        return RoboMasters.allies.get(1).lidarObservation.others;
     }
 
     public void drawCostMap(){

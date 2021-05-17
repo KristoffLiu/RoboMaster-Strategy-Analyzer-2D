@@ -3,24 +3,25 @@ package com.kristoff.robomaster_simulator.robomasters.modules;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
-import com.kristoff.robomaster_simulator.robomasters.Allies;
+import com.kristoff.robomaster_simulator.robomasters.Ally;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator;
 import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.systems.costmap.PositionCost;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
+import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.utils.Position;
 
 public class CostMap extends LoopThread {
-    public Allies roboMaster;
+    public Ally roboMaster;
     public StrategyMaker strategyMaker;
     public int[][] costmap;
     public PositionCost minPositionCost;
 
     public CostMap(RoboMaster roboMaster){
-        this.roboMaster = (Allies) roboMaster;
+        this.roboMaster = (Ally) roboMaster;
         this.costmap = new int[849][489];
         isStep = true;
         delta = 1/10f;
@@ -77,30 +78,31 @@ public class CostMap extends LoopThread {
     public int costOfEnemyObservation(int x, int y){
         int cost = 0;
 
-        if(Enemy.getUnlockedEnemy().isAlive){
-            if(EnemiesObservationSimulator.isInLockedEnemyViewOnly(x, y)) {
-                cost = costOfLockedEnemyDistance(x, y);
-            }
-            else if(EnemiesObservationSimulator.isInUnlockedEnemyViewOnly(x, y)) {
-                cost = costOfUnlockedEnemyDistance(x, y);
-            }
-            else if(EnemiesObservationSimulator.isOutOfBothEnemiesView(x, y))
-                cost = 0;
-            else if(EnemiesObservationSimulator.isInBothEnemiesView(x, y)) {
-                //cost += costOfLockedEnemyDistance(x, y);
-                //cost += costOfUnlockedEnemyDistance(x, y) * 2;
+        if(EnemiesObservationSimulator.isInLockedEnemyViewOnly(x, y) && Enemy.getLockedEnemy().isAvailable()) {
+            cost = costOfLockedEnemyDistance(x, y);
+        }
+        else if(EnemiesObservationSimulator.isInUnlockedEnemyViewOnly(x, y) && Enemy.getUnlockedEnemy().isAvailable()) {
+            cost = costOfUnlockedEnemyDistance(x, y);
+        }
+        else if(EnemiesObservationSimulator.isOutOfBothEnemiesView(x, y))
+            cost = 0;
+        else if(EnemiesObservationSimulator.isInBothEnemiesView(x, y)) {
+            if(Enemy.getLockedEnemy().isAvailable() && Enemy.getUnlockedEnemy().isAvailable()){
                 cost = costOfBothEnemyDistance(x, y);
             }
-        }
-        else {
-            cost = costOfLockedEnemyDistance(x, y);
+            else if(Enemy.getLockedEnemy().isAvailable()){
+                cost = costOfLockedEnemyDistance(x, y);
+            }
+            else if(Enemy.getUnlockedEnemy().isAvailable()){
+                cost = costOfUnlockedEnemyDistance(x, y);
+            }
         }
         return cost;
     }
 
     public int costOfFriendEntity(int x, int y){
         if(this.roboMaster.name == "Blue1"){
-            float distanceToFriend = RoboMasters.getRoboMaster("Blue2").getPointPosition().distanceTo(x,y);
+            float distanceToFriend = Team.ally2.getPointPosition().distanceTo(x,y);
             float cost = 0;
             if(distanceToFriend <= 65){
                 cost = 999;
@@ -108,7 +110,7 @@ public class CostMap extends LoopThread {
             return (int) cost;
         }
         else{
-            float distanceToFriend = RoboMasters.getRoboMaster("Blue1").getPointPosition().distanceTo(x,y);
+            float distanceToFriend = Team.ally1.getPointPosition().distanceTo(x,y);
             float cost = 0;
             if(distanceToFriend <= 65){
                 cost = 999;

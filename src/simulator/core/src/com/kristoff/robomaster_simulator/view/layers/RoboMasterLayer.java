@@ -2,12 +2,14 @@ package com.kristoff.robomaster_simulator.view.layers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Strategy.SearchNode;
 import com.kristoff.robomaster_simulator.robomasters.modules.RendererInputListener;
-import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
+import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.utils.Position;
 import com.kristoff.robomaster_simulator.view.renderers.EnvRenderer;
 
@@ -42,11 +44,16 @@ public class RoboMasterLayer extends VisualLayer {
     public void act (float delta) {
         float scale = 1f / 1000f;
         super.act(delta);
+        for(Actor actor : this.getActors()){
+            if(actor.getClass().equals(Enemy.class)){
+                System.out.println("hahahah");
+            }
+        }
     }
 
     @Override
     public void draw(){
-        drawCostMap();
+        //drawCostMap();
         drawPaths();
         super.draw();
     }
@@ -76,7 +83,7 @@ public class RoboMasterLayer extends VisualLayer {
 //                    0.05f,10);
 //        }
 
-        for(SearchNode node : RoboMasters.teamBlue.get(0).strategyMaker.getPathNodes()){
+        for(SearchNode node : RoboMasters.allies.get(0).strategyMaker.getPathNodes()){
             Position position = node.position;
             if(position!=null){
                 int x = position.x * 10;
@@ -88,7 +95,7 @@ public class RoboMasterLayer extends VisualLayer {
                         0.05f,10);
             }
         }
-        for(SearchNode node : RoboMasters.teamBlue.get(1).strategyMaker.getPathNodes()){
+        for(SearchNode node : RoboMasters.allies.get(1).strategyMaker.getPathNodes()){
             Position position = node.position;
             if(position!=null){
                 int x = position.x * 10;
@@ -111,7 +118,7 @@ public class RoboMasterLayer extends VisualLayer {
             for(int j = 0; j < 489; j+=10){
                 int x = i * 10;
                 int y = j * 10;
-                int cost = RoboMasters.getRoboMaster("Blue2").costMap.getCostMap()[i][j];
+                int cost = Team.ally2.costMap.getCostMap()[i][j];
                 float colorFloat = 0;
                 if(cost <= 255f){
                     colorFloat = (255f - cost) / 255f;

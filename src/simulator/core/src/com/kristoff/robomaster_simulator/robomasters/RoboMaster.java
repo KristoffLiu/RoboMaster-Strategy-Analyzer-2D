@@ -25,6 +25,7 @@ public abstract class RoboMaster {
     public int PIN;                                             //PIN
     public Team team;                                           //归属队伍 team
     public boolean isAlive = true;
+    public TeamColor teamColor;
 
     public Property                  property;                  //基本属性 Basic Property
     public Actor                     actor;                     //行为器 Acting System
@@ -51,8 +52,9 @@ public abstract class RoboMaster {
     public RoboMaster(String textureRegionPath, Team team, String name) {
         this.team = team;
         this.name = name;
-        No = this.team == RoboMasters.teamBlue? RoboMasters.teamBlue.size() : (2 + RoboMasters.teamRed.size());
-        teamIndex = this.team == RoboMasters.teamBlue? RoboMasters.teamBlue.size() : RoboMasters.teamRed.size();
+        this.teamColor = TeamColor.BLUE;
+        No = this.team == RoboMasters.allies ? RoboMasters.allies.size() + 1 : (3 + RoboMasters.enemies.size());
+        teamIndex = this.team == RoboMasters.allies ? RoboMasters.allies.size() : RoboMasters.enemies.size();
 
         switch (this.No){
             case 0 -> pointState = PointState.Blue1;
@@ -67,7 +69,7 @@ public abstract class RoboMaster {
         weapon = new Weapon(this);
         lidarObservation = new LidarObservation(this);
 
-        if(this.team == RoboMasters.teamBlue){
+        if(this.team == RoboMasters.allies){
             costMap = new CostMap(this);
             strategyMaker = new StrategyMaker(this);
         }
@@ -82,6 +84,22 @@ public abstract class RoboMaster {
             case realMachine -> {}
         }
         this.health = property.health;
+    }
+
+    public void setTeamColor(TeamColor color){
+        this.teamColor = color;
+    }
+
+    public String getTeamColor(){
+        switch (this.teamColor){
+            case RED -> {
+                return "Red" + (this.No <= 2 ? this.No : this.No / 2);
+            }
+            case BLUE -> {
+                return "Blue" + (this.No <= 2 ? this.No : this.No / 2);
+            }
+        }
+        return null;
     }
 
     public void start(){
