@@ -224,8 +224,8 @@ public class PointSimulator extends Simulator {
         }
 
         if(radian == 0){
-            for(int i = x - 25; i < x + width + 25 ; i ++){
-                for(int j = y - 25;j < y + height + 25; j ++){
+            for(int i = x - 30; i < x + width + 30 ; i ++){
+                for(int j = y - 30;j < y + height + 30; j ++){
                     setObstaclePoint(i, j);
                 }
             }

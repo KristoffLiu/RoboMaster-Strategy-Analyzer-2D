@@ -101,7 +101,7 @@ public class CostMap extends LoopThread {
     }
 
     public int costOfFriendEntity(int x, int y){
-        if(this.roboMaster.name == "Blue1"){
+        if(this.roboMaster.name == "Ally1"){
             float distanceToFriend = Team.ally2.getPointPosition().distanceTo(x,y);
             float cost = 0;
             if(distanceToFriend <= 65){
