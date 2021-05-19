@@ -16,6 +16,8 @@ import numpy as np
 import sys
 import os
 
+from genpy import rostime
+
 sys.path.append(os.getcwd().rstrip("env"))
 # os.path.abspath()
 from env.rosanalyzer.Analyzer import Analyzer
@@ -41,10 +43,10 @@ class Brain:
 
         self.analyzer = Analyzer()
 
-        self._decision_pub = [rospy.Publisher("/CAR1/move_base_simple/goal", PoseStamped, queue_size=10),
-                            rospy.Publisher("/CAR2/move_base_simple/goal", PoseStamped, queue_size=10)]
+        # self._decision_pub = [rospy.Publisher("/CAR1/move_base_simple/goal", PoseStamped, queue_size=10),
+        #                     rospy.Publisher("/CAR2/move_base_simple/goal", PoseStamped, queue_size=10)]
 
-        self._global_planner_pub = [rospy.Publisher("/CAR1/global_planner_node_action", Path, queue_size=10),
+        self._global_planner_pub = [rospy.Publisher("/CAR1/decision_global_path", Path, queue_size=10),
                             rospy.Publisher("/CAR2/decision_global_path", Path, queue_size=10)]
 
         self._robots_subscriber = [rospy.Subscriber("/CAR1/amcl_pose", PoseStamped, self.ownPositionCB0),
@@ -52,7 +54,7 @@ class Brain:
         self._enemies_subscriber = rospy.Subscriber("/obstacle_preprocessed", Obstacles, self.enemyInfo)
         self._hp_subscriber = rospy.Subscriber("/CAR1/game_robot_hp", GameRobotHP, self.robotHP)
         self._buff_zone_subscriber = rospy.Subscriber("/CAR1/game_zone_array_status", GameZoneArray, self.gameZone)
-        self._game_status_subscriber = rospy.Subscriber("/CAR1/game_status", GameStatus, self.gameState)
+        self._game_status_subscriber = rospy.Subscriber("/CAR2/game_status", GameStatus, self.gameState)
         self._vis_pub = [rospy.Publisher("/CAR1/visualization_marker", Marker, queue_size=10),
                          rospy.Publisher("/CAR2/visualization_marker", Marker, queue_size=10)]
         self._is_goal_reach_subscribers = [rospy.Subscriber("/CAR1/global_planner_node_action/status", GoalStatusArray, self.enable_decision1),
@@ -68,7 +70,7 @@ class Brain:
             if(msg.status_list[i].status) == 1:
                 isOn = False
                 break
-        self.analyzer.allies1.setStrategyMaker(isOn)
+        self.analyzer.ally1.setStrategyMaker(isOn)
 
     def enable_decision2(self, msg):
         isOn = True
@@ -76,21 +78,21 @@ class Brain:
             if(msg.status_list[i].status) == 1:
                 isOn = False
                 break
-        self.analyzer.allies2.setStrategyMaker(isOn)
+        self.analyzer.ally2.setStrategyMaker(isOn)
 
     def ownPositionCB0(self, msg):
         [y, p, r] = R.from_quat([msg.pose.orientation.x,
                                  msg.pose.orientation.y,
                                  msg.pose.orientation.z,
                                  msg.pose.orientation.w]).as_euler('zyx', degrees=True)
-        self.analyzer.allies1.setPosition(msg.pose.position.x, msg.pose.position.y,float(y))
+        self.analyzer.ally1.setPosition(msg.pose.position.x, msg.pose.position.y,float(y))
 
     def ownPositionCB1(self, msg):
         [y, p, r] = R.from_quat([msg.pose.orientation.x,
                                  msg.pose.orientation.y,
                                  msg.pose.orientation.z,
                                  msg.pose.orientation.w]).as_euler('zyx', degrees=True)
-        self.analyzer.allies2.setPosition(msg.pose.position.x, msg.pose.position.y,float(y))
+        self.analyzer.ally2.setPosition(msg.pose.position.x, msg.pose.position.y,float(y))
 
     def enemyInfo(self, data):
         enemy = data.circles
@@ -101,8 +103,8 @@ class Brain:
             self.analyzer.enemy2.setPosition(enemy[1].center.x, enemy[1].center.y,float(0))
 
     def robotHP(self, data):
-        self.analyzer.allies1.setHealth(data.blue1)
-        self.analyzer.allies2.setHealth(data.blue2)
+        self.analyzer.ally1.setHealth(data.blue1)
+        self.analyzer.ally2.setHealth(data.blue2)
         self.analyzer.enemy1.setHealth(data.red1)
         self.analyzer.enemy2.setHealth(data.red2)
 
@@ -128,18 +130,18 @@ class Brain:
         return [r[3], r[2], r[1], r[0]]
 
     def get_next_position1(self):
-        if self.analyzer.allies1.isStrategyMakerOn:
+        if self.analyzer.ally1.isStrategyMakerOn:
             # pos = self.Blue2.getPointAvoidingFacingEnemies()
-            [rx, ry] = self.analyzer.allies1.getDecisionMade()
+            [rx, ry] = self.analyzer.ally1.getDecisionMade()
 
             enemy = self.analyzer.entrypoint.getLockedEnemy()
             enemyPosition = enemy.getPointPosition()
             gx = enemyPosition.getX() / 100.0
             gy = enemyPosition.getY() / 100.0
 
-            eDistance = math.dist([self.analyzer.allies1.old_goal_x, self.analyzer.allies1.old_goal_y], [rx, ry]) 
+            eDistance = math.dist([self.analyzer.ally1.old_goal_x, self.analyzer.ally1.old_goal_y], [rx, ry]) 
             if (eDistance < 0.15):
-                self.analyzer.allies1.old_goal_x, self.analyzer.allies1.old_goal_y = rx, ry
+                self.analyzer.ally1.old_goal_x, self.analyzer.ally1.old_goal_y = rx, ry
                 return
 
             self.cnt = self.cnt+1
@@ -176,18 +178,18 @@ class Brain:
             self._vis_pub[0].publish(mark)
 
     def get_next_position2(self):
-        if self.analyzer.allies2.isStrategyMakerOn:
+        if self.analyzer.ally2.isStrategyMakerOn:
             # pos = self.Blue2.getPointAvoidingFacingEnemies()
-            [rx, ry] = self.analyzer.allies2.getDecisionMade()
+            [rx, ry] = self.analyzer.ally2.getDecisionMade()
 
             enemy = self.analyzer.entrypoint.getLockedEnemy()
             enemyPosition = enemy.getPointPosition()
             gx = enemyPosition.getX() / 100.0
             gy = enemyPosition.getY() / 100.0
 
-            eDistance = math.dist([self.analyzer.allies2.old_goal_x, self.analyzer.allies2.old_goal_y], [rx, ry]) 
+            eDistance = math.dist([self.analyzer.ally2.old_goal_x, self.analyzer.ally2.old_goal_y], [rx, ry]) 
             if (eDistance < 0.15):
-                self.analyzer.allies2.old_goal_x, self.analyzer.allies2.old_goal_y = rx, ry
+                self.analyzer.ally2.old_goal_x, self.analyzer.ally2.old_goal_y = rx, ry
                 return
 
             self.cnt = self.cnt+1
@@ -224,10 +226,14 @@ class Brain:
             self._vis_pub[1].publish(mark)
 
     def get_next_path1(self):
-        if self.analyzer.allies1.isStrategyMakerOn:
+        if self.analyzer.ally1.isStrategyMakerOn:
             # pos = self.Blue2.getPointAvoidingFacingEnemies()
-            rawPath = self.analyzer.allies1.getDecisionPath()
+            rawPath = self.analyzer.ally1.getDecisionPath()
             path = Path()
+            path.header.frame_id = "/map"
+            path.header.stamp = rospy.get_rostime()
+            print("~~~~~~~~~~~~~")
+            print(len(rawPath))
             for node in rawPath:
                 goal = PoseStamped()
                 goal.header.frame_id = "/map"
@@ -238,8 +244,6 @@ class Brain:
                 goal.pose.orientation.y,
                 goal.pose.orientation.z] = self._createQuaternionFromYaw(node.yaw)
                 path.poses.append(goal)
-
-            print(path)
             self._global_planner_pub[0].publish(path)
             
 
@@ -263,11 +267,17 @@ class Brain:
 
 
     def get_next_path2(self):
-        if self.analyzer.allies2.isStrategyMakerOn:
+        if self.analyzer.ally2.isStrategyMakerOn:
                         # pos = self.Blue2.getPointAvoidingFacingEnemies()
-            rawPath = self.analyzer.allies1.getDecisionPath()
+            rawPath = self.analyzer.ally2.getDecisionPath()
+            
             path = Path()
+            path.header.frame_id = "/map"
+            path.header.stamp = rospy.get_rostime()
+            print("-----------------")
+            print(len(rawPath))
             for node in rawPath:
+                
                 goal = PoseStamped()
                 goal.header.frame_id = "/map"
                 goal.pose.position.x, goal.pose.position.y = node.x, node.y
@@ -300,8 +310,8 @@ class Brain:
 
 
     def display(self):
-        # pass
-        self.analyzer.displayOnce()
+        pass
+        # self.analyzer.displayOnce()
         
 
 def call_rosspin():
@@ -320,10 +330,10 @@ if __name__ == '__main__':
         while not rospy.core.is_shutdown():
             brain.display()
             if (brain.analyzer.game_status == Analyzer.GameStatus.GAME):
-                brain.get_next_position1()
-                brain.get_next_position2()
-                # brain.get_next_path1()
-                # brain.get_next_path2()
+                # brain.get_next_position1()
+                # brain.get_next_position2()
+                brain.get_next_path1()
+                brain.get_next_path2()
             rate.sleep()
 
     except rospy.ROSInterruptException:
