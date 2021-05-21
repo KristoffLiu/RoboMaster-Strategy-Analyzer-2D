@@ -229,6 +229,10 @@ class Brain:
         if self.analyzer.ally1.isStrategyMakerOn:
             # pos = self.Blue2.getPointAvoidingFacingEnemies()
             rawPath = self.analyzer.ally1.getDecisionPath()
+
+            if len(rawPath) == 0:
+                return
+
             path = Path()
             path.header.frame_id = "/map"
             path.header.stamp = rospy.get_rostime()
@@ -243,9 +247,8 @@ class Brain:
                 goal.pose.orientation.x,
                 goal.pose.orientation.y,
                 goal.pose.orientation.z] = self._createQuaternionFromYaw(node.yaw)
+                # print("yaw angle: " , node.yaw)
                 path.poses.append(goal)
-
-            path.poses.reverse()
             self._global_planner_pub[0].publish(path)
             
 
@@ -273,6 +276,9 @@ class Brain:
                         # pos = self.Blue2.getPointAvoidingFacingEnemies()
             rawPath = self.analyzer.ally2.getDecisionPath()
             
+            if len(rawPath) == 0:
+                return
+
             path = Path()
             path.header.frame_id = "/map"
             path.header.stamp = rospy.get_rostime()
@@ -289,7 +295,7 @@ class Brain:
                 goal.pose.orientation.y,
                 goal.pose.orientation.z] = self._createQuaternionFromYaw(node.yaw)
                 path.poses.append(goal)
-            path.poses.reverse()
+
             self._global_planner_pub[1].publish(path)
 
             # mark = Marker()
@@ -312,8 +318,8 @@ class Brain:
 
 
     def display(self):
-        pass
-        # self.analyzer.displayOnce()
+        # pass
+        self.analyzer.displayOnce()
         
 
 def call_rosspin():
@@ -331,11 +337,11 @@ if __name__ == '__main__':
 
         while not rospy.core.is_shutdown():
             brain.display()
-            # if (brain.analyzer.game_status == Analyzer.GameStatus.GAME):
+            if (brain.analyzer.game_status == Analyzer.GameStatus.GAME):
                 # brain.get_next_position1()
                 # brain.get_next_position2()
-            brain.get_next_path1()
-            brain.get_next_path2()
+                brain.get_next_path1()
+                brain.get_next_path2()
             rate.sleep()
 
     except rospy.ROSInterruptException:

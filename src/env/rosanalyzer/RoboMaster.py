@@ -51,9 +51,15 @@ class Allies(RoboMaster):
         self.pathList = []
     
     def __str__(self):
-        boolstr = "is working" if self.isStrategyMakerOn else "not working"
-        str = "\n      StrategyMaker Status: {}".format(boolstr)
-        return super(Allies, self).__str__() + str
+        if self.isStrategyMakerOn:
+            boolstr = "is working" + " " + str(len(self.pathList)) + " "
+            if len(self.pathList) > 0:
+                destinationPoint = self.pathList[len(self.pathList) - 1]
+                boolstr += "Destination: " + "%.2f, %.2f, %2f" % (destinationPoint.x, destinationPoint.y, math.degrees(destinationPoint.yaw) )
+        else:
+            boolstr = "not working"
+        string = "\n      StrategyMaker Status: {}".format(boolstr)
+        return super(Allies, self).__str__() + string
     
     def getDecisionMade(self):
         pos = self._object.getDecisionMade()
@@ -61,22 +67,22 @@ class Allies(RoboMaster):
 
     def getDecisionPath(self):
         posList = self._object.getPath()
-        self.pathList = []
+        list = []
         last = DecisionNode()
         for i in posList:
             temp = DecisionNode(i.getX() / 100.0, i.getY() / 100.0)
             last.yawAngle2Point(temp.x, temp.y)
+            list.append(temp)
             last = temp
-            self.pathList.append(last)
-        
         enemy = self._entrypoint.getLockedEnemy()
         enemyPosition = enemy.getPointPosition()
         gx = enemyPosition.getX() / 100.0
         gy = enemyPosition.getY() / 100.0
         last.yawAngle2Point(gx, gy)
+        self.pathList = list
         return self.pathList
     
-    def setStrategyMaker(self, bool):
+    def setStrategyMaker(self, bool):  
         self.isStrategyMakerOn = bool
 
 
@@ -91,11 +97,8 @@ class DecisionNode():
         self.y = y
         self.yaw = yaw
     
-    def yawAngle2Point(self, nX, nY):
-        self.yaw = self.yawAngle(nX, self.x, nY, self.y)
-
-    def yawAngle(self, nX, oX, nY, oY):
-        return math.atan2(nY - oY, nX - oX)
+    def yawAngle2Point(self, targetX, targetY):
+        self.yaw = math.atan2(targetY - self.y, targetX - self.x)
 
     def __str__(self):
         return "{:f} {:f} {:f}".format(self.x, self.y, self.yaw)

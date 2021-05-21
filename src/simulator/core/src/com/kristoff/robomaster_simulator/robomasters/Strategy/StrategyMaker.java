@@ -158,8 +158,8 @@ public class StrategyMaker extends LoopThread {
 
     public List<Position> getPath(){
         List<Position> positions = new ArrayList<>();
-        for (SearchNode searchNode : this.pathNodes){
-            positions.add(searchNode.position);
+        for(int i = this.pathNodes.size() - 1; i >= 0; i --){
+            positions.add(this.pathNodes.get(i).position);
         }
         return positions;
     }

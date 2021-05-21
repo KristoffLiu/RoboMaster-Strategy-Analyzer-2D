@@ -24,3 +24,6 @@ if __name__ == '__main__':
     analyzer.enemy2.setHealth(1000)
     analyzer.ally1.setHealth(1000)
     analyzer.ally1.setHealth(1000)
+
+    analyzer.ally1.getDecisionPath()
+    analyzer.ally2.getDecisionPath()

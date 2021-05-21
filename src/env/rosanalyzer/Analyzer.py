@@ -29,7 +29,7 @@ class Analyzer:
         #self.enemy2 = Enemy(self.entrypoint.getEnemy(1))
         self.ally1 = Allies(self.entrypoint.getRoboMaster("Ally1"), self.entrypoint)
         self.ally2 = Allies(self.entrypoint.getRoboMaster("Ally2"), self.entrypoint)
-        self.enemy1 = Enemy(self.entrypoint.getEnemy("Enemy2"), self.entrypoint)
+        self.enemy1 = Enemy(self.entrypoint.getEnemy("Enemy1"), self.entrypoint)
         self.enemy2 = Enemy(self.entrypoint.getEnemy("Enemy2"), self.entrypoint)
         self.buff_zones = [self.BuffZone(i, self.BuffZone.BuffType.UNKNOWN, False) for i in range(6)]
 
