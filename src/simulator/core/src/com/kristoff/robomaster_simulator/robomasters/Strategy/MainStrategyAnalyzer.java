@@ -57,6 +57,7 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
         //boolean[][] tempVisitedGrid = new boolean[849][489];
 
         boolean[][] tempVisitedGrid = strategyMaker.visitedGrid;
+        SearchNode[][] tempVisitedGrid2 = new SearchNode[849][489];
 
         PositionCost target = getCostMap().minPositionCost;
         int targetCost = target.cost;
@@ -66,6 +67,7 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
         while(!is_find){
             queue.clear();
             tempVisitedGrid = new boolean[849][489];
+            tempVisitedGrid2 = new SearchNode[849][489];
 
             this.rootNode = new SearchNode(
                     currentPosition.x,
@@ -77,17 +79,18 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
 
             queue.offer(rootNode);
             tempVisitedGrid[rootNode.position.x][rootNode.position.y] = true;
+            tempVisitedGrid2[rootNode.position.x][rootNode.position.y] = rootNode;
 
             while (!this.queue.isEmpty()){
                 resultNode = this.queue.poll();
                 if(isAvailable(resultNode.position, targetCost, target)) {
                     break;
                 }
-                generateChildrenNodes(resultNode, tempVisitedGrid);
+                generateChildrenNodes(resultNode, tempVisitedGrid, tempVisitedGrid2);
                 setNodeHasBeenVisited(resultNode, tempVisitedGrid);
             }
-            if(Math.abs(targetCost - getCostMap().getCost(resultNode.position.getX(),resultNode.position.getY())) >= 50){
-                targetCost += 50;
+            if(Math.abs(targetCost - getCostMap().getCost(resultNode.position.getX(),resultNode.position.getY())) >= 20){
+                targetCost += 20;
             }
             else {
                 is_find = true;
@@ -106,7 +109,7 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
     }
 
     public boolean isAvailable(Position centre, int targetCost, Position target){
-        if(Math.abs(getCostMap().getCost(centre.getX(), centre.getY()) - targetCost) < 50 ||
+        if(Math.abs(getCostMap().getCost(centre.getX(), centre.getY()) - targetCost) < 20 ||
                 centre.x == target.x && centre.y == target.y){
             return true;
             //isTheSurroundingAreaAvailable(centre);
@@ -115,7 +118,7 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
     }
 
     //查找并生成子节点，并返回队列对象
-    public void generateChildrenNodes(SearchNode node, boolean[][] visitedGrid){
+    public void generateChildrenNodes(SearchNode node, boolean[][] visitedGrid, SearchNode[][] visitedGrid2){
         if(!PointSimulator.isPointInsideMap(node.position.x, node.position.y)) return;
         visitedGrid[node.position.x][node.position.y] = true;
         for(int i=0; i < SearchNode.childrenNodesFindingCost.length; i++){
@@ -129,15 +132,17 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
             if(!hasThisNodeBeenVisited(x, y, visitedGrid) ){
                 SearchNode childNode = new SearchNode(x,y,node.index + 1, totalCost,node);
                 boolean shouldSkip = false;
-                for (SearchNode nodeInQueue : queue){
-                    if(nodeInQueue.isInSamePosition(childNode)){
-                        if(nodeInQueue.cost > childNode.cost){
-                            nodeInQueue.cost = childNode.cost;
-                            nodeInQueue.index = childNode.index;
-                            nodeInQueue.parentNode = childNode.parentNode;
-                        }
-                        shouldSkip = true;
+                if(visitedGrid2[childNode.position.x][childNode.position.y] != null){
+                    SearchNode nodeInGrid = visitedGrid2[childNode.position.x][childNode.position.y];
+                    if(nodeInGrid.cost > childNode.cost){
+                        nodeInGrid.cost = childNode.cost;
+                        nodeInGrid.index = childNode.index;
+                        nodeInGrid.parentNode = childNode.parentNode;
                     }
+                    shouldSkip = true;
+                }
+                else{
+                    visitedGrid2[childNode.position.x][childNode.position.y] = childNode;
                 }
                 if(shouldSkip) continue;
                 if(currentCost > 400 || nextCost < 400){

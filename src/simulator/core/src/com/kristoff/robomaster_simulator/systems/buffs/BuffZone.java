@@ -21,7 +21,7 @@ public class BuffZone {
     Image buffImage;
     TextureMapObject textureMapObject;
     Position centrePosition;
-
+    Ally neededAlly;
 
     public static int isHPRecoveryNeeded = 0;
     public static int isBulletSupplyNeeded = 0;

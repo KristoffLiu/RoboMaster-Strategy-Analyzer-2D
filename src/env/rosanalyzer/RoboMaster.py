@@ -68,20 +68,60 @@ class Ally(RoboMaster):
 
     def getDecisionPath(self):
         posList = self._object.getPath()
-        list = []
-        last = DecisionNode()
-        for i in posList:
-            temp = DecisionNode(i.getX() / 100.0, i.getY() / 100.0)
-            last.yawAngle2Point(temp.x, temp.y)
-            list.append(temp)
-            last = temp
-        enemy = self._entrypoint.getLockedEnemy()
-        enemyPosition = enemy.getPointPosition()
-        gx = enemyPosition.getX() / 100.0
-        gy = enemyPosition.getY() / 100.0
-        last.yawAngle2Point(gx, gy)
-        self.pathList = list
-        return self.pathList
+
+        def TowardsEnemyOnlyAtLast():
+            list = []
+            last = DecisionNode()
+            for i in posList:
+                temp = DecisionNode(i.getX() / 100.0, i.getY() / 100.0)
+                last.yawAngle2Point(temp.x, temp.y)
+                list.append(temp)
+                last = temp
+            enemy = self._entrypoint.getLockedEnemy()
+            enemyPosition = enemy.getPointPosition()
+            gx = enemyPosition.getX() / 100.0
+            gy = enemyPosition.getY() / 100.0
+            last.yawAngle2Point(gx, gy)
+            self.pathList = list
+            return self.pathList
+
+        def TowardsEnemyAtBothSides():
+            list = []
+            last = DecisionNode()
+            enemy = self._entrypoint.getLockedEnemy()
+            enemyPosition = enemy.getPointPosition()
+            gx = enemyPosition.getX() / 100.0
+            gy = enemyPosition.getY() / 100.0
+            for i in posList:
+                temp = DecisionNode(i.getX() / 100.0, i.getY() / 100.0)
+                last.yawAngle2Point(temp.x, temp.y)
+                list.append(temp)
+                last = temp
+            first = list[1]
+            first.yawAngle2Point(gx, gy)
+            last.yawAngle2Point(gx, gy)
+            self.pathList = list
+            return self.pathList
+
+        def AlwaysTowardsEnemy():
+            list = []
+            last = DecisionNode()
+            enemy = self._entrypoint.getLockedEnemy()
+            enemyPosition = enemy.getPointPosition()
+            gx = enemyPosition.getX() / 100.0
+            gy = enemyPosition.getY() / 100.0
+            for i in posList:
+                temp = DecisionNode(i.getX() / 100.0, i.getY() / 100.0)
+                last.yawAngle2Point(gx, gy)
+                list.append(temp)
+                last = temp
+            last.yawAngle2Point(gx, gy)
+            self.pathList = list
+            return self.pathList
+        
+        return TowardsEnemyAtBothSides()
+
+    
     
     def setStrategyMaker(self, bool):  
         self.isStrategyMakerOn = bool
