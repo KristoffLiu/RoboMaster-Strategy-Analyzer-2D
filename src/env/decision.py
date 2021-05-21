@@ -16,11 +16,13 @@ import numpy as np
 import sys
 import os
 
+
 from genpy import rostime
 
 sys.path.append(os.getcwd().rstrip("env"))
 # os.path.abspath()
 from env.rosanalyzer.Analyzer import Analyzer
+from env.rosanalyzer.RoboMaster import Ally
 
 import rospy
 from geometry_msgs.msg import PoseStamped
@@ -225,6 +227,46 @@ class Brain:
             mark.lifetime = rospy.Duration(self._control_rate, 0)
             self._vis_pub[1].publish(mark)
 
+    def get_next_path(self, ally : Ally):
+        if ally.isStrategyMakerOn:
+            rawPath = ally.getDecisionPath()
+        if len(rawPath) == 0:
+            return
+        path = Path()
+        path.header.frame_id = "/map"
+        path.header.stamp = rospy.get_rostime()
+        print("~~~~~~~~~~~~~")
+        print(len(rawPath))
+        for node in rawPath:
+            goal = PoseStamped()
+            goal.header.frame_id = "/map"
+            goal.pose.position.x, goal.pose.position.y = node.x, node.y
+
+            [goal.pose.orientation.w,
+            goal.pose.orientation.x,
+            goal.pose.orientation.y,
+            goal.pose.orientation.z] = self._createQuaternionFromYaw(node.yaw)
+            # print("yaw angle: " , node.yaw)
+            path.poses.append(goal)
+        self._global_planner_pub[0].publish(path)
+        # mark = Marker()
+        # mark.header.frame_id = "/map"
+        # mark.header.stamp = rospy.Time.now()
+        # mark.ns = "showen_point"
+        # mark.id = 1
+        # mark.type = Marker().ARROW
+        # mark.action = Marker().ADD
+        # mark.pose = goal.pose
+        # mark.scale.x = 0.4
+        # mark.scale.y = 0.05
+        # mark.scale.z = 0.05
+        # mark.color.a = 1.0
+        # mark.color.r = 0.2
+        # mark.color.g = 1.0
+        # mark.color.b = 0.3
+        # mark.lifetime = rospy.Duration(self._control_rate, 0)
+        # self._vis_pub[1].publish(mark)
+
     def get_next_path1(self):
         if self.analyzer.ally1.isStrategyMakerOn:
             # pos = self.Blue2.getPointAvoidingFacingEnemies()
@@ -275,10 +317,8 @@ class Brain:
         if self.analyzer.ally2.isStrategyMakerOn:
                         # pos = self.Blue2.getPointAvoidingFacingEnemies()
             rawPath = self.analyzer.ally2.getDecisionPath()
-            
             if len(rawPath) == 0:
                 return
-
             path = Path()
             path.header.frame_id = "/map"
             path.header.stamp = rospy.get_rostime()
@@ -330,7 +370,7 @@ if __name__ == '__main__':
     try:
         print(__file__ + " start!!")
         rospy.init_node('decision_node', anonymous=True)
-        control_rate = 1
+        control_rate = 5
         rate = rospy.Rate(1.0 / control_rate)
         brain = Brain(control_rate)
         spin_thread = threading.Thread(target=call_rosspin).start()

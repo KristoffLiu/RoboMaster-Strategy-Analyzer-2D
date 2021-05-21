@@ -4,7 +4,7 @@
 from py4j.java_gateway import JavaGateway
 from py4j.java_gateway import java_import
 
-from env.rosanalyzer.RoboMaster import Allies
+from env.rosanalyzer.RoboMaster import Ally
 from env.rosanalyzer.RoboMaster import Enemy
 from enum import Enum
 from threading import Timer
@@ -13,6 +13,7 @@ import os
 
 class Analyzer:
     def __init__(self):
+        self.version = "1.55"
         self.gateway = JavaGateway() #启动py4j服务器
         self.entrypoint = self.gateway.entry_point #获取服务器桥的入口
         java_import(self.gateway.jvm,'java.util.*') #导入java中的类的方法
@@ -23,14 +24,10 @@ class Analyzer:
         self.entrypoint.setAsRoamer("blue1")
         self.entrypoint.isOurTeamBlue(True)
 
-        #self.allies1 = Allies(self.entrypoint.getAllies(0))
-        #self.allies2 = Allies(self.entrypoint.getAllies(1))
-        #self.enemy1 = Enemy(self.entrypoint.getEnemy(0))
-        #self.enemy2 = Enemy(self.entrypoint.getEnemy(1))
-        self.ally1 = Allies(self.entrypoint.getRoboMaster("Ally1"), self.entrypoint)
-        self.ally2 = Allies(self.entrypoint.getRoboMaster("Ally2"), self.entrypoint)
-        self.enemy1 = Enemy(self.entrypoint.getEnemy("Enemy1"), self.entrypoint)
-        self.enemy2 = Enemy(self.entrypoint.getEnemy("Enemy2"), self.entrypoint)
+        self.ally1 = Ally(self.entrypoint, self.entrypoint.getAlly("Ally1"))
+        self.ally2 = Ally(self.entrypoint, self.entrypoint.getAlly("Ally2"))
+        self.enemy1 = Enemy(self.entrypoint, self.entrypoint.getEnemy("Enemy1"))
+        self.enemy2 = Enemy(self.entrypoint, self.entrypoint.getEnemy("Enemy2"))
         self.buff_zones = [self.BuffZone(i, self.BuffZone.BuffType.UNKNOWN, False) for i in range(6)]
 
     def updateGameStatus(self, game_status, remaining_time):
@@ -82,7 +79,7 @@ class Analyzer:
         self.display_buff_zones()
 
     def display_title(self):
-        print("RoboMaster 分析器, 版本 v{}".format("1.51"))
+        print("RoboMaster 分析器, 版本 v{}".format(self.version))
     
     def display_game_status(self):
         print("Game Status: {}".format(self.game_status))

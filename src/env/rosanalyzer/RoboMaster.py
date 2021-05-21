@@ -4,7 +4,8 @@ class RoboMaster:
     x, y, yaw = 0.0, 0.0, 0.0
     old_goal_x, old_goal_y = 0.0, 0.0
     theta = 0.25
-    def __init__(self, object, entrypoint):
+
+    def __init__(self, entrypoint, object):
         self._entrypoint = entrypoint
         self._object = object
         self.name = object.getName()
@@ -25,7 +26,7 @@ class RoboMaster:
         self.numOfBullets = numOfBullets
 
     def __str__(self):
-        return "   %s - position: %.2f, %.2f, %2f" % (self.name, self.x, self.y, self.yaw) + self.display_health() + self.display_num_of_bullets()
+        return "   %s - [x]%.2f [y]%.2f [yaw]%.2f" % (self.name, self.x, self.y, self.yaw) + self.display_health() + self.display_num_of_bullets()
 
     def display_health(self):
         str = "\n      HP: ["
@@ -43,23 +44,23 @@ class RoboMaster:
     def __sub__(self, other):
         return self.x - other.x, self.y - other.y
 
-class Allies(RoboMaster):
-    def __init__(self, alliesObject, entrypoint):
-        super(Allies, self).__init__(alliesObject, entrypoint)
+class Ally(RoboMaster):
+    def __init__(self, entrypoint, allyObject):
+        super(Ally, self).__init__(entrypoint, allyObject)
         self.strategyMaker = self._object.getStrategyMaker()
         self.isStrategyMakerOn = True
         self.pathList = []
     
     def __str__(self):
         if self.isStrategyMakerOn:
-            boolstr = "is working" + " " + str(len(self.pathList)) + " "
+            boolstr = "is working" + " - " + str(len(self.pathList)) + " points path"
             if len(self.pathList) > 0:
                 destinationPoint = self.pathList[len(self.pathList) - 1]
-                boolstr += "Destination: " + "%.2f, %.2f, %2f" % (destinationPoint.x, destinationPoint.y, math.degrees(destinationPoint.yaw) )
+                boolstr += "\n      Destination: " + "%.2f, %.2f, %2f" % (destinationPoint.x, destinationPoint.y, math.degrees(destinationPoint.yaw) )
         else:
-            boolstr = "not working"
-        string = "\n      StrategyMaker Status: {}".format(boolstr)
-        return super(Allies, self).__str__() + string
+            boolstr = "not working\n      Destination: None"
+        string = "\n      StrategyMaker Status: {}".format(boolstr) 
+        return super(Ally, self).__str__() + string
     
     def getDecisionMade(self):
         pos = self._object.getDecisionMade()
@@ -87,8 +88,8 @@ class Allies(RoboMaster):
 
 
 class Enemy(RoboMaster):
-    def __init__(self, enemyObject, entrypoint):
-        super(Enemy, self).__init__(enemyObject, entrypoint)
+    def __init__(self, entrypoint, enemyObject):
+        super(Enemy, self).__init__(entrypoint, enemyObject)
 
 
 class DecisionNode():

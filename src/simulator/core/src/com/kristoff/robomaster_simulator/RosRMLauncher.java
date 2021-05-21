@@ -3,6 +3,7 @@ package com.kristoff.robomaster_simulator;
 import com.kristoff.robomaster_simulator.core.Simulator;
 import com.kristoff.robomaster_simulator.core.SimulatorConfiguration;
 import com.kristoff.robomaster_simulator.core.SimulatorMode;
+import com.kristoff.robomaster_simulator.robomasters.Ally;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
@@ -46,6 +47,10 @@ public class RosRMLauncher {
     public RoboMaster getRoboMaster(String name){
         roboMaster = RoboMasters.getRoboMaster(name);
         return roboMaster;
+    }
+
+    public Ally getAlly(String name){
+        return (Ally) RoboMasters.getRoboMaster(name);
     }
 
     public Enemy getEnemy(String name){
