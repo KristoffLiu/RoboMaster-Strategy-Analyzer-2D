@@ -11,6 +11,7 @@ import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.utils.Position;
 import org.w3c.dom.Node;
 
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -29,7 +30,7 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
         this.roboMaster = strategyMaker.roboMaster;
         this.strategyMaker = strategyMaker;
 
-        this.queue                      = this.strategyMaker.queue;
+        this.queue                      = new LinkedList<>();
         this.resultNodes                = new CopyOnWriteArrayList<>();
         this.pathNodes                  = new CopyOnWriteArrayList<>();
         resultNode = new SearchNode();
@@ -52,7 +53,9 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
     }
 
     public void scanMap(Position currentPosition){
+        long  startTime = System.currentTimeMillis();    //获取开始时间
         //boolean[][] tempVisitedGrid = new boolean[849][489];
+
         boolean[][] tempVisitedGrid = strategyMaker.visitedGrid;
 
         PositionCost target = getCostMap().minPositionCost;
@@ -97,6 +100,9 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
             node = node.parentNode;
         }
         this.strategyMaker.update(resultNode, tempVisitedGrid, resultNodes, pathNodes);
+
+        long endTime = System.currentTimeMillis();    //获取结束时间
+        System.out.println("程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
     }
 
     public boolean isAvailable(Position centre, int targetCost, Position target){
@@ -133,9 +139,7 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
                         shouldSkip = true;
                     }
                 }
-                if(shouldSkip){
-                    continue;
-                }
+                if(shouldSkip) continue;
                 if(currentCost > 400 || nextCost < 400){
                     node.childrenNodes.add(childNode);
                     queue.offer(childNode);
