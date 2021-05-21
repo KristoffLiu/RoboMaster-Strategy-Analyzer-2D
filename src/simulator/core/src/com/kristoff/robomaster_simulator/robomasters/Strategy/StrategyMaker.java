@@ -33,7 +33,7 @@ public class StrategyMaker extends LoopThread {
     //int counterState = -1;
     Position decisionMade;
 
-    StrategyAnalyzer_MasterVersion strategyAnalyzer_MasterVersion;
+    MainStrategyAnalyzer mainStrategyAnalyzer;
 
     SearchNode friendDecision;
 
@@ -64,11 +64,11 @@ public class StrategyMaker extends LoopThread {
         resultNodes            = new CopyOnWriteArrayList<SearchNode>();
         pathNodes              = new CopyOnWriteArrayList<SearchNode>();
 
-        strategyAnalyzer_MasterVersion = new StrategyAnalyzer_MasterVersion(this);
+        mainStrategyAnalyzer = new MainStrategyAnalyzer(this);
 
         costMap = roboMaster.costMap;
 
-        this.strategyAnalyzer = strategyAnalyzer_MasterVersion;
+        this.strategyAnalyzer = mainStrategyAnalyzer;
         this.delta = 2f;
         this.isStep = true;
     }
@@ -81,12 +81,11 @@ public class StrategyMaker extends LoopThread {
     public void makeDecision(){
         visitedGrid = new boolean[849][489];
         queue.clear();
-        switchAnalyzer();
         strategyAnalyzer.analyze(tacticState);
     }
 
     public void switchAnalyzer(){
-        strategyAnalyzer = strategyAnalyzer_MasterVersion;
+        strategyAnalyzer = mainStrategyAnalyzer;
     }
 
     public void update(SearchNode resultNode,
