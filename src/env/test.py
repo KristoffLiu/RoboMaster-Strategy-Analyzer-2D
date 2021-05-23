@@ -27,6 +27,3 @@ if __name__ == '__main__':
 
     analyzer.ally1.getDecisionPath()
     analyzer.ally2.getDecisionPath()
-
-    while(true):
-        time.sleep(1)
