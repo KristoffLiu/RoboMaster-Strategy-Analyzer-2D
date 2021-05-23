@@ -26,16 +26,16 @@ public class Actor extends LoopThread {
 
         switch (thisRoboMaster.No){
             case 0 -> {
-                pointState = PointState.Blue1;
+                pointState = PointState.Ally1;
             }
             case 1 -> {
-                pointState = PointState.Blue2;
+                pointState = PointState.Ally2;
             }
             case 2 -> {
-                pointState = PointState.Red1;
+                pointState = PointState.Enemy1;
             }
             case 3 -> {
-                pointState = PointState.Red2;
+                pointState = PointState.Enemy2;
             }
         }
 

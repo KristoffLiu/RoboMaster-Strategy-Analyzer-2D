@@ -1,4 +1,4 @@
-package com.kristoff.robomaster_simulator.teams.enemyobservations;
+package com.kristoff.robomaster_simulator.teams.allies.enemyobservations;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;

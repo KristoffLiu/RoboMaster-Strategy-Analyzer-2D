@@ -7,7 +7,7 @@ import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.robomasters.Ally;
 import com.kristoff.robomaster_simulator.systems.Systems;
-import com.kristoff.robomaster_simulator.teams.Team;
+import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.utils.Position;
 import com.kristoff.robomaster_simulator.view.actors.CustomActor;
 import com.kristoff.robomaster_simulator.view.ui.controls.Image;
@@ -63,9 +63,12 @@ public class BuffZone {
             isRedHPRecoveryNecessary = 0;
         }
         else if(RedHPRecovery.isActive){
-            if((Enemy.getLockedEnemy().getHealth() >= 1900 || !Enemy.getLockedEnemy().isAlive) &&
-                    (Enemy.getUnlockedEnemy().getHealth() >= 1900 || !Enemy.getUnlockedEnemy().isAlive)){
+            if((Enemy.getLockedEnemy().getHealth() < 1900 || !Enemy.getLockedEnemy().isAlive) &&
+                    (Enemy.getUnlockedEnemy().getHealth() < 1900 || !Enemy.getUnlockedEnemy().isAlive)){
                 isRedHPRecoveryNecessary = setPriority(RedHPRecovery);
+            }
+            else{
+
             }
         }
         else {
@@ -74,8 +77,8 @@ public class BuffZone {
     }
 
     public static int setPriority(BuffZone buffZone){
-        float distanceToBlue1 = buffZone.centrePosition.distanceTo(Team.ally1.getPointPosition());
-        float distanceToBlue2 = buffZone.centrePosition.distanceTo(Team.ally2.getPointPosition());
+        float distanceToBlue1 = buffZone.centrePosition.distanceTo(Allies.ally1.getPointPosition());
+        float distanceToBlue2 = buffZone.centrePosition.distanceTo(Allies.ally2.getPointPosition());
         if(distanceToBlue1 < distanceToBlue2){
             return 1;
         }
@@ -86,7 +89,7 @@ public class BuffZone {
 
     public static boolean isEnemyHPRecoveryNeeded(Ally roboMaster){
         if(isRedHPRecoveryNecessary == 0) return false;
-        if(roboMaster == Team.ally1){
+        if(roboMaster == Allies.ally1){
             return isRedHPRecoveryNecessary == 1;
         }
         else {
@@ -134,6 +137,11 @@ public class BuffZone {
         return bounds.contains(x / 100f, y / 100f);
     }
 
+    public Position getPosition(int x, int y, boolean isTarget){
+        Rectangle bounds = this.getBuffZoneActor().getBounds();
+        return new Position((int)(bounds.getX() * 100), (int)(bounds.getY()*100));
+    }
+
     public static int costOfBuff(int x, int y, Ally roboMaster){
         int cost = 0;
 
@@ -148,7 +156,7 @@ public class BuffZone {
                 case RedHPRecovery    -> {
                     if(isEnemyHPRecoveryNeeded(roboMaster)) {
                         if(distance <= 10){
-                            cost += (maxDis - distance) / maxDis * -150;
+                            cost += (maxDis - distance) / maxDis * -180;
                         }
                        //if(buffZone.isInBuffZone(x, y, true)) cost = -197;
                     }
@@ -211,7 +219,7 @@ public class BuffZone {
 
     public static boolean isHPRecoveryNeeded(Ally roboMaster){
         if(isHPRecoveryNeeded == 0) return false;
-        if(roboMaster == Team.ally1){
+        if(roboMaster == Allies.ally1){
             return isHPRecoveryNeeded == 1;
         }
         else {
@@ -223,10 +231,10 @@ public class BuffZone {
         if(BlueHPRecovery == null){
             isHPRecoveryNeeded = 0;
         }
-        if (Team.ally1.getHealth() > 1800 && Team.ally2.getHealth() > 1800) {
+        if (Allies.ally1.getHealth() > 1800 && Allies.ally2.getHealth() > 1800) {
             isHPRecoveryNeeded = 0;
         }
-        else if(Team.ally1.getHealth() > 1000 && Team.ally2.getHealth() > 1000){
+        else if(Allies.ally1.getHealth() > 1000 && Allies.ally2.getHealth() > 1000){
             isHPRecoveryNeeded = 0;
         }
         else{
@@ -236,7 +244,7 @@ public class BuffZone {
 
     public static boolean isBulletSupplyNeeded(Ally roboMaster){
         if(isBulletSupplyNeeded == 0) return false;
-        if(roboMaster == Team.ally1){
+        if(roboMaster == Allies.ally1){
             return isBulletSupplyNeeded == 1;
         }
         else {
@@ -264,44 +272,20 @@ public class BuffZone {
                         NotActivated = buffZone;
                     }
                     case 1 -> {
-                        if(Team.isOurTeamBlue){
-                            buffZone.updateBuff(Buff.RedHPRecovery, isActive);
-                            RedHPRecovery = buffZone;
-                        }
-                        else {
-                            buffZone.updateBuff(Buff.BlueHPRecovery, isActive);
-                            BlueHPRecovery = buffZone;
-                        }
+                        buffZone.updateBuff(Buff.RedHPRecovery, isActive);
+                        RedHPRecovery = buffZone;
                     }
                     case 2 -> {
-                        if(Team.isOurTeamBlue) {
-                            buffZone.updateBuff(Buff.RedBulletSupply, isActive);
-                            RedBulletSupply = buffZone;
-                        }
-                        else {
-                            buffZone.updateBuff(Buff.BlueBulletSupply, isActive);
-                            BlueBulletSupply = buffZone;
-                        }
+                        buffZone.updateBuff(Buff.RedBulletSupply, isActive);
+                        RedBulletSupply = buffZone;
                     }
                     case 3 -> {
-                        if(Team.isOurTeamBlue) {
-                            buffZone.updateBuff(Buff.BlueHPRecovery, isActive);
-                            BlueHPRecovery = buffZone;
-                        }
-                        else {
-                            buffZone.updateBuff(Buff.RedHPRecovery, isActive);
-                            RedHPRecovery = buffZone;
-                        }
+                        buffZone.updateBuff(Buff.BlueHPRecovery, isActive);
+                        BlueHPRecovery = buffZone;
                     }
                     case 4 -> {
-                        if(Team.isOurTeamBlue) {
-                            buffZone.updateBuff(Buff.BlueBulletSupply, isActive);
-                            BlueBulletSupply = buffZone;
-                        }
-                        else {
-                            buffZone.updateBuff(Buff.RedBulletSupply, isActive);
-                            RedBulletSupply = buffZone;
-                        }
+                        buffZone.updateBuff(Buff.BlueBulletSupply, isActive);
+                        BlueBulletSupply = buffZone;
                     }
                     case 5 -> {
                         buffZone.updateBuff(Buff.DisableShooting, isActive);

@@ -7,8 +7,9 @@ import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.robomasters.Ally;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
+import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
-import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator;
+import com.kristoff.robomaster_simulator.teams.allies.enemyobservations.EnemiesObservationSimulator;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.utils.Position;
@@ -96,7 +97,9 @@ public class StrategyMaker extends LoopThread {
         this.visitedGrid = visitedGrid;
         this.resultNodes = resultNodes;
         this.pathNodes = pathNodes;
-        changeTacticState();
+//        if(this.roboMaster.getName() == "Ally1") System.out.println(this.pathNodes.size());
+
+        //changeTacticState();
         decide();
     }
 
@@ -168,7 +171,7 @@ public class StrategyMaker extends LoopThread {
     }
 
     public int[][] getEnemiesObservationGrid(){
-        return roboMaster.team.getEnemiesObservationGrid();
+        return ((Allies)roboMaster.team).getEnemiesObservationGrid();
     }
 
     public Position getCurrentPosition(){

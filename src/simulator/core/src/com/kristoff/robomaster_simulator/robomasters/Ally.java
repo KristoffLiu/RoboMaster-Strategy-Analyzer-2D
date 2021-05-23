@@ -1,5 +1,6 @@
 package com.kristoff.robomaster_simulator.robomasters;
 
+import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.teams.Team;
 
 //AlexanderIII
@@ -13,7 +14,7 @@ public class Ally extends RoboMaster {
     }
 
     public boolean isRoamer(){
-        return isRoamer && Team.ally1.isAlive;
+        return isRoamer && Allies.ally1.isAlive;
     }
     public void setAsRoamer(){
          isRoamer = true;

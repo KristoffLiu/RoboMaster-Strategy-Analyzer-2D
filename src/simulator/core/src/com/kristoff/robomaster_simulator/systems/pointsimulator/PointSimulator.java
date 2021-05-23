@@ -107,7 +107,7 @@ public class PointSimulator extends Simulator {
     }
 
     public boolean isPointOnEnemies(int x, int y){
-        return this.pointMatrix[x][y] == PointState.Red1 || this.pointMatrix[x][y] == PointState.Red2;
+        return this.pointMatrix[x][y] == PointState.Enemy1 || this.pointMatrix[x][y] == PointState.Enemy2;
     }
 
 

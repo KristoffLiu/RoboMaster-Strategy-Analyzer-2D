@@ -97,7 +97,7 @@ class Ally(RoboMaster):
                 last.yawAngle2Point(temp.x, temp.y)
                 list.append(temp)
                 last = temp
-            first = list[1]
+            first = list[0]
             first.yawAngle2Point(gx, gy)
             last.yawAngle2Point(gx, gy)
             self.pathList = list
@@ -119,7 +119,7 @@ class Ally(RoboMaster):
             self.pathList = list
             return self.pathList
         
-        return TowardsEnemyAtBothSides()
+        return TowardsEnemyAtBothSides() if len(posList) > 0 else []
 
     
     

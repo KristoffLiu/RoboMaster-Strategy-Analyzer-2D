@@ -5,28 +5,25 @@ import com.kristoff.robomaster_simulator.robomasters.Strategy.gradientdescent.Gr
 import com.kristoff.robomaster_simulator.robomasters.modules.CostMap;
 import com.kristoff.robomaster_simulator.robomasters.modules.Property;
 import com.kristoff.robomaster_simulator.systems.costmap.PositionCost;
-import com.kristoff.robomaster_simulator.systems.costmap.UniversalCostMap;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator;
-import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.utils.Position;
-import org.w3c.dom.Node;
 
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class MainStrategyAnalyzer implements StrategyAnalyzer {
+public class PathFinder {
     public RoboMaster roboMaster;
     public StrategyMaker strategyMaker;
 
     public SearchNode rootNode;
     public Queue<SearchNode> queue;
     public SearchNode resultNode;
-    public CopyOnWriteArrayList<SearchNode>                   resultNodes;
-    public CopyOnWriteArrayList<SearchNode>                   pathNodes;
+    public CopyOnWriteArrayList<SearchNode> resultNodes;
+    public CopyOnWriteArrayList<SearchNode> pathNodes;
     public GradientDescentAnalyzer gradientDescentAnalyzer;
 
-    public MainStrategyAnalyzer(StrategyMaker strategyMaker){
+    public PathFinder(){
         this.roboMaster = strategyMaker.roboMaster;
         this.strategyMaker = strategyMaker;
 
@@ -89,8 +86,8 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
                 generateChildrenNodes(resultNode, tempVisitedGrid, tempVisitedGrid2);
                 setNodeHasBeenVisited(resultNode, tempVisitedGrid);
             }
-            if(Math.abs(targetCost - getCostMap().getCost(resultNode.position.getX(),resultNode.position.getY())) >= 30){
-                targetCost += 30;
+            if(Math.abs(targetCost - getCostMap().getCost(resultNode.position.getX(),resultNode.position.getY())) >= 10){
+                targetCost += 10;
             }
             else {
                 is_find = true;
@@ -103,7 +100,7 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
             node = node.parentNode;
         }
         if(this.roboMaster.getName() == "Ally1"){
-//            System.out.println("pos: " + String.valueOf(pathNodes.get(0).position.getX()) + " " + String.valueOf(pathNodes.get(0).position.getY()) + " " + String.valueOf(pathNodes.size()));
+            System.out.println("prin");
         }
         this.strategyMaker.update(resultNode, tempVisitedGrid, resultNodes, pathNodes);
 
@@ -112,7 +109,7 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
     }
 
     public boolean isAvailable(Position centre, int targetCost, Position target){
-        if(Math.abs(getCostMap().getCost(centre.getX(), centre.getY()) - targetCost) < 30 ||
+        if(Math.abs(getCostMap().getCost(centre.getX(), centre.getY()) - targetCost) < 10 ||
                 centre.x == target.x && centre.y == target.y){
             return true;
             //isTheSurroundingAreaAvailable(centre);
@@ -216,5 +213,4 @@ public class MainStrategyAnalyzer implements StrategyAnalyzer {
     public CostMap getCostMap(){
         return this.roboMaster.costMap;
     }
-
 }

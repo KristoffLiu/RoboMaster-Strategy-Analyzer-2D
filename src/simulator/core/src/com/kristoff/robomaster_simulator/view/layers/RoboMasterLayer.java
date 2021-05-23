@@ -8,8 +8,8 @@ import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Strategy.SearchNode;
 import com.kristoff.robomaster_simulator.robomasters.modules.RendererInputListener;
+import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
-import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.utils.Position;
 import com.kristoff.robomaster_simulator.view.renderers.EnvRenderer;
 
@@ -83,6 +83,7 @@ public class RoboMasterLayer extends VisualLayer {
 //                    0.05f,10);
 //        }
 
+//        System.out.println(RoboMasters.allies.get(0).strategyMaker.getPathNodes().size());
         for(SearchNode node : RoboMasters.allies.get(0).strategyMaker.getPathNodes()){
             Position position = node.position;
             if(position!=null){
@@ -118,7 +119,7 @@ public class RoboMasterLayer extends VisualLayer {
             for(int j = 0; j < 489; j+=10){
                 int x = i * 10;
                 int y = j * 10;
-                int cost = Team.ally1.costMap.getCostMap()[i][j];
+                int cost = Allies.ally1.costMap.getCostMap()[i][j];
                 float colorFloat = 0;
                 if(cost <= 255f){
                     colorFloat = (255f - cost) / 255f;

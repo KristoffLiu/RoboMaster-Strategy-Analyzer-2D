@@ -1,6 +1,7 @@
 package com.kristoff.robomaster_simulator.robomasters;
 
 import com.kristoff.robomaster_simulator.robomasters.modules.*;
+import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.teams.Team;
 
 /***
@@ -23,6 +24,7 @@ public class Enemy extends RoboMaster {
 
     public Enemy(Team team, String name){
         super("RoboMasters/AlexanderMaster.png", team, name);
+        this.teamColor = TeamColor.RED;
         inView = new InView(this, 2);
         inView.start();
     }
@@ -75,7 +77,7 @@ public class Enemy extends RoboMaster {
     }
 
     public static Enemy getUnlockedEnemy(){
-        return Team.enemy().get(0) != lockedEnemy ? (Enemy)Team.enemy().get(0) : (Enemy)Team.enemy().get(1);
+        return Allies.enemy().get(0) != lockedEnemy ? (Enemy)Allies.enemy().get(0) : (Enemy)Allies.enemy().get(1);
     }
 
     public boolean isAvailable(){

@@ -8,9 +8,9 @@ import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
+import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.systems.Systems;
-import com.kristoff.robomaster_simulator.teams.Team;
 import py4j.GatewayServer;
 
 public class RosRMLauncher {
@@ -72,15 +72,11 @@ public class RosRMLauncher {
 
     public void setAsRoamer(String roboName){
         if(roboName.equals("blue1")){
-            Team.ally1.setAsRoamer();
+            Allies.ally1.setAsRoamer();
         }
         else{
-            Team.ally2.setAsRoamer();
+            Allies.ally2.setAsRoamer();
         }
-    }
-
-    public void isOurTeamBlue(boolean bool){
-        Team.isOurTeamBlue = bool;
     }
 
     public Enemy getLockedEnemy(){

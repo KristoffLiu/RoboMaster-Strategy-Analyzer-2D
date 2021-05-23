@@ -1,8 +1,10 @@
-package com.kristoff.robomaster_simulator.teams;
+package com.kristoff.robomaster_simulator.teams.allies;
 
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Strategy.CounterState;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
+import com.kristoff.robomaster_simulator.teams.RoboMasters;
+import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 
 /***

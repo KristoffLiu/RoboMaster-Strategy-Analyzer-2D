@@ -4,8 +4,8 @@ public enum PointState {
     Empty,
     HighStaticObject,
     LowStaticObject,
-    Blue1,
-    Blue2,
-    Red1,
-    Red2
+    Ally1,
+    Ally2,
+    Enemy1,
+    Enemy2
 }

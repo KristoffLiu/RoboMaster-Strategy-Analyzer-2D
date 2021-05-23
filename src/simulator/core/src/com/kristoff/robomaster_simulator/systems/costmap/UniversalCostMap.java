@@ -4,7 +4,7 @@ import com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
-import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator;
+import com.kristoff.robomaster_simulator.teams.allies.enemyobservations.EnemiesObservationSimulator;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.utils.Position;
 
@@ -33,7 +33,7 @@ public class UniversalCostMap extends LoopThread {
 
     public void generateCostMap(){
         synchronized (costmap){
-            long  startTime = System.currentTimeMillis();    //获取开始时间
+            long startTime = System.currentTimeMillis();    //获取开始时间
             PositionCost minPositionCost = new PositionCost(9999,0,0);
             for(int i = 19; i < 830; i ++){
                 for(int j = 19; j < 470; j ++){

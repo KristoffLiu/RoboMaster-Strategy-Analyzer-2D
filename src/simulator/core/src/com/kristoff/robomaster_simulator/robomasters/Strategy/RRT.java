@@ -1,7 +1,7 @@
 package com.kristoff.robomaster_simulator.robomasters.Strategy;
 
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
-import com.kristoff.robomaster_simulator.teams.Team;
+import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.utils.Position;
 
@@ -153,7 +153,7 @@ public class RRT implements StrategyAnalyzer {
                 SearchNode newNode = steer(nearestNode, rnd, this.expandDistance);
                 this.positions.add(newNode.position);
 
-                if(checkAvailability(newNode, Team.me().enemiesObservationSimulator.matrix, this.pointState)){
+                if(checkAvailability(newNode, Allies.me().enemiesObservationSimulator.matrix, this.pointState)){
                     results.add(newNode.position);
                 }
                 nodeList.add(newNode);

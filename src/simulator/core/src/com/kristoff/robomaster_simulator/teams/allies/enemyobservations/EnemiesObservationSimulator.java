@@ -1,4 +1,4 @@
-package com.kristoff.robomaster_simulator.teams.enemyobservations;
+package com.kristoff.robomaster_simulator.teams.allies.enemyobservations;
 
 import com.badlogic.gdx.utils.Array;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;

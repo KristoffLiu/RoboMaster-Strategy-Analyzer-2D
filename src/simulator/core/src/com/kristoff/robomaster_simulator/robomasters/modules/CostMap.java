@@ -8,9 +8,8 @@ import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator;
 import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.systems.costmap.PositionCost;
-import com.kristoff.robomaster_simulator.teams.RoboMasters;
-import com.kristoff.robomaster_simulator.teams.Team;
-import com.kristoff.robomaster_simulator.teams.enemyobservations.EnemiesObservationSimulator;
+import com.kristoff.robomaster_simulator.teams.allies.Allies;
+import com.kristoff.robomaster_simulator.teams.allies.enemyobservations.EnemiesObservationSimulator;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.utils.Position;
 
@@ -102,7 +101,7 @@ public class CostMap extends LoopThread {
 
     public int costOfFriendEntity(int x, int y){
         if(this.roboMaster.name == "Ally1"){
-            float distanceToFriend = Team.ally2.getPointPosition().distanceTo(x,y);
+            float distanceToFriend = Allies.ally2.getPointPosition().distanceTo(x,y);
             float cost = 0;
             if(distanceToFriend <= 65){
                 cost = 999;
@@ -110,7 +109,7 @@ public class CostMap extends LoopThread {
             return (int) cost;
         }
         else{
-            float distanceToFriend = Team.ally1.getPointPosition().distanceTo(x,y);
+            float distanceToFriend = Allies.ally1.getPointPosition().distanceTo(x,y);
             float cost = 0;
             if(distanceToFriend <= 65){
                 cost = 999;

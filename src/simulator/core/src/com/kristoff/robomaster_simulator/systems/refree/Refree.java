@@ -1,8 +1,11 @@
 package com.kristoff.robomaster_simulator.systems.refree;
 
 import com.badlogic.gdx.maps.objects.TextureMapObject;
+import com.kristoff.robomaster_simulator.robomasters.modules.TeamColor;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
+import com.kristoff.robomaster_simulator.teams.Enemies;
+import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 
@@ -30,6 +33,30 @@ public class Refree extends LoopThread {
             buffZones.add(new BuffZone(textureMapObject));
         }
         super.start();
+    }
+
+    public List<BuffZone> getAvailableBuffZone(TeamColor teamColor){
+        List<BuffZone> results = new LinkedList<>();
+        for(BuffZone buffZone : buffZones){
+            switch (teamColor){
+                case BLUE -> {
+                    switch (buffZone.getBuff()){
+                        case BlueHPRecovery -> {
+                            if(Allies.isHPSupplyNeeded()) results.add(buffZone);
+                        }
+                        case BlueBulletSupply -> {
+                            results.add(buffZone);
+                        }
+                        case RedHPRecovery -> {
+                            if(!Enemies.isHPSupplyNeeded()) results.add(buffZone);
+                        }
+                    }
+
+                }
+            }
+
+        }
+        return results;
     }
 
 

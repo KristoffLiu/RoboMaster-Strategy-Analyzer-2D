@@ -57,10 +57,10 @@ public abstract class RoboMaster {
         teamIndex = this.team == RoboMasters.allies ? RoboMasters.allies.size() : RoboMasters.enemies.size();
 
         switch (this.No){
-            case 0 -> pointState = PointState.Blue1;
-            case 1 -> pointState = PointState.Blue2;
-            case 2 -> pointState = PointState.Red1;
-            case 3 -> pointState = PointState.Red2;
+            case 0 -> pointState = PointState.Ally1;
+            case 1 -> pointState = PointState.Ally2;
+            case 2 -> pointState = PointState.Enemy1;
+            case 3 -> pointState = PointState.Enemy2;
         }
 
         property = new Property();

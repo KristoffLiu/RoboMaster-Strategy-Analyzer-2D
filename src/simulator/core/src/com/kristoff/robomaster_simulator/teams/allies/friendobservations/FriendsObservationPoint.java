@@ -1,4 +1,4 @@
-package com.kristoff.robomaster_simulator.teams.friendobservations;
+package com.kristoff.robomaster_simulator.teams.allies.friendobservations;
 
 import com.kristoff.robomaster_simulator.utils.Position;
 
