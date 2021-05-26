@@ -26,7 +26,7 @@ class RoboMaster:
         self.numOfBullets = numOfBullets
 
     def __str__(self):
-        return "   %s - [x]%.2f [y]%.2f [yaw]%.2f" % (self.name, self.x, self.y, self.yaw) + self.display_health() + self.display_num_of_bullets()
+        return "   %s - [x]%.2f [y]%.2f [yaw]%.2f°" % (self.name, self.x, self.y, self.yaw) + self.display_health() + self.display_num_of_bullets()
 
     def display_health(self):
         str = "\n      HP: ["

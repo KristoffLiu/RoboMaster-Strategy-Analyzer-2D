@@ -119,7 +119,7 @@ public class RoboMasterLayer extends VisualLayer {
             for(int j = 0; j < 489; j+=10){
                 int x = i * 10;
                 int y = j * 10;
-                int cost = Allies.ally1.costMap.getCostMap()[i][j];
+                int cost = Allies.ally2.costMap.getCostMap()[i][j];
                 float colorFloat = 0;
                 if(cost <= 255f){
                     colorFloat = (255f - cost) / 255f;

@@ -312,7 +312,6 @@ class Brain:
             # mark.lifetime = rospy.Duration(self._control_rate, 0)
             # self._vis_pub[1].publish(mark)
 
-
     def get_next_path2(self):
         if self.analyzer.ally2.isStrategyMakerOn:
                         # pos = self.Blue2.getPointAvoidingFacingEnemies()
@@ -356,7 +355,6 @@ class Brain:
             # mark.lifetime = rospy.Duration(self._control_rate, 0)
             # self._vis_pub[0].publish(mark)
 
-
     def display(self):
         # pass
         self.analyzer.displayOnce()
@@ -370,7 +368,7 @@ if __name__ == '__main__':
     try:
         print(__file__ + " start!!")
         rospy.init_node('decision_node', anonymous=True)
-        control_rate = 5
+        control_rate = 0.5    
         rate = rospy.Rate(1.0 / control_rate)
         brain = Brain(control_rate)
         spin_thread = threading.Thread(target=call_rosspin).start()

@@ -8,14 +8,14 @@ from env.rosanalyzer.Analyzer import Analyzer
 if __name__ == '__main__':
     analyzer = Analyzer()
     analyzer.display()
-    analyzer.updateBuffZone(0, 6, True)
-    analyzer.updateBuffZone(5, 5, True)
+    analyzer.updateBuffZone(0, 4, False)
+    analyzer.updateBuffZone(5, 2, False)
 
-    analyzer.updateBuffZone(2, 2, True)
-    analyzer.updateBuffZone(3, 4, True)
+    analyzer.updateBuffZone(2, 1, False)
+    analyzer.updateBuffZone(3, 3, False)
 
-    analyzer.updateBuffZone(1, 1, True)
-    analyzer.updateBuffZone(4, 3, True)
+    analyzer.updateBuffZone(1, 5, False)
+    analyzer.updateBuffZone(4, 6, False)
 
     # for i in range(2000):
     #     analyzer.allies1.setHealth(2000 - i)
