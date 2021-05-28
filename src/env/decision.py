@@ -22,7 +22,7 @@ from genpy import rostime
 sys.path.append(os.getcwd().rstrip("env"))
 # os.path.abspath()
 from env.rosanalyzer.Analyzer import Analyzer
-from env.rosanalyzer.RoboMaster import Ally
+from env.rosanalyzer.RoboMaster import Ally, Enemy
 
 import rospy
 from geometry_msgs.msg import PoseStamped
@@ -34,6 +34,7 @@ from roborts_msgs.msg import GameStatus
 from roborts_msgs.msg import GameRobotBullet
 from roborts_msgs.msg import RobotDamage
 from visualization_msgs.msg import Marker
+from autofire.msg import enemy_id
 from actionlib_msgs.msg import GoalStatusArray
 from scipy.spatial.transform import Rotation as R
 
@@ -50,6 +51,8 @@ class Brain:
 
         self._global_planner_pub = [rospy.Publisher("/CAR1/decision_global_path", Path, queue_size=10),
                             rospy.Publisher("/CAR2/decision_global_path", Path, queue_size=10)]
+        self._enemy_id = [rospy.Subscriber("/CAR1/enemy_id", enemy_id, self.updateEnemyID1),
+                          rospy.Subscriber("/CAR2/enemy_id", enemy_id, self.updateEnemyID2)]
 
         self._robots_subscriber = [rospy.Subscriber("/CAR1/amcl_pose", PoseStamped, self.ownPositionCB0),
                                    rospy.Subscriber("/CAR2/amcl_pose", PoseStamped, self.ownPositionCB1)]
@@ -99,10 +102,22 @@ class Brain:
     def enemyInfo(self, data):
         enemy = data.circles
         if len(enemy) == 1:
-            self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
+            if abs(self.analyzer.enemy1.visionX - enemy[0].center.x) < 1 and abs(self.analyzer.enemy1.visionY - enemy[0].center.y) < 1:
+                self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
+            elif abs(self.analyzer.enemy2.visionX - enemy[0].center.x) < 1 and abs(self.analyzer.enemy2.visionY - enemy[0].center.y) < 1:
+                self.analyzer.enemy2.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
+            else:
+                self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
         elif len(enemy) == 2:
-            self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
-            self.analyzer.enemy2.setPosition(enemy[1].center.x, enemy[1].center.y,float(0))
+            if abs(self.analyzer.enemy1.visionX - enemy[0].center.x) < 1 and abs(self.analyzer.enemy1.visionY - enemy[0].center.y) < 1:
+                self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
+                self.analyzer.enemy2.setPosition(enemy[1].center.x, enemy[1].center.y,float(0))
+            elif abs(self.analyzer.enemy2.visionX - enemy[0].center.x) < 1 and abs(self.analyzer.enemy2.visionY - enemy[0].center.y) < 1:
+                self.analyzer.enemy2.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
+                self.analyzer.enemy1.setPosition(enemy[1].center.x, enemy[1].center.y,float(0))
+            else:
+                self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
+                self.analyzer.enemy2.setPosition(enemy[1].center.x, enemy[1].center.y,float(0))
 
     def robotHP(self, data):
         self.analyzer.ally1.setHealth(data.blue1)
@@ -130,6 +145,20 @@ class Brain:
         r = R.from_euler('zyx', [0, 0, yaw], degrees=False).as_quat()
         # output: w x y z
         return [r[3], r[2], r[1], r[0]]
+
+    def updateEnemyID1(self, msg):
+        self.analyzer.enemy1.x = self.updateEnemyID(msg)
+            
+    def updateEnemyID2(self, msg):
+        self.analyzer.enemy1.x = self.updateEnemyID(msg)
+
+    def updateEnemyID(self, msg):
+        id = filter(str.isdigit,  msg.id)
+        if id == 1:
+            self.analyzer.enemy1.setVisionPosition(msg.x, msg.y)
+        else:
+            self.analyzer.enemy2.setVisionPosition(msg.x, msg.y)
+
 
     def get_next_position1(self):
         if self.analyzer.ally1.isStrategyMakerOn:

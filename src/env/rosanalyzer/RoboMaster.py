@@ -26,6 +26,14 @@ class RoboMaster:
         self.numOfBullets = numOfBullets
 
     def __str__(self):
+        if self.x == None:
+            return "   %s - [y]%.2f [yaw]%.2f°" % (self.name,  self.y, self.yaw) + self.display_health() + self.display_num_of_bullets()
+        elif self.y == None:
+            return "   %s - [x]%.2f [yaw]%.2f°" % (self.name, self.x, self.yaw) + self.display_health() + self.display_num_of_bullets()
+        elif self.yaw == None:
+            return "   %s - [x]%.2f [y]%.2f" % (self.name, self.x, self.y) + self.display_health() + self.display_num_of_bullets()
+        elif self.x == None or self.y == None or self.yaw == None:
+            return "   %s - " % (self.name) + self.display_health() + self.display_num_of_bullets()
         return "   %s - [x]%.2f [y]%.2f [yaw]%.2f°" % (self.name, self.x, self.y, self.yaw) + self.display_health() + self.display_num_of_bullets()
 
     def display_health(self):
@@ -119,7 +127,7 @@ class Ally(RoboMaster):
             self.pathList = list
             return self.pathList
         
-        return TowardsEnemyAtBothSides() if len(posList) > 0 else []
+        return AlwaysTowardsEnemy() if len(posList) > 0 else []
 
     
     
@@ -129,7 +137,13 @@ class Ally(RoboMaster):
 
 class Enemy(RoboMaster):
     def __init__(self, entrypoint, enemyObject):
+        self.visionX = -1
+        self.visionY = -1
         super(Enemy, self).__init__(entrypoint, enemyObject)
+
+    def setVisionPosition(self, x, y):
+        self.visionX = x
+        self.visionY = y
 
 
 class DecisionNode():

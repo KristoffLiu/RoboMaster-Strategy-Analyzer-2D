@@ -70,7 +70,7 @@ public class StrategyMaker extends LoopThread {
         costMap = roboMaster.costMap;
 
         this.strategyAnalyzer = mainStrategyAnalyzer;
-        this.delta = 1/30f;
+        this.delta = 1/60f;
         this.isStep = true;
     }
 

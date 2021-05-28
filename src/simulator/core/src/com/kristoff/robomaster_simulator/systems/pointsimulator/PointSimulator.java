@@ -224,8 +224,8 @@ public class PointSimulator extends Simulator {
         }
 
         if(radian == 0){
-            for(int i = x - 30; i < x + width + 30 ; i ++){
-                for(int j = y - 30;j < y + height + 30; j ++){
+            for(int i = x - 35; i < x + width + 35 ; i ++){
+                for(int j = y - 35;j < y + height + 35; j ++){
                     setObstaclePoint(i, j);
                 }
             }
@@ -286,25 +286,9 @@ public class PointSimulator extends Simulator {
         }
 
         if(radian == 0){
-            for(int i = x - 25; i < x + width + 25 ; i ++){
-                for(int j = y - 25;j < y + height + 25; j ++){
+            for(int i = x - 35; i < x + width + 35 ; i ++){
+                for(int j = y - 35;j < y + height + 35; j ++){
                     setObstaclePoint(i, j);
-                }
-            }
-        }
-        else{
-            for(int i = 0; i <= (60 * Math.sqrt(2)); i++){
-                if(i <= (60 / Math.sqrt(2))){
-                    for(int j = 0; j <= i ; j++){
-                        setObstaclePoint(i + 382, 245 + j);
-                        setObstaclePoint(i + 382, 245 - j);
-                    }
-                }
-                else{
-                    for(int j = 0; j <= 60 * Math.sqrt(2) - i; j++){
-                        setObstaclePoint(i + 382, 245 + j);
-                        setObstaclePoint(i + 382, 245 - j);
-                    }
                 }
             }
         }
