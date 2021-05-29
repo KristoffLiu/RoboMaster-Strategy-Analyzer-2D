@@ -60,20 +60,39 @@ public class BuffZone {
     }
 
     public static void setEnemyHPRecoveryNeeded() {
-        if(RedHPRecovery == null){
-            isRedHPRecoveryNecessary = 0;
-        }
-        else if(RedHPRecovery.isActive){
-            if((Enemy.getLockedEnemy().getHealth() < 1900 || !Enemy.getLockedEnemy().isAlive) &&
-                    (Enemy.getUnlockedEnemy().getHealth() < 1900 || !Enemy.getUnlockedEnemy().isAlive)){
-                isRedHPRecoveryNecessary = setPriority(RedHPRecovery);
+        if(Allies.teamColor == TeamColor.BLUE){
+            if(RedHPRecovery == null){
+                isRedHPRecoveryNecessary = 0;
             }
-            else{
+            else if(RedHPRecovery.isActive){
+                if((Enemy.getLockedEnemy().getHealth() < 1900 || !Enemy.getLockedEnemy().isAlive) &&
+                        (Enemy.getUnlockedEnemy().getHealth() < 1900 || !Enemy.getUnlockedEnemy().isAlive)){
+                    isRedHPRecoveryNecessary = setPriority(RedHPRecovery);
+                }
+                else{
 
+                }
+            }
+            else {
+                isRedHPRecoveryNecessary = 0;
             }
         }
-        else {
-            isRedHPRecoveryNecessary = 0;
+        else{
+            if(BlueHPRecovery == null){
+                isRedHPRecoveryNecessary = 0;
+            }
+            else if(BlueHPRecovery.isActive){
+                if((Enemy.getLockedEnemy().getHealth() < 1900 || !Enemy.getLockedEnemy().isAlive) &&
+                        (Enemy.getUnlockedEnemy().getHealth() < 1900 || !Enemy.getUnlockedEnemy().isAlive)){
+                    isRedHPRecoveryNecessary = setPriority(BlueHPRecovery);
+                }
+                else{
+
+                }
+            }
+            else {
+                isRedHPRecoveryNecessary = 0;
+            }
         }
     }
 
@@ -263,17 +282,29 @@ public class BuffZone {
     }
 
     public static void setHPRecoveryNeeded(){
-        if(BlueHPRecovery == null){
-            isHPRecoveryNeeded = 0;
+        if(Allies.teamColor == TeamColor.BLUE) {
+            if (BlueHPRecovery == null) {
+                isHPRecoveryNeeded = 0;
+            }
+            if (Allies.ally1.getHealth() > 1800 && Allies.ally2.getHealth() > 1800) {
+                isHPRecoveryNeeded = 0;
+            } else if (Allies.ally1.getHealth() > 1000 && Allies.ally2.getHealth() > 1000) {
+                isHPRecoveryNeeded = 0;
+            } else {
+                isHPRecoveryNeeded = setPriority(BlueHPRecovery);
+            }
         }
-        if (Allies.ally1.getHealth() > 1800 && Allies.ally2.getHealth() > 1800) {
-            isHPRecoveryNeeded = 0;
-        }
-        else if(Allies.ally1.getHealth() > 1000 && Allies.ally2.getHealth() > 1000){
-            isHPRecoveryNeeded = 0;
-        }
-        else{
-            isHPRecoveryNeeded = setPriority(BlueHPRecovery);
+        else {
+            if (RedHPRecovery == null) {
+                isHPRecoveryNeeded = 0;
+            }
+            if (Allies.ally1.getHealth() > 1800 && Allies.ally2.getHealth() > 1800) {
+                isHPRecoveryNeeded = 0;
+            } else if (Allies.ally1.getHealth() > 1000 && Allies.ally2.getHealth() > 1000) {
+                isHPRecoveryNeeded = 0;
+            } else {
+                isHPRecoveryNeeded = setPriority(RedHPRecovery);
+            }
         }
     }
 
@@ -288,10 +319,18 @@ public class BuffZone {
     }
 
     public static void setBulletSupplyNeeded(){
-        if(BlueBulletSupply == null){
-            return;
+        if(Allies.teamColor == TeamColor.BLUE) {
+            if (BlueBulletSupply == null) {
+                return;
+            }
+            isBulletSupplyNeeded = setPriority(BlueBulletSupply);
         }
-        isBulletSupplyNeeded = setPriority(BlueBulletSupply);
+        else {
+            if (RedBulletSupply == null) {
+                return;
+            }
+            isBulletSupplyNeeded = setPriority(RedBulletSupply);
+        }
     }
 
     public static boolean isInBuffZone(int x, int y, BuffZone buffZone){
