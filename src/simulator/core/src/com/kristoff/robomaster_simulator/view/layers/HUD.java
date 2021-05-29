@@ -74,6 +74,7 @@ public class HUD extends UIPage {
         super.act(delta);
         for(Image roboImage : this.roboMastersIDList){
             RoboMaster roboMaster = (RoboMaster) roboImage.getTag();
+            roboImage.setTextureRegion("RoboMasters/Indicators/" + roboMaster.getTeamColor() + ".png");
             roboImage.setPosition((roboMaster.getX() - 310f) / 1000f , (roboMaster.getY() + 210f) / 1000f );
         }
         for(int i = 0; i < this.hpBarIndicatorBackgroundList.size(); i++){

@@ -13,7 +13,7 @@ import os
 
 class Analyzer:
     def __init__(self):
-        self.version = "1.66 2012/05/23"
+        self.version = "1.73 2012/05/29"
         self.gateway = JavaGateway() #启动py4j服务器
         self.entrypoint = self.gateway.entry_point #获取服务器桥的入口
         java_import(self.gateway.jvm,'java.util.*') #导入java中的类的方法
@@ -28,6 +28,9 @@ class Analyzer:
         self.enemy1 = Enemy(self.entrypoint, self.entrypoint.getEnemy("Enemy1"))
         self.enemy2 = Enemy(self.entrypoint, self.entrypoint.getEnemy("Enemy2"))
         self.buff_zones = [self.BuffZone(i, self.BuffZone.BuffType.UNKNOWN, False) for i in range(6)]
+
+    def setTeamColor(self, teamColor):
+        self.entrypoint.setTeamColor(teamColor)
 
     def updateGameStatus(self, game_status, remaining_time):
         self.game_status = self.GameStatus(game_status)
@@ -81,7 +84,7 @@ class Analyzer:
         print("RoboMaster 分析器, 版本 v{}".format(self.version))
     
     def display_game_status(self):
-        print("Game Status: {}".format(self.game_status))
+        print("Competition Status: {}".format(self.game_status))
         if(self.game_status == self.GameStatus.GAME):
             timeleft = self.remaining_time / 180
             str = "["

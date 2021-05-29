@@ -33,6 +33,8 @@ public class RoboMasters{
 
             enemies.add(new Enemy(enemies,"Enemy1"));
             enemies.add(new Enemy(enemies,"Enemy2"));
+            enemies.enemy1 = (Enemy)enemies.get(0);
+            enemies.enemy2 = (Enemy)enemies.get(1);
             Enemy lockedEnemy = (Enemy) enemies.get(0);
             lockedEnemy.lock();
             Enemy unlockedEnemy = (Enemy) enemies.get(1);

@@ -41,6 +41,7 @@ public abstract class RoboMaster {
     public int No;
     public int teamIndex;
     public int health;
+    public int numOfBullet;
     public PointState pointState;
 
     /***
@@ -84,6 +85,7 @@ public abstract class RoboMaster {
             case realMachine -> {}
         }
         this.health = property.health;
+        this.numOfBullet = 0;
     }
 
     public void setTeamColor(TeamColor color){
@@ -137,13 +139,13 @@ public abstract class RoboMaster {
     }
 
     public void setPosition(int x, int y, float rotation) {
-        for(RoboMaster roboMaster : RoboMasters.all){
-            if(this != roboMaster){
-                if(roboMaster.getPointPosition().distanceTo(x / 10,y / 10) < 50){
-                    return;
-                }
-            }
-        }
+//        for(RoboMaster roboMaster : RoboMasters.all){
+//            if(this != roboMaster){
+//                if(roboMaster.getPointPosition().distanceTo(x / 10,y / 10) < 50){
+//                    return;
+//                }
+//            }
+//        }
         this.actor.update(x, y, rotation);
     }
 
@@ -233,6 +235,10 @@ public abstract class RoboMaster {
 
     public String getName() {
         return name;
+    }
+
+    public void setNumOfBullet(int bulletnum){
+        this.numOfBullet = bulletnum;
     }
 }
 

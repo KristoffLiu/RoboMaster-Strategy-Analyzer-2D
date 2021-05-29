@@ -70,7 +70,7 @@ public class StrategyMaker extends LoopThread {
         costMap = roboMaster.costMap;
 
         this.strategyAnalyzer = mainStrategyAnalyzer;
-        this.delta = 1/60f;
+        this.delta = 1/30f;
         this.isStep = true;
     }
 
@@ -93,14 +93,16 @@ public class StrategyMaker extends LoopThread {
                        boolean[][] visitedGrid,
                        CopyOnWriteArrayList<SearchNode> resultNodes,
                        CopyOnWriteArrayList<SearchNode> pathNodes){
-        this.resultNode = resultNode;
-        this.visitedGrid = visitedGrid;
-        this.resultNodes = resultNodes;
-        this.pathNodes = pathNodes;
-//        if(this.roboMaster.getName() == "Ally1") System.out.println(this.pathNodes.size());
+        synchronized (this.pathNodes) {
+            this.resultNode = resultNode;
+            this.visitedGrid = visitedGrid;
+            this.resultNodes = resultNodes;
+            this.pathNodes = pathNodes;
+            //        if(this.roboMaster.getName() == "Ally1") System.out.println(this.pathNodes.size());
 
-        //changeTacticState();
-        decide();
+            //changeTacticState();
+            decide();
+        }
     }
 
     private void changeTacticState(){
@@ -113,7 +115,7 @@ public class StrategyMaker extends LoopThread {
     }
 
     private void decide(){
-        switch (tacticState){
+        switch (tacticState) {
             case STATIC -> {
                 pathNodes.clear();
                 decisionNode = new SearchNode(this.getCurrentPosition().x, this.getCurrentPosition().y);
@@ -122,7 +124,7 @@ public class StrategyMaker extends LoopThread {
                 decisionNode = resultNode;
             }
         }
-        if(!this.roboMaster.isRoamer()){
+        if (!this.roboMaster.isRoamer()) {
             this.getFriendRoboMaster().strategyMaker.setFriendDecision(new SearchNode(decisionNode.position.x, decisionNode.position.y));
         }
     }
@@ -159,11 +161,13 @@ public class StrategyMaker extends LoopThread {
     }
 
     public List<Position> getPath(){
-        List<Position> positions = new ArrayList<>();
-        for(int i = this.pathNodes.size() - 1; i >= 0; i --){
-            positions.add(this.pathNodes.get(i).position);
+        synchronized (this.pathNodes){
+            List<Position> positions = new ArrayList<>();
+            for(int i = this.pathNodes.size() - 1; i >= 0; i --){
+                positions.add(this.pathNodes.get(i).position);
+            }
+            return positions;
         }
-        return positions;
     }
 
     public CopyOnWriteArrayList<SearchNode> getResultNodes(){

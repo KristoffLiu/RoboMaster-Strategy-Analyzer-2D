@@ -12,7 +12,7 @@ import com.kristoff.robomaster_simulator.teams.allies.friendobservations.Friends
 public class Allies extends Team {
     public static Ally ally1;
     public static Ally ally2;
-    TeamColor teamColor;
+    public static TeamColor teamColor;
 
     String name;
     public FriendsObservationSimulator friendsObservationSimulator; //敌军视野模拟

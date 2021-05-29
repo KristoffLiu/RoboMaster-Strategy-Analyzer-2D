@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.robomasters.Ally;
+import com.kristoff.robomaster_simulator.robomasters.modules.TeamColor;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.utils.Position;
@@ -151,64 +152,98 @@ public class BuffZone {
             float distance = buffZone.centrePosition.distanceTo(x,y);
             float maxDis = 150;
 
-            switch (buffZone.buff){
-                case Unknown -> cost = 0;
-                case RedHPRecovery    -> {
-                    if(isEnemyHPRecoveryNeeded(roboMaster)) {
-                        if(distance <= 10){
-                            cost += (maxDis - distance) / maxDis * -180;
+            if(Allies.teamColor == TeamColor.BLUE){
+                switch (buffZone.buff){
+                    case Unknown -> cost = 0;
+                    case RedHPRecovery    -> {
+                        if(isEnemyHPRecoveryNeeded(roboMaster)) {
+                            if(distance <= 10){
+                                cost += (maxDis - distance) / maxDis * -180;
+                            }
+                            //if(buffZone.isInBuffZone(x, y, true)) cost = -197;
                         }
-                       //if(buffZone.isInBuffZone(x, y, true)) cost = -197;
-                    }
-                    else{
-                        if(buffZone.isInBuffZone(x, y, false)) cost = 999;
-                    }
-                }
-                case RedBulletSupply  -> {
-                    if (buffZone.isInBuffZone(x, y, false)) cost = 999;
-                }
-                case BlueHPRecovery   -> {
-                    if(isHPRecoveryNeeded(roboMaster)) {
-                        if(distance <= 10){
-                            cost += (maxDis - distance) / maxDis * -210;
+                        else{
+                            if(buffZone.isInBuffZone(x, y, false)) cost = 999;
                         }
-                        //if(buffZone.isInBuffZone(x, y, true)) cost = -197;
                     }
-                    else{
-                        if(buffZone.isInBuffZone(x, y, false)) cost = 999;
+                    case RedBulletSupply  -> {
+                        if (buffZone.isInBuffZone(x, y, false)) cost = 999;
                     }
+                    case BlueHPRecovery   -> {
+                        if(isHPRecoveryNeeded(roboMaster)) {
+                            if(distance <= 10){
+                                cost += (maxDis - distance) / maxDis * -210;
+                            }
+                            //if(buffZone.isInBuffZone(x, y, true)) cost = -197;
+                        }
+                        else{
+                            if(buffZone.isInBuffZone(x, y, false)) cost = 999;
+                        }
 //                    if(buffZone.isInBuffZone(x, y, true)) cost = -150;
 //                    else if(distance <= maxDis){
 //                        cost += (maxDis - distance) / maxDis * -127;
 //                    }
-                }
-                case BlueBulletSupply -> {
+                    }
+                    case BlueBulletSupply -> {
 //                    if(buffZone.isInBuffZone(x, y, true)) cost = -150;
 //                    else if(distance <= maxDis){
 //                        cost += (maxDis - distance) / maxDis * -127;
 //                    }
-                    if(isBulletSupplyNeeded((roboMaster))){
-                        if(distance <= 10){
-                            cost += (maxDis - distance) / maxDis * -200;
+                        if(isBulletSupplyNeeded((roboMaster))){
+                            if(distance <= 10){
+                                cost += (maxDis - distance) / maxDis * -200;
+                            }
                         }
                     }
-                }
-                case DisableShooting  -> {
-                    if(buffZone.isInBuffZone(x, y, false)) cost = 999;
-                }
-                case DisableMovement  -> {
-                    if(buffZone.isInBuffZone(x, y, false)) cost = 999;
+                    case DisableShooting  -> {
+                        if(buffZone.isInBuffZone(x, y, false)) cost = 999;
+                    }
+                    case DisableMovement  -> {
+                        if(buffZone.isInBuffZone(x, y, false)) cost = 999;
+                    }
                 }
             }
-//            else{
-//
-////                if(Systems.refree.buffRoundIndex == 0 && roboMaster == Team.blue2 && buffZone.buff == Buff.RedBulletSupply){
-////                    float distance2 = new Position(x, y).distanceTo(500, 70);
-////                    if(distance2 <= 10){
-////                        cost += - 255;
-////                    }
-////                }
-//            }
+            else {
+                switch (buffZone.buff) {
+                    case Unknown -> cost = 0;
+                    case RedHPRecovery -> {
+                        if (isHPRecoveryNeeded(roboMaster)) {
+                            if (distance <= 10) {
+                                cost += (maxDis - distance) / maxDis * -210;
+                            }
+                            //if(buffZone.isInBuffZone(x, y, true)) cost = -197;
+                        } else {
+                            if (buffZone.isInBuffZone(x, y, false)) cost = 999;
+                        }
+                    }
+                    case RedBulletSupply -> {
+                        if (isBulletSupplyNeeded((roboMaster))) {
+                            if (distance <= 10) {
+                                cost += (maxDis - distance) / maxDis * -200;
+                            }
+                        }
+                    }
+                    case BlueHPRecovery -> {
+                        if (isEnemyHPRecoveryNeeded(roboMaster)) {
+                            if (distance <= 10) {
+                                cost += (maxDis - distance) / maxDis * -180;
+                            }
+                            //if(buffZone.isInBuffZone(x, y, true)) cost = -197;
+                        } else {
+                            if (buffZone.isInBuffZone(x, y, false)) cost = 999;
+                        }
+                    }
+                    case BlueBulletSupply -> {
+                        if (buffZone.isInBuffZone(x, y, false)) cost = 999;
+                    }
+                    case DisableShooting -> {
+                        if (buffZone.isInBuffZone(x, y, false)) cost = 999;
+                    }
+                    case DisableMovement -> {
+                        if (buffZone.isInBuffZone(x, y, false)) cost = 999;
+                    }
+                }
+            }
         }
         return cost;
     }

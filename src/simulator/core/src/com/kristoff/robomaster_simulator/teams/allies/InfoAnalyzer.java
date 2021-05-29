@@ -3,6 +3,7 @@ package com.kristoff.robomaster_simulator.teams.allies;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Strategy.CounterState;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
+import com.kristoff.robomaster_simulator.teams.Enemies;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
@@ -75,27 +76,50 @@ public class InfoAnalyzer extends LoopThread {
                 }
             }
             case OneVSTwo -> {
-                for(RoboMaster roboMaster : this.thisTeam){
-                    float distance1 = roboMaster.getPosition().distanceTo(Enemy.getLockedEnemy().getPosition());
-                    float distance2 = roboMaster.getPosition().distanceTo(Enemy.getUnlockedEnemy().getPosition()) * lockingWeight;
-                    if(distance1 < distance2) {
-                        ((Enemy)this.enemyTeam.get(0)).lock();
+                if(Enemies.enemy1.health > Enemies.enemy2.health){
+                    Enemies.enemy2.lock();
+                }
+                else if(Enemies.enemy1.health < Enemies.enemy2.health){
+                    Enemies.enemy1.lock();
+                }
+                else{
+                    if(Enemies.enemy1.numOfBullet > Enemies.enemy2.numOfBullet){
+                        Enemies.enemy2.lock();
                     }
                     else {
-                        ((Enemy)this.enemyTeam.get(1)).lock();
+                        Enemies.enemy1.lock();
                     }
                 }
+//                for(RoboMaster roboMaster : this.thisTeam){
+//                    float distance1 = roboMaster.getPosition().distanceTo(Enemy.getLockedEnemy().getPosition());
+//                    float distance2 = roboMaster.getPosition().distanceTo(Enemy.getUnlockedEnemy().getPosition()) * lockingWeight;
+//                    if(distance1 < distance2) {
+//                        ((Enemy)this.enemyTeam.get(0)).lock();
+//                    }
+//                    else {
+//                        ((Enemy)this.enemyTeam.get(1)).lock();
+//                    }
+//                }
             }
             case TwoVSTwo ->{
-                float lockedEnemyDistance =
-                        (lockedEnemy.getPosition().distanceTo(this.thisTeam.get(0).getPosition()) +
-                        lockedEnemy.getPosition().distanceTo(this.thisTeam.get(1).getPosition())) ;
-                float unlockedEnemyDistance =
-                        (unlockedEnemy.getPosition().distanceTo(this.thisTeam.get(0).getPosition()) +
-                        unlockedEnemy.getPosition().distanceTo(this.thisTeam.get(1).getPosition())) * 1.6f;
-                if(lockedEnemyDistance > unlockedEnemyDistance) {
-                    unlockedEnemy.lock();
+                if(Enemies.enemy1.health > Enemies.enemy2.health){
+                    Enemies.enemy2.lock();
                 }
+                else if(Enemies.enemy1.health < Enemies.enemy2.health){
+                    Enemies.enemy1.lock();
+                }
+                else{
+
+                }
+//                float lockedEnemyDistance =
+//                        (lockedEnemy.getPosition().distanceTo(this.thisTeam.get(0).getPosition()) +
+//                        lockedEnemy.getPosition().distanceTo(this.thisTeam.get(1).getPosition())) ;
+//                float unlockedEnemyDistance =
+//                        (unlockedEnemy.getPosition().distanceTo(this.thisTeam.get(0).getPosition()) +
+//                        unlockedEnemy.getPosition().distanceTo(this.thisTeam.get(1).getPosition())) * 1.6f;
+//                if(lockedEnemyDistance > unlockedEnemyDistance) {
+//                    unlockedEnemy.lock();
+//                }
             }
         }
 

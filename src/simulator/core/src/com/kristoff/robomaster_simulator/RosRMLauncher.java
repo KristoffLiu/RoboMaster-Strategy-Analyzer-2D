@@ -6,6 +6,7 @@ import com.kristoff.robomaster_simulator.core.SimulatorMode;
 import com.kristoff.robomaster_simulator.robomasters.Ally;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
+import com.kristoff.robomaster_simulator.robomasters.modules.TeamColor;
 import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
 import com.kristoff.robomaster_simulator.teams.allies.Allies;
@@ -34,6 +35,15 @@ public class RosRMLauncher {
 
     public Simulator getSimulator(){
         return simulator;
+    }
+
+    public void setTeamColor(int teamColor){
+        if(teamColor == 0){
+            RoboMasters.allies.setTeamColor(TeamColor.BLUE);
+        }
+        else if(teamColor == 1){
+            RoboMasters.allies.setTeamColor(TeamColor.RED);
+        }
     }
 
     public PointState[][] getMap(){

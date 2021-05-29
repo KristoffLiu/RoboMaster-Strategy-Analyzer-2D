@@ -100,24 +100,46 @@ class Brain:
         self.analyzer.ally2.setPosition(msg.pose.position.x, msg.pose.position.y,float(y))
 
     def enemyInfo(self, data):
-        enemy = data.circles
-        if len(enemy) == 1:
-            if abs(self.analyzer.enemy1.visionX - enemy[0].center.x) < 1 and abs(self.analyzer.enemy1.visionY - enemy[0].center.y) < 1:
-                self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
-            elif abs(self.analyzer.enemy2.visionX - enemy[0].center.x) < 1 and abs(self.analyzer.enemy2.visionY - enemy[0].center.y) < 1:
-                self.analyzer.enemy2.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
+        enemies = data.circles
+        if len(enemies) == 1:
+            enemy = enemies[0]
+            if enemy.center.x == None or enemy.center.y == None:
+                print("something is null")
+                return
+
+            # if abs(self.analyzer.enemy1.x - enemy.center.x) < abs(self.analyzer.enemy2.x - enemy.center.x) and abs(self.analyzer.enemy1.y - enemy.center.y) < abs(self.analyzer.enemy2.y - enemy.center.y):
+            #     if self.analyzer.enemy1.isVisualPositionMatched(enemy.center.x, enemy.center.y, float(0)) == 1:
+            #         self.analyzer.enemy1.setPosition(enemy.center.x, enemy.center.y, float(0))
+            #     elif self.analyzer.enemy2.isVisualPositionMatched(enemy.center.x, enemy.center.y, float(0)) == 1:
+            #         self.analyzer.enemy2.setPosition(enemy.center.x, enemy.center.y, float(0))
+            # else:
+            #     if self.analyzer.enemy2.isVisualPositionMatched(enemy.center.x, enemy.center.y, float(0)) == 1:
+            #         self.analyzer.enemy2.setPosition(enemy.center.x, enemy.center.y, float(0))
+            #     elif self.analyzer.enemy1.isVisualPositionMatched(enemy.center.x, enemy.center.y, float(0)) == 1:
+            #         self.analyzer.enemy1.setPosition(enemy.center.x, enemy.center.y, float(0))
+        elif len(enemies) == 2:
+            enemyPos1 = enemies[0]
+            enemyPos2 = enemies[1]
+            if enemyPos1.center.x == None or enemyPos1.center.y == None or enemyPos2.center.x == None or enemyPos2.center.y == None:
+                print("something is null")
+            elif self.analyzer.enemy1.x == None or self.analyzer.enemy1.y == None:
+                print("B is null")
             else:
-                self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
-        elif len(enemy) == 2:
-            if abs(self.analyzer.enemy1.visionX - enemy[0].center.x) < 1 and abs(self.analyzer.enemy1.visionY - enemy[0].center.y) < 1:
-                self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
-                self.analyzer.enemy2.setPosition(enemy[1].center.x, enemy[1].center.y,float(0))
-            elif abs(self.analyzer.enemy2.visionX - enemy[0].center.x) < 1 and abs(self.analyzer.enemy2.visionY - enemy[0].center.y) < 1:
-                self.analyzer.enemy2.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
-                self.analyzer.enemy1.setPosition(enemy[1].center.x, enemy[1].center.y,float(0))
-            else:
-                self.analyzer.enemy1.setPosition(enemy[0].center.x, enemy[0].center.y,float(0))
-                self.analyzer.enemy2.setPosition(enemy[1].center.x, enemy[1].center.y,float(0))
+                if abs(self.analyzer.enemy1.x - enemyPos1.center.x) < abs(self.analyzer.enemy2.x - enemyPos1.center.x) and abs(self.analyzer.enemy1.y - enemyPos1.center.y) < abs(self.analyzer.enemy2.y - enemyPos1.center.y):
+                    if self.analyzer.enemy1.isVisualPositionMatched(enemyPos1.center.x, enemyPos1.center.y, float(0)) == 1:
+                        self.analyzer.enemy1.setPosition(enemyPos1.center.x, enemyPos1.center.y, float(0))
+                        self.analyzer.enemy2.setPosition(enemyPos2.center.x, enemyPos2.center.y, float(0))
+                    elif self.analyzer.enemy2.isVisualPositionMatched(enemyPos1.center.x, enemyPos1.center.y, float(0)) == 1:
+                        self.analyzer.enemy2.setPosition(enemyPos1.center.x, enemyPos1.center.y, float(0))
+                        self.analyzer.enemy1.setPosition(enemyPos2.center.x, enemyPos2.center.y, float(0))
+                else:
+                    if self.analyzer.enemy2.isVisualPositionMatched(enemyPos1.center.x, enemyPos1.center.y, float(0)) == 1:
+                        self.analyzer.enemy2.setPosition(enemyPos1.center.x, enemyPos1.center.y, float(0))
+                        self.analyzer.enemy1.setPosition(enemyPos2.center.x, enemyPos2.center.y, float(0))
+                    elif self.analyzer.enemy1.isVisualPositionMatched(enemyPos1.center.x, enemyPos1.center.y, float(0)) == 1:
+                        self.analyzer.enemy1.setPosition(enemyPos1.center.x, enemyPos1.center.y, float(0))
+                        self.analyzer.enemy2.setPosition(enemyPos2.center.x, enemyPos2.center.y, float(0))
+
 
     def robotHP(self, data):
         self.analyzer.ally1.setHealth(data.blue1)
@@ -147,17 +169,19 @@ class Brain:
         return [r[3], r[2], r[1], r[0]]
 
     def updateEnemyID1(self, msg):
-        self.analyzer.enemy1.x = self.updateEnemyID(msg)
+        self.updateEnemyID(msg)
             
     def updateEnemyID2(self, msg):
-        self.analyzer.enemy1.x = self.updateEnemyID(msg)
+        self.updateEnemyID(msg)
 
     def updateEnemyID(self, msg):
-        id = filter(str.isdigit,  msg.id)
+        id = int(msg.id[len(msg.id)-1])
         if id == 1:
-            self.analyzer.enemy1.setVisionPosition(msg.x, msg.y)
+            self.analyzer.enemy1.setVisualPosition(msg.x, msg.y)
+        elif id == 2:
+            self.analyzer.enemy2.setVisualPosition(msg.x, msg.y)
         else:
-            self.analyzer.enemy2.setVisionPosition(msg.x, msg.y)
+            print("visual localization update error!")
 
 
     def get_next_position1(self):
@@ -264,8 +288,7 @@ class Brain:
         path = Path()
         path.header.frame_id = "/map"
         path.header.stamp = rospy.get_rostime()
-        print("~~~~~~~~~~~~~")
-        print(len(rawPath))
+
         for node in rawPath:
             goal = PoseStamped()
             goal.header.frame_id = "/map"
@@ -307,8 +330,7 @@ class Brain:
             path = Path()
             path.header.frame_id = "/map"
             path.header.stamp = rospy.get_rostime()
-            print("~~~~~~~~~~~~~")
-            print(len(rawPath))
+
             for node in rawPath:
                 goal = PoseStamped()
                 goal.header.frame_id = "/map"
@@ -322,7 +344,6 @@ class Brain:
                 path.poses.append(goal)
             self._global_planner_pub[0].publish(path)
             
-
             # mark = Marker()
             # mark.header.frame_id = "/map"
             # mark.header.stamp = rospy.Time.now()
@@ -343,15 +364,14 @@ class Brain:
 
     def get_next_path2(self):
         if self.analyzer.ally2.isStrategyMakerOn:
-                        # pos = self.Blue2.getPointAvoidingFacingEnemies()
+            # pos = self.Blue2.getPointAvoidingFacingEnemies()
             rawPath = self.analyzer.ally2.getDecisionPath()
             if len(rawPath) == 0:
                 return
             path = Path()
             path.header.frame_id = "/map"
             path.header.stamp = rospy.get_rostime()
-            print("-----------------")
-            print(len(rawPath))
+
             for node in rawPath:
                 
                 goal = PoseStamped()
@@ -385,8 +405,8 @@ class Brain:
             # self._vis_pub[0].publish(mark)
 
     def display(self):
-        # pass
         self.analyzer.displayOnce()
+        #pass
         
 
 def call_rosspin():
@@ -397,10 +417,12 @@ if __name__ == '__main__':
     try:
         print(__file__ + " start!!")
         rospy.init_node('decision_node', anonymous=True)
-        control_rate = 0.5    
+        control_rate = 0.5
         rate = rospy.Rate(1.0 / control_rate)
         brain = Brain(control_rate)
         spin_thread = threading.Thread(target=call_rosspin).start()
+
+        brain.analyzer.setTeamColor(0) #调队伍颜色的，0是蓝色，1是红色
 
         while not rospy.core.is_shutdown():
             brain.display()
@@ -409,6 +431,7 @@ if __name__ == '__main__':
                 # brain.get_next_position2()
                 brain.get_next_path1()
                 brain.get_next_path2()
+                pass
             rate.sleep()
 
     except rospy.ROSInterruptException:

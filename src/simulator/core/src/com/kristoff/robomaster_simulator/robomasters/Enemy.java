@@ -43,7 +43,7 @@ public class Enemy extends RoboMaster {
 
     @Override
     public void setPosition(int x, int y, float rotation) {
-        if(isInTheView() && this.getPosition().distanceTo(x, y) > 500 && timerCount < 5){
+        if(isInTheView() && this.getPosition().distanceTo(x, y) > 500 && timerCount < 20){
             timerCount++;
             return;
         }

@@ -9,7 +9,7 @@ class RoboMaster:
         self._entrypoint = entrypoint
         self._object = object
         self.name = object.getName()
-        self.x, self.y, self.yaw = 0, 0, 0
+        self.x, self.y, self.yaw = 0.0, 0.0, 0.0
         self.health = 2000
         self.numOfBullets = 0
 
@@ -25,15 +25,8 @@ class RoboMaster:
     def setNumOfBullets(self, numOfBullets):
         self.numOfBullets = numOfBullets
 
+
     def __str__(self):
-        if self.x == None:
-            return "   %s - [y]%.2f [yaw]%.2f°" % (self.name,  self.y, self.yaw) + self.display_health() + self.display_num_of_bullets()
-        elif self.y == None:
-            return "   %s - [x]%.2f [yaw]%.2f°" % (self.name, self.x, self.yaw) + self.display_health() + self.display_num_of_bullets()
-        elif self.yaw == None:
-            return "   %s - [x]%.2f [y]%.2f" % (self.name, self.x, self.y) + self.display_health() + self.display_num_of_bullets()
-        elif self.x == None or self.y == None or self.yaw == None:
-            return "   %s - " % (self.name) + self.display_health() + self.display_num_of_bullets()
         return "   %s - [x]%.2f [y]%.2f [yaw]%.2f°" % (self.name, self.x, self.y, self.yaw) + self.display_health() + self.display_num_of_bullets()
 
     def display_health(self):
@@ -129,22 +122,40 @@ class Ally(RoboMaster):
         
         return AlwaysTowardsEnemy() if len(posList) > 0 else []
 
-    
-    
     def setStrategyMaker(self, bool):  
         self.isStrategyMakerOn = bool
 
 
 class Enemy(RoboMaster):
     def __init__(self, entrypoint, enemyObject):
-        self.visionX = -1
-        self.visionY = -1
+        self.visualX = -1
+        self.visualY = -1
         super(Enemy, self).__init__(entrypoint, enemyObject)
 
-    def setVisionPosition(self, x, y):
-        self.visionX = x
-        self.visionY = y
+    def __str__(self):
+        string = "\n      Visual Localization: " + "%.2f, %.2f" % (self.visualX, self.visualY)
+        return super(Enemy, self).__str__() + string
 
+    def setVisualPosition(self, x, y):
+        self.visualX = x
+        self.visualY = y
+
+    def isVisualPositionMatched(self, x, y, yaw):
+        if self.visualX == -1 or self.visualY == -1:
+            return -1
+        if abs(self.visualX - x) < 1 and abs(self.visualY - y) < 1:
+            return 1
+        else:
+            return 0
+
+    def setIfVisualPositionMatched(self, x, y, yaw):
+        if self.visualX == -1 or self.visualY == -1:
+            return -1
+        if abs(self.visualX - x) < 0.5 and abs(self.visualY - y) < 0.5:
+            self.setPosition(x, y, yaw)
+            return 1
+        else:
+            return 0
 
 class DecisionNode():
     def __init__(self, x = 0, y = 0, yaw = 0.0):
