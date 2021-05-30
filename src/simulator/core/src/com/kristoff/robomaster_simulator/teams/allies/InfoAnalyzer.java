@@ -83,7 +83,7 @@ public class InfoAnalyzer extends LoopThread {
                     Enemies.enemy1.lock();
                 }
                 else{
-                    if(Enemies.enemy1.numOfBullet > Enemies.enemy2.numOfBullet){
+                    if(Enemies.enemy1.numOfBullets > Enemies.enemy2.numOfBullets){
                         Enemies.enemy2.lock();
                     }
                     else {

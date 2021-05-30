@@ -16,7 +16,7 @@ import com.kristoff.robomaster_simulator.teams.Team;
 public class Enemy extends RoboMaster {
     static Enemy lockedEnemy;
 
-    DetectionState detectionState = DetectionState.Initialized;
+    public DetectionState detectionState = DetectionState.Initialized;
 
     InView inView;
     int timerCount = 0;

@@ -1,6 +1,6 @@
 package com.kristoff.robomaster_simulator.robomasters.Strategy;
 
-public enum StrategyType {
+public enum StrategyState {
     DEAD,
     STATIC,
     MOVING,

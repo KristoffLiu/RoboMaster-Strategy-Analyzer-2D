@@ -1,8 +1,10 @@
 package com.kristoff.robomaster_simulator.teams.allies;
 
+import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.kristoff.robomaster_simulator.robomasters.Ally;
 import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.modules.TeamColor;
+import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.teams.Enemies;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.teams.Team;
@@ -51,12 +53,44 @@ public class Allies extends Team {
         this.teamColor = teamColor;
         ally1.teamColor = teamColor;
         ally2.teamColor = teamColor;
+        int i = 0;
         if(teamColor == TeamColor.BLUE) {
             Enemies.setTeamColor(TeamColor.RED);
+            for(TextureMapObject textureMapObject : Systems.map.getBirthZones()){
+                float halfWidth = textureMapObject.getTextureRegion().getRegionWidth() / 2f;
+                float halfHeight = textureMapObject.getTextureRegion().getRegionHeight() / 2f;
+                int x = (int)(textureMapObject.getX() + halfWidth);
+                int y = (int)(textureMapObject.getY() + halfHeight);
+                if(textureMapObject.getProperties().containsKey("blue")){
+                    if(i == 0){
+                        ally1.actor.update(x, y, (float) (Math.PI));
+                    }
+                    else if(i == 1){
+                        ally2.actor.update(x, y, (float) (Math.PI));
+                    }
+                    i ++;
+                }
+            }
         }
         else{
             Enemies.setTeamColor(TeamColor.BLUE);
+            for(TextureMapObject textureMapObject : Systems.map.getBirthZones()){
+                float halfWidth = textureMapObject.getTextureRegion().getRegionWidth() / 2f;
+                float halfHeight = textureMapObject.getTextureRegion().getRegionHeight() / 2f;
+                int x = (int)(textureMapObject.getX() + halfWidth);
+                int y = (int)(textureMapObject.getY() + halfHeight);
+                if(textureMapObject.getProperties().containsKey("red")){
+                    if(i == 0){
+                        ally1.actor.update(x, y, (float) (Math.PI));
+                    }
+                    else if(i == 1){
+                        ally2.actor.update(x, y, (float) (Math.PI));
+                    }
+                    i ++;
+                }
+            }
         }
+
     }
 
 

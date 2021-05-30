@@ -3,6 +3,7 @@ package com.kristoff.robomaster_simulator.robomasters;
 import com.badlogic.gdx.math.Vector2;
 import com.kristoff.robomaster_simulator.core.Simulator;
 import com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker;
+import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
 import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
@@ -41,7 +42,7 @@ public abstract class RoboMaster {
     public int No;
     public int teamIndex;
     public int health;
-    public int numOfBullet;
+    public int numOfBullets;
     public PointState pointState;
 
     /***
@@ -85,7 +86,7 @@ public abstract class RoboMaster {
             case realMachine -> {}
         }
         this.health = property.health;
-        this.numOfBullet = 0;
+        this.numOfBullets = 0;
     }
 
     public void setTeamColor(TeamColor color){
@@ -146,6 +147,7 @@ public abstract class RoboMaster {
 //                }
 //            }
 //        }
+        if(Systems.pointSimulator.isPointTheObstacle(x, y)) return;
         this.actor.update(x, y, rotation);
     }
 
@@ -237,8 +239,8 @@ public abstract class RoboMaster {
         return name;
     }
 
-    public void setNumOfBullet(int bulletnum){
-        this.numOfBullet = bulletnum;
+    public void setNumOfBullets(int bulletnum){
+        this.numOfBullets = bulletnum;
     }
 }
 

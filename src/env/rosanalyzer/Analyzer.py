@@ -13,7 +13,7 @@ import os
 
 class Analyzer:
     def __init__(self):
-        self.version = "1.73 2012/05/29"
+        self.version = "1.75 2012/05/30"
         self.gateway = JavaGateway() #启动py4j服务器
         self.entrypoint = self.gateway.entry_point #获取服务器桥的入口
         java_import(self.gateway.jvm,'java.util.*') #导入java中的类的方法
@@ -22,6 +22,7 @@ class Analyzer:
         self.remaining_time = 0
 
         self.entrypoint.setAsRoamer("blue1")
+        self.teamColor = 0
 
         self.ally1 = Ally(self.entrypoint, self.entrypoint.getAlly("Ally1"))
         self.ally2 = Ally(self.entrypoint, self.entrypoint.getAlly("Ally2"))
@@ -30,6 +31,7 @@ class Analyzer:
         self.buff_zones = [self.BuffZone(i, self.BuffZone.BuffType.UNKNOWN, False) for i in range(6)]
 
     def setTeamColor(self, teamColor):
+        self.teamColor = teamColor
         self.entrypoint.setTeamColor(teamColor)
 
     def updateGameStatus(self, game_status, remaining_time):

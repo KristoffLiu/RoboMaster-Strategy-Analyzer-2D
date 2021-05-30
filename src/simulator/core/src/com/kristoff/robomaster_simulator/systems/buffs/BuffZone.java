@@ -28,13 +28,13 @@ public class BuffZone {
     public static int isBulletSupplyNeeded = 0;
     public static int isRedHPRecoveryNecessary = 0;
 
-    static BuffZone NotActivated    ;
-    static BuffZone RedHPRecovery   ;
-    static BuffZone DisableShooting ;
-    static BuffZone BlueBulletSupply;
-    static BuffZone BlueHPRecovery  ;
-    static BuffZone DisableMovement ;
-    static BuffZone RedBulletSupply ;
+    public static BuffZone NotActivated    ;
+    public static BuffZone RedHPRecovery   ;
+    public static BuffZone DisableShooting ;
+    public static BuffZone BlueBulletSupply;
+    public static BuffZone BlueHPRecovery  ;
+    public static BuffZone DisableMovement ;
+    public static BuffZone RedBulletSupply ;
 
     public BuffZone(TextureMapObject textureMapObject){
         this.name = textureMapObject.getName();
@@ -99,11 +99,14 @@ public class BuffZone {
     public static int setPriority(BuffZone buffZone){
         float distanceToBlue1 = buffZone.centrePosition.distanceTo(Allies.ally1.getPointPosition());
         float distanceToBlue2 = buffZone.centrePosition.distanceTo(Allies.ally2.getPointPosition());
-        if(distanceToBlue1 < distanceToBlue2){
+        if((Allies.ally1.isAlive() && !Allies.ally2.isAlive()) || (distanceToBlue1 < distanceToBlue2)){
             return 1;
         }
-        else {
+        else if((Allies.ally2.isAlive() && !Allies.ally1.isAlive()) || (distanceToBlue1 > distanceToBlue2)){
             return 2;
+        }
+        else{
+            return 1;
         }
     }
 
@@ -403,5 +406,43 @@ public class BuffZone {
                 buffImage.setTextureRegion(finalPathHeader);
             }
         });
+    }
+
+    public boolean isActive(){
+        return this.isActive;
+    }
+
+    public static BuffZone AllyHPRecoveryBuffZone(){
+        if(Allies.teamColor == TeamColor.BLUE){
+            return BlueHPRecovery;
+        }
+        else if(Allies.teamColor == TeamColor.RED){
+            return RedHPRecovery;
+        }
+        return BlueHPRecovery;
+    }
+
+    public static BuffZone AllyBulletSupplyBuffZone(){
+        if(Allies.teamColor == TeamColor.BLUE){
+            return BlueBulletSupply;
+        }
+        else if(Allies.teamColor == TeamColor.RED){
+            return RedBulletSupply;
+        }
+        return BlueBulletSupply;
+    }
+
+    public static BuffZone EnemyHPRecoveryBuffZone(){
+        if(Allies.teamColor == TeamColor.BLUE){
+            return RedHPRecovery;
+        }
+        else if(Allies.teamColor == TeamColor.RED){
+            return BlueHPRecovery;
+        }
+        return RedHPRecovery;
+    }
+
+    public static boolean isAnyAvailableBuffZone(){
+        return AllyHPRecoveryBuffZone().isActive() || AllyBulletSupplyBuffZone().isActive() || EnemyHPRecoveryBuffZone().isActive();
     }
 }

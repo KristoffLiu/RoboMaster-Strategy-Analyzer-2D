@@ -6,7 +6,9 @@ import com.kristoff.robomaster_simulator.robomasters.modules.CostMap;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.robomasters.Ally;
 import com.kristoff.robomaster_simulator.systems.Systems;
+import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
+import com.kristoff.robomaster_simulator.teams.Enemies;
 import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.teams.allies.enemyobservations.EnemiesObservationSimulator;
@@ -232,6 +234,26 @@ public class StrategyMaker extends LoopThread {
             }
         }
         return false;
+    }
+
+    public int getStrategyState2Int(){
+        return this.getStrategyState().ordinal();
+    }
+
+    public StrategyState getStrategyState(){
+        if(!this.roboMaster.isAlive) return StrategyState.DEAD;
+        if(this.roboMaster.numOfBullets == 0 && !BuffZone.AllyBulletSupplyBuffZone().isActive() && !BuffZone.AllyHPRecoveryBuffZone().isActive()){
+            return StrategyState.ROTATING;
+        }
+        else if(!Enemies.enemy1.isInTheView() && !Enemies.enemy1.isInitialized() && !Enemies.enemy2.isInTheView() && !Enemies.enemy2.isInitialized()){
+            return StrategyState.PATROLLING;
+        }
+        else if(this.getPathNodes().size() != 0 || BuffZone.isAnyAvailableBuffZone()){
+            return StrategyState.MOVING;
+        }
+        else{
+            return StrategyState.STATIC;
+        }
     }
 
     public boolean isCollidingWithObstacle(int centreX, int centreY){

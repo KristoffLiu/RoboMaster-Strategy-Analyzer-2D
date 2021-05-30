@@ -22,7 +22,7 @@ from genpy import rostime
 sys.path.append(os.getcwd().rstrip("env"))
 # os.path.abspath()
 from env.rosanalyzer.Analyzer import Analyzer
-from env.rosanalyzer.RoboMaster import Ally, Enemy
+from env.rosanalyzer.RoboMaster import Ally, Enemy, RoboMaster, StrategyState
 
 import rospy
 from geometry_msgs.msg import PoseStamped
@@ -37,6 +37,12 @@ from visualization_msgs.msg import Marker
 from autofire.msg import enemy_id
 from actionlib_msgs.msg import GoalStatusArray
 from scipy.spatial.transform import Rotation as R
+
+from roborts_msgs.msg import TwistAccel
+
+
+
+
 
 class Brain:
     def __init__(self, control_rate):
@@ -58,6 +64,11 @@ class Brain:
                                    rospy.Subscriber("/CAR2/amcl_pose", PoseStamped, self.ownPositionCB1)]
         self._enemies_subscriber = rospy.Subscriber("/obstacle_preprocessed", Obstacles, self.enemyInfo)
         self._hp_subscriber = rospy.Subscriber("/CAR1/game_robot_hp", GameRobotHP, self.robotHP)
+        self._robot_bullet_subscriber = [rospy.Subscriber("/CAR2/game_robot_bullet", GameRobotBullet, self.robotBullet)]
+
+        self._rotate_publisher = [rospy.Publisher("/CAR1/cmd_vel_acc", TwistAccel, queue_size=10),
+                                  rospy.Publisher("/CAR2/cmd_vel_acc", TwistAccel, queue_size=10)]
+
         self._buff_zone_subscriber = rospy.Subscriber("/CAR1/game_zone_array_status", GameZoneArray, self.gameZone)
         self._game_status_subscriber = rospy.Subscriber("/CAR2/game_status", GameStatus, self.gameState)
         self._vis_pub = [rospy.Publisher("/CAR1/visualization_marker", Marker, queue_size=10),
@@ -65,9 +76,13 @@ class Brain:
         self._is_goal_reach_subscribers = [rospy.Subscriber("/CAR1/global_planner_node_action/status", GoalStatusArray, self.enable_decision1),
                                            rospy.Subscriber("/CAR2/global_planner_node_action/status", GoalStatusArray, self.enable_decision2)]
 
-
         self.decision_1_activate = True
         self.decision_2_activate = True
+
+    def step(self):
+        if (self.analyzer.game_status == Analyzer.GameStatus.GAME):
+            self.ally_make_decision(self.analyzer.ally1)
+            self.ally_make_decision(self.analyzer.ally2)
 
     def enable_decision1(self, msg):
         isOn = True
@@ -140,12 +155,29 @@ class Brain:
                         self.analyzer.enemy1.setPosition(enemyPos1.center.x, enemyPos1.center.y, float(0))
                         self.analyzer.enemy2.setPosition(enemyPos2.center.x, enemyPos2.center.y, float(0))
 
-
     def robotHP(self, data):
-        self.analyzer.ally1.setHealth(data.blue1)
-        self.analyzer.ally2.setHealth(data.blue2)
-        self.analyzer.enemy1.setHealth(data.red1)
-        self.analyzer.enemy2.setHealth(data.red2)
+        if self.analyzer.teamColor == 0:
+            self.analyzer.ally1.setHealth(data.blue1)
+            self.analyzer.ally2.setHealth(data.blue2)
+            self.analyzer.enemy1.setHealth(data.red1)
+            self.analyzer.enemy2.setHealth(data.red2)
+        elif self.analyzer.teamColor == 1:
+            self.analyzer.ally1.setHealth(data.red1)
+            self.analyzer.ally2.setHealth(data.red2)
+            self.analyzer.enemy1.setHealth(data.blue1)
+            self.analyzer.enemy2.setHealth(data.blue2)
+
+    def robotBullet(self, data):
+        if self.analyzer.teamColor == 0:
+            self.analyzer.ally1.setNumOfBullets(data.blue1)
+            self.analyzer.ally2.setNumOfBullets(data.blue2)
+            self.analyzer.enemy1.setNumOfBullets(data.red1)
+            self.analyzer.enemy2.setNumOfBullets(data.red2)
+        elif self.analyzer.teamColor == 1:
+            self.analyzer.ally1.setNumOfBullets(data.red1)
+            self.analyzer.ally2.setNumOfBullets(data.red2)
+            self.analyzer.enemy1.setNumOfBullets(data.blue1)
+            self.analyzer.enemy2.setNumOfBullets(data.blue2)
 
     def gameState(self, data):
         self.analyzer.updateGameStatus(data.game_status, data.remaining_time)   
@@ -160,7 +192,6 @@ class Brain:
         for i, d in enumerate(data.zone):
             self.analyzer.updateBuffZone(i, d.type, d.active)
             # self.analyzer.updateBuffZone(i, 0, False)
-
 
     def _createQuaternionFromYaw(self, yaw):
         # input: r p y
@@ -182,7 +213,6 @@ class Brain:
             self.analyzer.enemy2.setVisualPosition(msg.x, msg.y)
         else:
             print("visual localization update error!")
-
 
     def get_next_position1(self):
         if self.analyzer.ally1.isStrategyMakerOn:
@@ -280,7 +310,6 @@ class Brain:
             mark.lifetime = rospy.Duration(self._control_rate, 0)
             self._vis_pub[1].publish(mark)
 
-    def get_next_path(self, ally : Ally):
         if ally.isStrategyMakerOn:
             rawPath = ally.getDecisionPath()
         if len(rawPath) == 0:
@@ -301,117 +330,55 @@ class Brain:
             # print("yaw angle: " , node.yaw)
             path.poses.append(goal)
         self._global_planner_pub[0].publish(path)
-        # mark = Marker()
-        # mark.header.frame_id = "/map"
-        # mark.header.stamp = rospy.Time.now()
-        # mark.ns = "showen_point"
-        # mark.id = 1
-        # mark.type = Marker().ARROW
-        # mark.action = Marker().ADD
-        # mark.pose = goal.pose
-        # mark.scale.x = 0.4
-        # mark.scale.y = 0.05
-        # mark.scale.z = 0.05
-        # mark.color.a = 1.0
-        # mark.color.r = 0.2
-        # mark.color.g = 1.0
-        # mark.color.b = 0.3
-        # mark.lifetime = rospy.Duration(self._control_rate, 0)
-        # self._vis_pub[1].publish(mark)
 
-    def get_next_path1(self):
-        if self.analyzer.ally1.isStrategyMakerOn:
-            # pos = self.Blue2.getPointAvoidingFacingEnemies()
-            rawPath = self.analyzer.ally1.getDecisionPath()
+    def ally_make_decision(self, ally : Ally):
+        if ally.isStrategyMakerOn:
+            if ally.getStrategyState == StrategyState.MOVING:
+                self.get_next_path(ally)
+            elif ally.getStrategyState == StrategyState.ROTATING:
+                self.rotate(ally)
+            elif ally.getStrategyState == StrategyState.ROTATING:
+                self.rotate(ally)
+            elif ally.getStrategyState == StrategyState.PATROLLING:
+                self.get_next_path(ally)
+            elif ally.getStrategyState == StrategyState.DEAD:
+                pass            
 
-            if len(rawPath) == 0:
-                return
+    def rotate(self, ally : Ally):
+        cmd = TwistAccel()
+        cmd.twist.angular.z = 0.1
+        self._rotate_publisher[ally.no].publish(cmd)
 
-            path = Path()
-            path.header.frame_id = "/map"
-            path.header.stamp = rospy.get_rostime()
+    def get_next_path(self, ally : Ally):
+        # pos = self.Blue2.getPointAvoidingFacingEnemies()
+        rawPath = ally.getDecisionPath()
 
-            for node in rawPath:
-                goal = PoseStamped()
-                goal.header.frame_id = "/map"
-                goal.pose.position.x, goal.pose.position.y = node.x, node.y
+        if len(rawPath) == 0:
+            return
 
-                [goal.pose.orientation.w,
-                goal.pose.orientation.x,
-                goal.pose.orientation.y,
-                goal.pose.orientation.z] = self._createQuaternionFromYaw(node.yaw)
-                # print("yaw angle: " , node.yaw)
-                path.poses.append(goal)
-            self._global_planner_pub[0].publish(path)
-            
-            # mark = Marker()
-            # mark.header.frame_id = "/map"
-            # mark.header.stamp = rospy.Time.now()
-            # mark.ns = "showen_point"
-            # mark.id = 1
-            # mark.type = Marker().ARROW
-            # mark.action = Marker().ADD
-            # mark.pose = goal.pose
-            # mark.scale.x = 0.4
-            # mark.scale.y = 0.05
-            # mark.scale.z = 0.05
-            # mark.color.a = 1.0
-            # mark.color.r = 0.2
-            # mark.color.g = 1.0
-            # mark.color.b = 0.3
-            # mark.lifetime = rospy.Duration(self._control_rate, 0)
-            # self._vis_pub[1].publish(mark)
+        path = Path()
+        path.header.frame_id = "/map"
+        path.header.stamp = rospy.get_rostime()
 
-    def get_next_path2(self):
-        if self.analyzer.ally2.isStrategyMakerOn:
-            # pos = self.Blue2.getPointAvoidingFacingEnemies()
-            rawPath = self.analyzer.ally2.getDecisionPath()
-            if len(rawPath) == 0:
-                return
-            path = Path()
-            path.header.frame_id = "/map"
-            path.header.stamp = rospy.get_rostime()
+        for node in rawPath:
+            goal = PoseStamped()
+            goal.header.frame_id = "/map"
+            goal.pose.position.x, goal.pose.position.y = node.x, node.y
 
-            for node in rawPath:
-                
-                goal = PoseStamped()
-                goal.header.frame_id = "/map"
-                goal.pose.position.x, goal.pose.position.y = node.x, node.y
-
-                [goal.pose.orientation.w,
-                goal.pose.orientation.x,
-                goal.pose.orientation.y,
-                goal.pose.orientation.z] = self._createQuaternionFromYaw(node.yaw)
-                path.poses.append(goal)
-
-            self._global_planner_pub[1].publish(path)
-
-            # mark = Marker()
-            # mark.header.frame_id = "/map"
-            # mark.header.stamp = rospy.Time.now()
-            # mark.ns = "showen_point"
-            # mark.id = 0
-            # mark.type = Marker().ARROW
-            # mark.action = Marker().ADD
-            # mark.pose = goal.pose
-            # mark.scale.x = 0.4
-            # mark.scale.y = 0.05
-            # mark.scale.z = 0.05
-            # mark.color.a = 1.0
-            # mark.color.r = 0.2
-            # mark.color.g = 1.0
-            # mark.color.b = 0.3
-            # mark.lifetime = rospy.Duration(self._control_rate, 0)
-            # self._vis_pub[0].publish(mark)
+            [goal.pose.orientation.w,
+            goal.pose.orientation.x,
+            goal.pose.orientation.y,
+            goal.pose.orientation.z] = self._createQuaternionFromYaw(node.yaw)
+            # print("yaw angle: " , node.yaw)
+            path.poses.append(goal)
+        self._global_planner_pub[ally.no].publish(path)
 
     def display(self):
         self.analyzer.displayOnce()
-        #pass
+        # pass
         
-
 def call_rosspin():
     rospy.spin()
-
 
 if __name__ == '__main__':
     try:
@@ -422,16 +389,11 @@ if __name__ == '__main__':
         brain = Brain(control_rate)
         spin_thread = threading.Thread(target=call_rosspin).start()
 
-        brain.analyzer.setTeamColor(0) #调队伍颜色的，0是蓝色，1是红色
+        brain.analyzer.setTeamColor(1) #调队伍颜色的，0是蓝色，1是红色
 
         while not rospy.core.is_shutdown():
             brain.display()
-            if (brain.analyzer.game_status == Analyzer.GameStatus.GAME):
-                # brain.get_next_position1()
-                # brain.get_next_position2()
-                brain.get_next_path1()
-                brain.get_next_path2()
-                pass
+            brain.step()
             rate.sleep()
 
     except rospy.ROSInterruptException:

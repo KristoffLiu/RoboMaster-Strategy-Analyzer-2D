@@ -7,6 +7,7 @@ from env.rosanalyzer.Analyzer import Analyzer
 
 if __name__ == '__main__':
     analyzer = Analyzer()
+    analyzer.display()
     analyzer.setTeamColor(1)
     analyzer.updateBuffZone(0, 4, True)
     analyzer.updateBuffZone(5, 2, True)

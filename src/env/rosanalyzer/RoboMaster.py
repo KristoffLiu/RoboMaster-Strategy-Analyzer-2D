@@ -1,4 +1,5 @@
 import math
+from enum import Enum
 
 class RoboMaster:
     x, y, yaw = 0.0, 0.0, 0.0
@@ -9,6 +10,7 @@ class RoboMaster:
         self._entrypoint = entrypoint
         self._object = object
         self.name = object.getName()
+        self.no = int(self.name[len(self.name) - 1]) - 1 # index start from 0
         self.x, self.y, self.yaw = 0.0, 0.0, 0.0
         self.health = 2000
         self.numOfBullets = 0
@@ -24,6 +26,7 @@ class RoboMaster:
     
     def setNumOfBullets(self, numOfBullets):
         self.numOfBullets = numOfBullets
+        self._object.setNumOfBullets(numOfBullets)
 
 
     def __str__(self):
@@ -66,6 +69,9 @@ class Ally(RoboMaster):
     def getDecisionMade(self):
         pos = self._object.getDecisionMade()
         return pos.getX() / 100.0, pos.getY() / 100.0
+
+    def getStrategyState(self):
+        return StrategyState(self._object.getStrategyState())
 
     def getDecisionPath(self):
         posList = self._object.getPath()
@@ -119,8 +125,17 @@ class Ally(RoboMaster):
             last.yawAngle2Point(gx, gy)
             self.pathList = list
             return self.pathList
-        
-        return AlwaysTowardsEnemy() if len(posList) > 0 else []
+
+        def JustTowardsEnemy():
+            currentNode = DecisionNode(self.x, self.y)
+            enemy = self._entrypoint.getLockedEnemy()
+            enemyPosition = enemy.getPointPosition()
+            gx = enemyPosition.getX() / 100.0
+            gy = enemyPosition.getY() / 100.0
+            currentNode.yawAngle2Point(gx, gy)
+            return [currentNode]
+
+        return AlwaysTowardsEnemy() if len(posList) > 0 else JustTowardsEnemy()
 
     def setStrategyMaker(self, bool):  
         self.isStrategyMakerOn = bool
@@ -168,6 +183,30 @@ class DecisionNode():
 
     def __str__(self):
         return "{:f} {:f} {:f}".format(self.x, self.y, self.yaw)
+
+class StrategyState(Enum):
+    ERROR = -1
+    DEAD = 0
+    STATIC = 1
+    MOVING = 2
+    ATTACKING = 3
+    ROTATING = 4
+    PATROLLING = 5
+    def str(self) -> str:
+        if(self.value == 0):
+            return "No strategy because its dead"
+        elif(self.value == 1):
+            return "No Action"
+        elif(self.value == 2):
+            return "Moving"
+        elif(self.value == 3):
+            return "Attacking"
+        elif(self.value == 4):
+            return "Rotating"
+        elif(self.value == 5):
+            return "Patrolling"
+        else:
+            return "Error Raised"
     
 
 
