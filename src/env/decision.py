@@ -422,7 +422,7 @@ if __name__ == '__main__':
         brain = Brain(control_rate)
         spin_thread = threading.Thread(target=call_rosspin).start()
 
-        brain.analyzer.setTeamColor(0) #调队伍颜色的，0是蓝色，1是红色
+        brain.analyzer.setTeamColor(1) #调队伍颜色的，0是蓝色，1是红色
 
         while not rospy.core.is_shutdown():
             brain.display()
