@@ -229,7 +229,7 @@ public class StrategyMaker extends LoopThread {
             }
             else if((!Enemies.enemy1.isAlive() || (!Enemies.enemy1.isInTheView() && !Enemies.enemy1.isInitialized()))
                     && (!Enemies.enemy2.isAlive() || (!Enemies.enemy2.isInTheView() && !Enemies.enemy2.isInitialized())) ){
-                this.strategyState = StrategyState.PATROLLING;
+                this.strategyState = StrategyState.ATTACKING;
             }
             else if(EnemiesObservationSimulator.isInLockedEnemyViewOnly(this.roboMaster.getPointPosition().x, this.roboMaster.getPointPosition().y) ||
                     sizeOfPathNodes == 0){
@@ -239,7 +239,7 @@ public class StrategyMaker extends LoopThread {
                 this.strategyState = StrategyState.MOVING;
             }
             else{
-                this.strategyState = StrategyState.STATIC;
+                this.strategyState = StrategyState.ATTACKING;
             }
         }
         catch (NullPointerException e){

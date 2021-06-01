@@ -1,10 +1,14 @@
 package com.kristoff.robomaster_simulator.teams;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.kristoff.robomaster_simulator.robomasters.DetectionState;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
+import com.kristoff.robomaster_simulator.robomasters.RoboMaster;
 import com.kristoff.robomaster_simulator.robomasters.modules.TeamColor;
 import com.kristoff.robomaster_simulator.systems.Systems;
+import com.kristoff.robomaster_simulator.view.layers.HUD;
+import com.kristoff.robomaster_simulator.view.ui.controls.Image;
 
 public class Enemies extends Team{
     public static Enemy enemy1;
@@ -68,5 +72,11 @@ public class Enemies extends Team{
                 }
             }
         }
+//        Gdx.app.postRunnable(new Runnable() {
+//            @Override
+//            public void run() {
+//                HUD.current.resetTeamColor();
+//            }
+//        });
     }
 }

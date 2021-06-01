@@ -10,10 +10,11 @@ import com.kristoff.robomaster_simulator.view.ui.pages.UIPage;
 import java.util.ArrayList;
 
 public class HUD extends UIPage {
+    public static HUD current;
     EnvRenderer envRenderer;
     ArrayList<Image> hpBarIndicatorBackgroundList = new ArrayList<>();
     ArrayList<Image> hpBarIndicatorForegroundList = new ArrayList<>();
-    ArrayList<Image> roboMastersIDList = new ArrayList<>();
+    public ArrayList<Image> roboMastersIDList = new ArrayList<>();
     ArrayList<Image> enemyInViewIndicators = new ArrayList<>();
     ArrayList<Image> isDeadIndicatorList = new ArrayList<>();
 
@@ -21,6 +22,7 @@ public class HUD extends UIPage {
 
     public HUD(EnvRenderer envRenderer) {
         super(envRenderer.view.getViewport());
+        current = this;
         this.envRenderer = envRenderer;
         for(RoboMaster roboMaster : RoboMasters.all){
             Image roboImage = new Image();
@@ -74,7 +76,7 @@ public class HUD extends UIPage {
         super.act(delta);
         for(Image roboImage : this.roboMastersIDList){
             RoboMaster roboMaster = (RoboMaster) roboImage.getTag();
-            roboImage.setTextureRegion("RoboMasters/Indicators/" + roboMaster.getTeamColor() + ".png");
+//            roboImage.setTextureRegion("RoboMasters/Indicators/" + roboMaster.getTeamColor() + ".png");
             roboImage.setPosition((roboMaster.getX() - 310f) / 1000f , (roboMaster.getY() + 210f) / 1000f );
         }
         for(int i = 0; i < this.hpBarIndicatorBackgroundList.size(); i++){
@@ -107,6 +109,14 @@ public class HUD extends UIPage {
         inViewImage.setPosition((enemy.getX() + 320f) / 1000f , (enemy.getY() - 220f) / 1000f );
         if(enemy.isLocked()){
             lockedIndicator.setPosition((enemy.getX() + 320f) / 1000f , (enemy.getY() - 0f) / 1000f );
+        }
+    }
+
+    public void resetTeamColor() {
+        for(Image roboImage : roboMastersIDList){
+            RoboMaster robo = (RoboMaster) roboImage.getTag();
+            System.out.println("RoboMasters/Indicators/" + robo.getTeamColor() + ".png");
+            roboImage.setTextureRegion("RoboMasters/Indicators/" + robo.getTeamColor() + ".png");
         }
     }
 }
