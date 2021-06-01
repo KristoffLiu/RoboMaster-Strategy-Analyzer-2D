@@ -36,8 +36,6 @@ public class StrategyMaker extends LoopThread {
     //int counterState = -1;
     Position decisionMade;
 
-    MainStrategyAnalyzer mainStrategyAnalyzer;
-
     SearchNode friendDecision;
 
     public boolean[][] visitedGrid;
@@ -52,7 +50,7 @@ public class StrategyMaker extends LoopThread {
     public CopyOnWriteArrayList<SearchNode>                 pathNodes;
 
     public CounterState counterState = CounterState.TwoVSTwo;
-    public TacticState tacticState = TacticState.MOVING;
+    public StrategyState strategyState = StrategyState.NOTWORKING;
 
     public StrategyMaker(RoboMaster roboMaster){
         this.roboMaster = (Ally)roboMaster;
@@ -67,11 +65,9 @@ public class StrategyMaker extends LoopThread {
         resultNodes            = new CopyOnWriteArrayList<SearchNode>();
         pathNodes              = new CopyOnWriteArrayList<SearchNode>();
 
-        mainStrategyAnalyzer = new MainStrategyAnalyzer(this);
-
+        strategyAnalyzer = new StrategyAnalyzer(this);
         costMap = roboMaster.costMap;
 
-        this.strategyAnalyzer = mainStrategyAnalyzer;
         this.delta = 1/30f;
         this.isStep = true;
     }
@@ -84,49 +80,22 @@ public class StrategyMaker extends LoopThread {
     public void makeDecision(){
         visitedGrid = new boolean[849][489];
         queue.clear();
-        strategyAnalyzer.analyze(tacticState);
-    }
-
-    public void switchAnalyzer(){
-        strategyAnalyzer = mainStrategyAnalyzer;
+        strategyAnalyzer.analyze();
     }
 
     public void update(SearchNode resultNode,
                        boolean[][] visitedGrid,
                        CopyOnWriteArrayList<SearchNode> resultNodes,
                        CopyOnWriteArrayList<SearchNode> pathNodes){
+        this.resultNode = resultNode;
+        this.visitedGrid = visitedGrid;
+        this.resultNodes = resultNodes;
         synchronized (this.pathNodes) {
-            this.resultNode = resultNode;
-            this.visitedGrid = visitedGrid;
-            this.resultNodes = resultNodes;
             this.pathNodes = pathNodes;
-            //        if(this.roboMaster.getName() == "Ally1") System.out.println(this.pathNodes.size());
-
-            //changeTacticState();
-            decide();
         }
-    }
-
-    private void changeTacticState(){
-        if(EnemiesObservationSimulator.isInBothEnemiesView(this.resultNode.getX(), this.resultNode.getY())){
-            tacticState = TacticState.STATIC;
-        }
-        else{
-            tacticState = TacticState.MOVING;
-        }
-    }
-
-    private void decide(){
-        switch (tacticState) {
-            case STATIC -> {
-                pathNodes.clear();
-                decisionNode = new SearchNode(this.getCurrentPosition().x, this.getCurrentPosition().y);
-            }
-            case MOVING -> {
-                decisionNode = resultNode;
-            }
-        }
-        if (!this.roboMaster.isRoamer()) {
+        decisionNode = resultNode;
+        updateStrategyState();
+        if (this.roboMaster.isRoamer()) {
             this.getFriendRoboMaster().strategyMaker.setFriendDecision(new SearchNode(decisionNode.position.x, decisionNode.position.y));
         }
     }
@@ -163,12 +132,17 @@ public class StrategyMaker extends LoopThread {
     }
 
     public List<Position> getPath(){
-        synchronized (this.pathNodes){
-            List<Position> positions = new ArrayList<>();
-            for(int i = this.pathNodes.size() - 1; i >= 0; i --){
-                positions.add(this.pathNodes.get(i).position);
+        try{
+            synchronized (this.pathNodes){
+                List<Position> positions = new ArrayList<>();
+                for(int i = this.pathNodes.size() - 1; i >= 0; i --){
+                    positions.add(this.pathNodes.get(i).position);
+                }
+                return positions;
             }
-            return positions;
+        }
+        catch (ArrayIndexOutOfBoundsException e){
+            return new ArrayList<>();
         }
     }
 
@@ -222,7 +196,7 @@ public class StrategyMaker extends LoopThread {
 
 
     public boolean isPointInsideMap(Position position){
-        return  PointSimulator.isPointInsideMap(position.x, position.y);
+        return PointSimulator.isPointInsideMap(position.x, position.y);
     }
 
     public boolean isSafeNow(int x, int y){
@@ -240,20 +214,41 @@ public class StrategyMaker extends LoopThread {
         return this.getStrategyState().ordinal();
     }
 
+    private void updateStrategyState(){
+        try{
+            int sizeOfPathNodes = 0;
+            synchronized (this.pathNodes){
+                sizeOfPathNodes = this.pathNodes.size();
+            }
+            if(!this.roboMaster.isAlive) this.strategyState = StrategyState.DEAD;
+            if(this.roboMaster.numOfBullets == 0 && !BuffZone.AllyBulletSupplyBuffZone().isActive() && !BuffZone.AllyHPRecoveryBuffZone().isActive()){
+                this.strategyState = StrategyState.ROTATING;
+            }
+            else if(BuffZone.isHPRecoveryNeeded != 0 || BuffZone.isBulletSupplyNeeded != 0 || BuffZone.isRedHPRecoveryNecessary != 0){
+                this.strategyState = StrategyState.GETTINGBUFF;
+            }
+            else if((!Enemies.enemy1.isAlive() || (!Enemies.enemy1.isInTheView() && !Enemies.enemy1.isInitialized()))
+                    && (!Enemies.enemy2.isAlive() || (!Enemies.enemy2.isInTheView() && !Enemies.enemy2.isInitialized())) ){
+                this.strategyState = StrategyState.PATROLLING;
+            }
+            else if(EnemiesObservationSimulator.isInLockedEnemyViewOnly(this.roboMaster.getPointPosition().x, this.roboMaster.getPointPosition().y) ||
+                    sizeOfPathNodes == 0){
+                this.strategyState = StrategyState.ATTACKING;
+            }
+            else if(sizeOfPathNodes > 0 || BuffZone.isAnyAvailableBuffZone()){
+                this.strategyState = StrategyState.MOVING;
+            }
+            else{
+                this.strategyState = StrategyState.STATIC;
+            }
+        }
+        catch (NullPointerException e){
+            this.strategyState = StrategyState.MOVING;
+        }
+    }
+
     public StrategyState getStrategyState(){
-        if(!this.roboMaster.isAlive) return StrategyState.DEAD;
-        if(this.roboMaster.numOfBullets == 0 && !BuffZone.AllyBulletSupplyBuffZone().isActive() && !BuffZone.AllyHPRecoveryBuffZone().isActive()){
-            return StrategyState.ROTATING;
-        }
-        else if(!Enemies.enemy1.isInTheView() && !Enemies.enemy1.isInitialized() && !Enemies.enemy2.isInTheView() && !Enemies.enemy2.isInitialized()){
-            return StrategyState.PATROLLING;
-        }
-        else if(this.getPathNodes().size() != 0 || BuffZone.isAnyAvailableBuffZone()){
-            return StrategyState.MOVING;
-        }
-        else{
-            return StrategyState.STATIC;
-        }
+        return this.strategyState;
     }
 
     public boolean isCollidingWithObstacle(int centreX, int centreY){

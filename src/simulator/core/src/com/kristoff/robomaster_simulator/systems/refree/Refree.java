@@ -24,6 +24,7 @@ public class Refree extends LoopThread {
     public Refree(){
         isStep = true;
         delta = 1f;
+        remainingTime = -1;
         buffZones = new LinkedList<>();
     }
 

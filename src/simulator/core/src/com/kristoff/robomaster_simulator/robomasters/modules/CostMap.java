@@ -12,6 +12,7 @@ import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.teams.allies.enemyobservations.EnemiesObservationSimulator;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.utils.Position;
+import org.lwjgl.Sys;
 
 public class CostMap extends LoopThread {
     public Ally roboMaster;
@@ -62,6 +63,7 @@ public class CostMap extends LoopThread {
                     cost += costToMyself(i, j);
                     cost += costOfFriendEntity(i, j);
                     cost += costOfFriendDecision(i, j);
+                    //cost += costOfPossibleTargets(i, j);
                     costmap[i][j] = cost;
                     if(minPositionCost.cost > cost) {
                         minPositionCost.cost = cost;
@@ -74,25 +76,46 @@ public class CostMap extends LoopThread {
         }
     }
 
+    private int costOfPossibleTargets(int i, int j) {
+        int cost = 0;
+        synchronized (Allies.possibleTargets.getTargets()){
+            int size = Allies.possibleTargets.getTargets().size();
+            if(size == 0) return cost;
+            for(int x = 0; x < Allies.possibleTargets.getTargets().size(); x++){
+                Position position = Allies.possibleTargets.getTargets().get(x);
+                float distanceToPossibleTarget = position.distanceTo(i, j);
+                if(distanceToPossibleTarget <= 60){
+                    cost = 999;
+                }
+                else if(x == 0 && distanceToPossibleTarget >= 125 && distanceToPossibleTarget <= 160){
+                    cost = -80;
+                }
+            }
+            return cost;
+        }
+    }
+
     public int costOfEnemyObservation(int x, int y){
         int cost = 0;
 
-        if(EnemiesObservationSimulator.isInLockedEnemyViewOnly(x, y) && Enemy.getLockedEnemy().isAvailable()) {
+        if(EnemiesObservationSimulator.isInLockedEnemyViewOnly(x, y) && Enemy.getLockedEnemy().canBeSeen()) {
             cost = costOfLockedEnemyDistance(x, y);
         }
-        else if(EnemiesObservationSimulator.isInUnlockedEnemyViewOnly(x, y) && Enemy.getUnlockedEnemy().isAvailable()) {
+        else if(EnemiesObservationSimulator.isInUnlockedEnemyViewOnly(x, y) && Enemy.getUnlockedEnemy().canBeSeen()) {
             cost = costOfUnlockedEnemyDistance(x, y);
         }
         else if(EnemiesObservationSimulator.isOutOfBothEnemiesView(x, y))
             cost = 0;
         else if(EnemiesObservationSimulator.isInBothEnemiesView(x, y)) {
-            if(Enemy.getLockedEnemy().isAvailable() && Enemy.getUnlockedEnemy().isAvailable()){
-                cost = costOfBothEnemyDistance(x, y);
+            if(Enemy.getLockedEnemy().canBeSeen() && Enemy.getUnlockedEnemy().canBeSeen()){
+                cost += costOfLockedEnemyDistance(x, y);
+                cost += costOfUnlockedEnemyDistance(x, y) * 1.75;
+                //cost = costOfBothEnemyDistance(x, y);
             }
-            else if(Enemy.getLockedEnemy().isAvailable()){
+            else if(Enemy.getLockedEnemy().canBeSeen()){
                 cost = costOfLockedEnemyDistance(x, y);
             }
-            else if(Enemy.getUnlockedEnemy().isAvailable()){
+            else if(Enemy.getUnlockedEnemy().canBeSeen()){
                 cost = costOfUnlockedEnemyDistance(x, y);
             }
         }
@@ -119,10 +142,10 @@ public class CostMap extends LoopThread {
     }
 
     public int costOfFriendDecision(int x, int y){
-        if(this.roboMaster.isRoamer()){
+        if(!this.roboMaster.isRoamer()){
             float outerRange = 100;
             float outerPeek = 45;
-            float distanceToFriendDecision = this.strategyMaker.getFriendDecision().position.manhattanDistanceTo(x, y);
+            float distanceToFriendDecision = this.strategyMaker.getFriendDecision().position.distanceTo(x, y);
             float cost = 0;
             if(distanceToFriendDecision <= 65){
                 cost = 999;
@@ -167,7 +190,7 @@ public class CostMap extends LoopThread {
         if(distanceToEnemy <= 65){
             cost = 999;
         }
-        else{
+        else if(Enemy.getUnlockedEnemy().isAlive()){
             cost = (maxRange - distanceToEnemy) / maxRange * peekVal;
         }
         return (int) cost;
@@ -231,6 +254,14 @@ public class CostMap extends LoopThread {
             return costmap[x][y];
         }
         else return 999;
+    }
+
+    public boolean setCost(int x, int y, int cost){
+        if(costmap[x][y] < 255){
+            costmap[x][y] = 50;
+            return true;
+        }
+        return false;
     }
 
     public PositionCost getMinPositionCost(){

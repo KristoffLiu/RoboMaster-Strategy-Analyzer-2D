@@ -11,11 +11,13 @@ import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.utils.Position;
 import org.w3c.dom.Node;
 
+import javax.sound.midi.SysexMessage;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class MainStrategyAnalyzer {
+public class StrategyAnalyzer {
     public RoboMaster roboMaster;
     public StrategyMaker strategyMaker;
 
@@ -25,6 +27,7 @@ public class MainStrategyAnalyzer {
     public CopyOnWriteArrayList<SearchNode>                   resultNodes;
     public CopyOnWriteArrayList<SearchNode>                   pathNodes;
     public GradientDescentAnalyzer gradientDescentAnalyzer;
+    public StrategyState previousStrategyState;
 
     public StrategyAnalyzer(StrategyMaker strategyMaker){
         this.roboMaster = strategyMaker.roboMaster;
@@ -33,18 +36,13 @@ public class MainStrategyAnalyzer {
         this.queue                      = new LinkedList<>();
         this.resultNodes                = new CopyOnWriteArrayList<>();
         this.pathNodes                  = new CopyOnWriteArrayList<>();
+        this.previousStrategyState      = StrategyState.STATIC;
         resultNode = new SearchNode();
     }
 
     public void analyze() {
         Position currentPosition = strategyMaker.getCurrentPosition();
-        if(shouldIMove(currentPosition.x, currentPosition.y)){
-            scanMap(currentPosition);
-        }
-        else {
-            pathNodes.clear();
-            return;
-        }
+        scanMap(currentPosition);
     }
 
     public boolean shouldIMove(int x, int y){
@@ -59,8 +57,29 @@ public class MainStrategyAnalyzer {
         boolean[][] tempVisitedGrid = strategyMaker.visitedGrid;
         SearchNode[][] tempVisitedGrid2 = new SearchNode[849][489];
 
-        PositionCost target = getCostMap().minPositionCost;
-        int targetCost = target.cost;
+        PositionCost target = new PositionCost(0,0,0);
+        int targetCost = 50;
+
+        target = getCostMap().minPositionCost;
+        targetCost = target.cost;
+
+//        if(this.previousStrategyState != StrategyState.PATROLLING && this.strategyMaker.strategyState == StrategyState.PATROLLING){
+//            boolean finished = false;
+//            int x = 0;
+//            int y = 0;
+//            Random random = new Random();
+//            while (!finished){
+//                x = random.nextInt(680) + 80;
+//                y = random.nextInt(320) + 80;
+//                finished = getCostMap().setCost(x, y, targetCost);
+//            }
+//            target = new PositionCost(targetCost, x, y);
+//        }
+//        else {
+//
+//        }
+
+        previousStrategyState = this.strategyMaker.strategyState;
         resultNode = new SearchNode();
 
         boolean is_find = false;
@@ -89,8 +108,8 @@ public class MainStrategyAnalyzer {
                 generateChildrenNodes(resultNode, tempVisitedGrid, tempVisitedGrid2);
                 setNodeHasBeenVisited(resultNode, tempVisitedGrid);
             }
-            if(Math.abs(targetCost - getCostMap().getCost(resultNode.position.getX(),resultNode.position.getY())) >= 30){
-                targetCost += 30;
+            if(Math.abs(targetCost - getCostMap().getCost(resultNode.position.getX(),resultNode.position.getY())) >= 10){
+                targetCost += 10;
             }
             else {
                 is_find = true;
@@ -98,12 +117,19 @@ public class MainStrategyAnalyzer {
         }
         SearchNode node = resultNode;
         pathNodes.clear();
-        while (true && node.parentNode != null){
-            pathNodes.add(node);
+
+        int count = 0;
+//        if(node.parentNode == null) System.out.println("null");
+//        else  System.out.println("not null");
+        while (node.parentNode != null){
+            if(count == 0){
+                pathNodes.add(node);
+            }
             node = node.parentNode;
-        }
-        if(this.roboMaster.getName() == "Ally1"){
-//            System.out.println("pos: " + String.valueOf(pathNodes.get(0).position.getX()) + " " + String.valueOf(pathNodes.get(0).position.getY()) + " " + String.valueOf(pathNodes.size()));
+            count ++;
+            if(count == 5){
+                count = 0;
+            }
         }
         this.strategyMaker.update(resultNode, tempVisitedGrid, resultNodes, pathNodes);
 
@@ -112,7 +138,7 @@ public class MainStrategyAnalyzer {
     }
 
     public boolean isAvailable(Position centre, int targetCost, Position target){
-        if(Math.abs(getCostMap().getCost(centre.getX(), centre.getY()) - targetCost) < 30 ||
+        if(Math.abs(getCostMap().getCost(centre.getX(), centre.getY()) - targetCost) < 10 ||
                 centre.x == target.x && centre.y == target.y){
             return true;
             //isTheSurroundingAreaAvailable(centre);

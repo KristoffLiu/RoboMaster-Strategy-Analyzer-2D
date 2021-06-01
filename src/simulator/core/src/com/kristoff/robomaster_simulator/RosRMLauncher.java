@@ -12,6 +12,7 @@ import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
 import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.systems.Systems;
+import com.kristoff.robomaster_simulator.teams.allies.PossibleTargets;
 import py4j.GatewayServer;
 
 public class RosRMLauncher {
@@ -81,12 +82,22 @@ public class RosRMLauncher {
     }
 
     public void setAsRoamer(String roboName){
-        if(roboName.equals("blue1")){
+        if(roboName.equals("ally1")){
             Allies.ally1.setAsRoamer();
         }
         else{
             Allies.ally2.setAsRoamer();
         }
+    }
+
+    public void demo(){
+        Allies.possibleTargets.clear();
+        Allies.possibleTargets.add(550, 310);
+        Allies.possibleTargets.add(550, 120);
+    }
+
+    public PossibleTargets getPossibleTargets(){
+        return Allies.possibleTargets;
     }
 
     public Enemy getLockedEnemy(){

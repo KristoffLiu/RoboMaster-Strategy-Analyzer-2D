@@ -15,6 +15,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys
 import os
+import time
+
+import threading
 
 
 from genpy import rostime
@@ -23,6 +26,8 @@ sys.path.append(os.getcwd().rstrip("env"))
 # os.path.abspath()
 from env.rosanalyzer.Analyzer import Analyzer
 from env.rosanalyzer.RoboMaster import Ally, Enemy, RoboMaster, StrategyState
+from env.rosanalyzer.Localization import Position
+
 
 import rospy
 from geometry_msgs.msg import PoseStamped
@@ -38,11 +43,10 @@ from autofire.msg import enemy_id
 from actionlib_msgs.msg import GoalStatusArray
 from scipy.spatial.transform import Rotation as R
 
+from std_srvs.srv import SetBool
+
+
 from roborts_msgs.msg import TwistAccel
-
-
-
-
 
 class Brain:
     def __init__(self, control_rate):
@@ -55,6 +59,9 @@ class Brain:
         # self._decision_pub = [rospy.Publisher("/CAR1/move_base_simple/goal", PoseStamped, queue_size=10),
         #                     rospy.Publisher("/CAR2/move_base_simple/goal", PoseStamped, queue_size=10)]
 
+        # self._rotate_publisher = [rospy.Publisher("/CAR1/cmd_vel_acc", TwistAccel, queue_size=10),
+        #                           rospy.Publisher("/CAR2/cmd_vel_acc", TwistAccel, queue_size=10)]
+
         self._global_planner_pub = [rospy.Publisher("/CAR1/decision_global_path", Path, queue_size=10),
                             rospy.Publisher("/CAR2/decision_global_path", Path, queue_size=10)]
         self._enemy_id = [rospy.Subscriber("/CAR1/enemy_id", enemy_id, self.updateEnemyID1),
@@ -66,8 +73,6 @@ class Brain:
         self._hp_subscriber = rospy.Subscriber("/CAR1/game_robot_hp", GameRobotHP, self.robotHP)
         self._robot_bullet_subscriber = [rospy.Subscriber("/CAR2/game_robot_bullet", GameRobotBullet, self.robotBullet)]
 
-        self._rotate_publisher = [rospy.Publisher("/CAR1/cmd_vel_acc", TwistAccel, queue_size=10),
-                                  rospy.Publisher("/CAR2/cmd_vel_acc", TwistAccel, queue_size=10)]
 
         self._buff_zone_subscriber = rospy.Subscriber("/CAR1/game_zone_array_status", GameZoneArray, self.gameZone)
         self._game_status_subscriber = rospy.Subscriber("/CAR2/game_status", GameStatus, self.gameState)
@@ -76,13 +81,25 @@ class Brain:
         self._is_goal_reach_subscribers = [rospy.Subscriber("/CAR1/global_planner_node_action/status", GoalStatusArray, self.enable_decision1),
                                            rospy.Subscriber("/CAR2/global_planner_node_action/status", GoalStatusArray, self.enable_decision2)]
 
+        self._spin_service = [rospy.ServiceProxy("/CAR1/chassis_spin", SetBool),rospy.ServiceProxy("/CAR2/chassis_spin", SetBool)]
+        self._twist_service = [rospy.ServiceProxy("/CAR1/chassis_twist", SetBool),rospy.ServiceProxy("/CAR2/chassis_twist", SetBool)]
+
         self.decision_1_activate = True
         self.decision_2_activate = True
 
     def step(self):
+        # self.rotateThreads[0].start()
+        # self.rotateThreads[1].start()
+        # thread1 = threading.Thread(target = self.start_rotate_body1)
+        # thread1.start()
+        # thread2 = threading.Thread(target = self.start_rotate_body2)
+        # thread2.start()
+
         if (self.analyzer.game_status == Analyzer.GameStatus.GAME):
             self.ally_make_decision(self.analyzer.ally1)
             self.ally_make_decision(self.analyzer.ally2)
+            self.analyzer.enemy1.increaseVisualTimeStamp(0.5)
+            self.analyzer.enemy2.increaseVisualTimeStamp(0.5)
 
     def enable_decision1(self, msg):
         isOn = True
@@ -118,42 +135,14 @@ class Brain:
         enemies = data.circles
         if len(enemies) == 1:
             enemy = enemies[0]
-            if enemy.center.x == None or enemy.center.y == None:
-                print("something is null")
-                return
+            enemyPos  = Position(enemies[0].center.x, enemies[0].center.y)
+            self.analyzer.localizationFilter.inputSignal(enemyPos)
 
-            # if abs(self.analyzer.enemy1.x - enemy.center.x) < abs(self.analyzer.enemy2.x - enemy.center.x) and abs(self.analyzer.enemy1.y - enemy.center.y) < abs(self.analyzer.enemy2.y - enemy.center.y):
-            #     if self.analyzer.enemy1.isVisualPositionMatched(enemy.center.x, enemy.center.y, float(0)) == 1:
-            #         self.analyzer.enemy1.setPosition(enemy.center.x, enemy.center.y, float(0))
-            #     elif self.analyzer.enemy2.isVisualPositionMatched(enemy.center.x, enemy.center.y, float(0)) == 1:
-            #         self.analyzer.enemy2.setPosition(enemy.center.x, enemy.center.y, float(0))
-            # else:
-            #     if self.analyzer.enemy2.isVisualPositionMatched(enemy.center.x, enemy.center.y, float(0)) == 1:
-            #         self.analyzer.enemy2.setPosition(enemy.center.x, enemy.center.y, float(0))
-            #     elif self.analyzer.enemy1.isVisualPositionMatched(enemy.center.x, enemy.center.y, float(0)) == 1:
-            #         self.analyzer.enemy1.setPosition(enemy.center.x, enemy.center.y, float(0))
         elif len(enemies) == 2:
-            enemyPos1 = enemies[0]
-            enemyPos2 = enemies[1]
-            if enemyPos1.center.x == None or enemyPos1.center.y == None or enemyPos2.center.x == None or enemyPos2.center.y == None:
-                print("something is null")
-            elif self.analyzer.enemy1.x == None or self.analyzer.enemy1.y == None:
-                print("B is null")
-            else:
-                if abs(self.analyzer.enemy1.x - enemyPos1.center.x) < abs(self.analyzer.enemy2.x - enemyPos1.center.x) and abs(self.analyzer.enemy1.y - enemyPos1.center.y) < abs(self.analyzer.enemy2.y - enemyPos1.center.y):
-                    if self.analyzer.enemy1.isVisualPositionMatched(enemyPos1.center.x, enemyPos1.center.y, float(0)) == 1:
-                        self.analyzer.enemy1.setPosition(enemyPos1.center.x, enemyPos1.center.y, float(0))
-                        self.analyzer.enemy2.setPosition(enemyPos2.center.x, enemyPos2.center.y, float(0))
-                    elif self.analyzer.enemy2.isVisualPositionMatched(enemyPos1.center.x, enemyPos1.center.y, float(0)) == 1:
-                        self.analyzer.enemy2.setPosition(enemyPos1.center.x, enemyPos1.center.y, float(0))
-                        self.analyzer.enemy1.setPosition(enemyPos2.center.x, enemyPos2.center.y, float(0))
-                else:
-                    if self.analyzer.enemy2.isVisualPositionMatched(enemyPos1.center.x, enemyPos1.center.y, float(0)) == 1:
-                        self.analyzer.enemy2.setPosition(enemyPos1.center.x, enemyPos1.center.y, float(0))
-                        self.analyzer.enemy1.setPosition(enemyPos2.center.x, enemyPos2.center.y, float(0))
-                    elif self.analyzer.enemy1.isVisualPositionMatched(enemyPos1.center.x, enemyPos1.center.y, float(0)) == 1:
-                        self.analyzer.enemy1.setPosition(enemyPos1.center.x, enemyPos1.center.y, float(0))
-                        self.analyzer.enemy2.setPosition(enemyPos2.center.x, enemyPos2.center.y, float(0))
+            enemyPos1 = Position(enemies[0].center.x, enemies[0].center.y)
+            enemyPos2 = Position(enemies[1].center.x, enemies[1].center.y)
+
+            self.analyzer.localizationFilter.inputSignal(enemyPos1, enemyPos2)
 
     def robotHP(self, data):
         if self.analyzer.teamColor == 0:
@@ -333,21 +322,50 @@ class Brain:
 
     def ally_make_decision(self, ally : Ally):
         if ally.isStrategyMakerOn:
-            if ally.getStrategyState == StrategyState.MOVING:
-                self.get_next_path(ally)
-            elif ally.getStrategyState == StrategyState.ROTATING:
-                self.rotate(ally)
-            elif ally.getStrategyState == StrategyState.ROTATING:
-                self.rotate(ally)
-            elif ally.getStrategyState == StrategyState.PATROLLING:
-                self.get_next_path(ally)
-            elif ally.getStrategyState == StrategyState.DEAD:
-                pass            
+            ally.updateStrategyState()
+            if ally.strategyState == StrategyState.ATTACKING:
+                self.robomaster_twist(ally.no, True)
+            else:
+                self.robomaster_twist(ally.no, False)
+                if ally.previousStrategyState != StrategyState.ROTATING and ally.strategyState == StrategyState.ROTATING:
+                    self.robomaster_spin(ally.no, True)
+                else:
+                    self.robomaster_spin(ally.no, False)
+                    if ally.strategyState == StrategyState.STATIC:
+                        rawPath = ally.getDecisionPath()
+                    elif ally.strategyState == StrategyState.MOVING:
+                        self.get_next_path(ally)
+                    elif ally.strategyState == StrategyState.GETTINGBUFF:
+                        self.get_next_path(ally)
+                    elif ally.strategyState == StrategyState.PATROLLING:
+                        self.get_next_path(ally)
+                    elif ally.strategyState == StrategyState.DEAD:
+                        pass
+            ally.previousStrategyState = ally.strategyState
 
-    def rotate(self, ally : Ally):
-        cmd = TwistAccel()
-        cmd.twist.angular.z = 0.1
-        self._rotate_publisher[ally.no].publish(cmd)
+    def robomaster_spin(self, no, bool):
+        self._spin_service[no](bool)
+        if not bool:
+            time.sleep(1)
+
+    def robomaster_twist(self, no, bool):
+        self._twist_service[no](bool) 
+        if not bool:
+            time.sleep(1)
+
+    def start_rotate_body1(self):
+        for _ in range(10):
+            cmd = TwistAccel()
+            cmd.twist.angular.z = 4.5
+            self._rotate_publisher[0].publish(cmd)
+            rate.sleep()
+
+    def start_rotate_body2(self):
+        for _ in range(10):
+            cmd = TwistAccel()
+            cmd.twist.angular.z = 4.5
+            self._rotate_publisher[1].publish(cmd)
+            rate.sleep()
 
     def get_next_path(self, ally : Ally):
         # pos = self.Blue2.getPointAvoidingFacingEnemies()

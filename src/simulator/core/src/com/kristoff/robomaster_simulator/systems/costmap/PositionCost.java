@@ -5,8 +5,8 @@ import com.kristoff.robomaster_simulator.utils.Position;
 public class PositionCost extends Position {
     public int cost;
 
-    public PositionCost(int value, int x, int y){
-        this.cost = value;
+    public PositionCost(int cost, int x, int y){
+        this.cost = cost;
         this.x = x;
         this.x = y;
     }

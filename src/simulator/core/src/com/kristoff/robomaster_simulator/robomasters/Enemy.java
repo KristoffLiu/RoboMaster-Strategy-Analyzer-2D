@@ -16,7 +16,7 @@ import com.kristoff.robomaster_simulator.teams.Team;
 public class Enemy extends RoboMaster {
     static Enemy lockedEnemy;
 
-    public DetectionState detectionState = DetectionState.Initialized;
+    public DetectionState detectionState = DetectionState.INITIALIZED;
 
     InView inView;
     int timerCount = 0;
@@ -43,7 +43,7 @@ public class Enemy extends RoboMaster {
 
     @Override
     public void setPosition(int x, int y, float rotation) {
-        if(isInTheView() && this.getPosition().distanceTo(x, y) > 500 && timerCount < 20){
+        if(isInTheView() && this.getPosition().distanceTo(x, y) > 500 && timerCount < 8){
             timerCount++;
             return;
         }
@@ -55,13 +55,13 @@ public class Enemy extends RoboMaster {
 
     public void setInTheView(){
         if(count > 2){
-            detectionState = DetectionState.Locked;
+            detectionState = DetectionState.IN_VIEW;
         }
         inView.resetTimer();
     }
 
     public void setNotInTheView(){
-        detectionState = DetectionState.Lost;
+        detectionState = DetectionState.LOST;
     }
 
     public void lock(){
@@ -84,11 +84,15 @@ public class Enemy extends RoboMaster {
         return (this.isInTheView() || isInitialized()) && this.isAlive;
     }
 
+    public boolean canBeSeen(){
+        return isInTheView() || isInitialized();
+    }
+
     public boolean isInTheView(){
-        return this.detectionState == DetectionState.Locked;
+        return this.detectionState == DetectionState.IN_VIEW;
     }
 
     public boolean isInitialized(){
-        return this.detectionState == DetectionState.Initialized;
+        return this.detectionState == DetectionState.INITIALIZED;
     }
 }

@@ -38,7 +38,7 @@ public class EnemyObservation{
 
         int centre_x = position.x / 10;//原点的在大地图中的x轴相对位置
         int centre_y = position.y / 10;//原点的在大地图中的y轴相对位置
-        float sectorAngleDegree = 1f;//每道光线的度数，也就是就是图中的θ
+        float sectorAngleDegree = 9f;//每道光线的度数，也就是就是图中的θ
         float sectorAngleRadian = (float)Math.toRadians(sectorAngleDegree);//每道光线的度数，也就是就是图中的θ
         //绕周围照射一圈光线，照射次数与每道光线的度数有关
         //degree就是我图中的Δ

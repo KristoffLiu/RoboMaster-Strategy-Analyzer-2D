@@ -1,7 +1,6 @@
 package com.kristoff.robomaster_simulator.teams;
 
 import com.badlogic.gdx.maps.objects.TextureMapObject;
-import com.kristoff.robomaster_simulator.robomasters.Ally;
 import com.kristoff.robomaster_simulator.robomasters.DetectionState;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.robomasters.modules.TeamColor;
@@ -40,11 +39,11 @@ public class Enemies extends Team{
                 if(textureMapObject.getProperties().containsKey("blue")){
                     if(i == 0){
                         enemy1.actor.update(x, y, (float) (Math.PI));
-                        enemy1.detectionState = DetectionState.Initialized;
+                        enemy1.detectionState = DetectionState.INITIALIZED;
                     }
                     else if(i == 1){
                         enemy2.actor.update(x, y, (float) (Math.PI));
-                        enemy2.detectionState = DetectionState.Initialized;
+                        enemy2.detectionState = DetectionState.INITIALIZED;
                     }
                     i ++;
                 }
@@ -59,11 +58,11 @@ public class Enemies extends Team{
                 if(textureMapObject.getProperties().containsKey("red")){
                     if(i == 0){
                         enemy1.actor.update(x, y, (float) (Math.PI));
-                        enemy1.detectionState = DetectionState.Initialized;
+                        enemy1.detectionState = DetectionState.INITIALIZED;
                     }
                     else if(i == 1){
                         enemy2.actor.update(x, y, (float) (Math.PI));
-                        enemy2.detectionState = DetectionState.Initialized;
+                        enemy2.detectionState = DetectionState.INITIALIZED;
                     }
                     i ++;
                 }

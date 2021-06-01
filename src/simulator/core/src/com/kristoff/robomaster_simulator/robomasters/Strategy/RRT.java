@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class RRT implements StrategyAnalyzer {
+public class RRT {
     public StrategyMaker strategyMaker;
 
     public Random random;
@@ -136,7 +136,6 @@ public class RRT implements StrategyAnalyzer {
         return minIndex;
     }
 
-    @Override
     public void analyze(TacticState tacticState) {
         start = new SearchNode(strategyMaker.getCurrentPosition().x, strategyMaker.getCurrentPosition().y);
         this.nodeList.clear();

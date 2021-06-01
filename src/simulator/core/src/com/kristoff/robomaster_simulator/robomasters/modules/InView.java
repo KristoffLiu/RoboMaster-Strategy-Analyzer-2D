@@ -1,5 +1,6 @@
 package com.kristoff.robomaster_simulator.robomasters.modules;
 
+import com.kristoff.robomaster_simulator.robomasters.DetectionState;
 import com.kristoff.robomaster_simulator.robomasters.Enemy;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 
@@ -18,7 +19,14 @@ public class InView extends LoopThread {
     @Override
     public void step() {
         timer ++;
-        if(timer > timerLimit && this.thisEnemy.count > 2) this.thisEnemy.setNotInTheView();
+        if(timer > timerLimit && this.thisEnemy.count > 2)
+            if(this.thisEnemy.isAlive()){
+                this.thisEnemy.setNotInTheView();
+            }
+            else {
+                this.thisEnemy.detectionState = DetectionState.IN_VIEW;
+                this.isStep = false;
+            }
     }
 
     public void resetTimer(){

@@ -54,24 +54,26 @@ class Ally(RoboMaster):
         self.strategyMaker = self._object.getStrategyMaker()
         self.isStrategyMakerOn = True
         self.pathList = []
+        self.previousStrategyState = StrategyState.STATIC
+        self.strategyState = StrategyState.STATIC
     
     def __str__(self):
         if self.isStrategyMakerOn:
-            boolstr = "is working" + " - " + str(len(self.pathList)) + " points path"
+            boolstr = "(→)" + " {}".format(self.strategyState) + " - " + str(len(self.pathList)) + " points path"
             if len(self.pathList) > 0:
                 destinationPoint = self.pathList[len(self.pathList) - 1]
                 boolstr += "\n      Destination: " + "%.2f, %.2f, %2f" % (destinationPoint.x, destinationPoint.y, math.degrees(destinationPoint.yaw) )
         else:
-            boolstr = "not working\n      Destination: None"
-        string = "\n      StrategyMaker Status: {}".format(boolstr) 
+            boolstr = "(x) \n      Destination: None"
+        string = "\n      Strategy State: {}".format(boolstr) 
         return super(Ally, self).__str__() + string
     
     def getDecisionMade(self):
         pos = self._object.getDecisionMade()
         return pos.getX() / 100.0, pos.getY() / 100.0
 
-    def getStrategyState(self):
-        return StrategyState(self._object.getStrategyState())
+    def updateStrategyState(self):
+        self.strategyState = StrategyState(self._object.getStrategyState())
 
     def getDecisionPath(self):
         posList = self._object.getPath()
@@ -133,7 +135,8 @@ class Ally(RoboMaster):
             gx = enemyPosition.getX() / 100.0
             gy = enemyPosition.getY() / 100.0
             currentNode.yawAngle2Point(gx, gy)
-            return [currentNode]
+            self.pathList = [currentNode]
+            return self.pathList
 
         return AlwaysTowardsEnemy() if len(posList) > 0 else JustTowardsEnemy()
 
@@ -145,23 +148,42 @@ class Enemy(RoboMaster):
     def __init__(self, entrypoint, enemyObject):
         self.visualX = -1
         self.visualY = -1
+        self.visualTimeStamp = 0
+        self.detectionState = DetectionState.INITIALIZED
+
         super(Enemy, self).__init__(entrypoint, enemyObject)
 
     def __str__(self):
-        string = "\n      Visual Localization: " + "%.2f, %.2f" % (self.visualX, self.visualY)
+        string = "\n      Visual Localization: " + "%.2f, %.2f, %.1f" % (self.visualX, self.visualY, self.visualTimeStamp)
         return super(Enemy, self).__str__() + string
 
     def setVisualPosition(self, x, y):
         self.visualX = x
         self.visualY = y
+        self.setVisualTimeStamp(0)
 
-    def isVisualPositionMatched(self, x, y, yaw):
+    def setVisualTimeStamp(self, time):
+        self.visualTimeStamp = time
+
+    def increaseVisualTimeStamp(self, time):
+        self.visualTimeStamp += time
+
+    def isVisualPositionMatched(self, x, y):
         if self.visualX == -1 or self.visualY == -1:
             return -1
-        if abs(self.visualX - x) < 1 and abs(self.visualY - y) < 1:
+        if self.visualTimeStamp < 1.5 and abs(self.visualX - x) < 1 and abs(self.visualY - y) < 1:
             return 1
         else:
             return 0
+
+    def isOldPositionMatched(self, x, y):
+        return (math.sqrt(math.pow(self.x - x,2) + math.pow(self.y - y,2))) < 0.3
+
+    def isLocked(self):
+        return self._object.isLocked()
+
+    def updateDetectionState(self):
+        self._object.getDetectionState
 
     def setIfVisualPositionMatched(self, x, y, yaw):
         if self.visualX == -1 or self.visualY == -1:
@@ -186,24 +208,57 @@ class DecisionNode():
 
 class StrategyState(Enum):
     ERROR = -1
-    DEAD = 0
-    STATIC = 1
-    MOVING = 2
-    ATTACKING = 3
-    ROTATING = 4
-    PATROLLING = 5
-    def str(self) -> str:
+    NOTWORKING = 0
+    DEAD = 1
+    STATIC = 2
+    MOVING = 3
+    ATTACKING = 4
+    GETTINGBUFF = 5
+    ROTATING = 6
+    PATROLLING = 7
+    def __str__(self) -> str:
         if(self.value == 0):
-            return "No strategy because its dead"
+            return "Not Working At All"
         elif(self.value == 1):
-            return "No Action"
+            return "No strategy because its dead"
         elif(self.value == 2):
-            return "Moving"
+            return "Static"
         elif(self.value == 3):
-            return "Attacking"
+            return "Moving"
         elif(self.value == 4):
-            return "Rotating"
+            return "Attacking(Andrew Spinning Mode)"
         elif(self.value == 5):
+            return "Getting Buff"
+        elif(self.value == 6):
+            return "Rotating"
+        elif(self.value == 7):
+            return "Patrolling"
+        else:
+            return "Error Raised"
+
+class DetectionState(Enum):
+    ERROR = -1
+    INITIALIZED = 0
+    LOST = 1
+    IN_VIEW = 2
+    GUESSING = 3
+
+    def __str__(self) -> str:
+        if(self.value == 0):
+            return "Not Working At All"
+        elif(self.value == 1):
+            return "No strategy because its dead"
+        elif(self.value == 2):
+            return "Static"
+        elif(self.value == 3):
+            return "Moving"
+        elif(self.value == 4):
+            return "Attacking(Spinning Mode)"
+        elif(self.value == 5):
+            return "Getting Buff"
+        elif(self.value == 6):
+            return "Rotating"
+        elif(self.value == 7):
             return "Patrolling"
         else:
             return "Error Raised"

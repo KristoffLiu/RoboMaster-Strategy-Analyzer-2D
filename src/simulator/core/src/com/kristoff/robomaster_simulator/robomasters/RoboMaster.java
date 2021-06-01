@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.kristoff.robomaster_simulator.core.Simulator;
 import com.kristoff.robomaster_simulator.robomasters.Strategy.StrategyMaker;
 import com.kristoff.robomaster_simulator.systems.Systems;
+import com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
 import com.kristoff.robomaster_simulator.teams.Team;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
@@ -136,6 +137,7 @@ public abstract class RoboMaster {
                 }
             }
         }
+        if(Systems.pointSimulator.isPointTheObstacle(x / 10,y / 10)) return;
         this.actor.update(x, y);
     }
 
@@ -147,7 +149,8 @@ public abstract class RoboMaster {
 //                }
 //            }
 //        }
-        if(Systems.pointSimulator.isPointTheObstacle(x, y)) return;
+        if(!PointSimulator.isPointInsideMap(x / 10,y / 10)) return;
+        if(Systems.pointSimulator.isPointTheObstacle(x / 10,y / 10)) return;
         this.actor.update(x, y, rotation);
     }
 
@@ -205,7 +208,7 @@ public abstract class RoboMaster {
     }
 
     public void setHealth(int value){
-        this.health = this.health > 0 ? value : 0;
+        this.health = value > 0 ? value : 0;
         if(this.health <= 0)
             this.isAlive = false;
         else this.isAlive = true;
@@ -241,6 +244,10 @@ public abstract class RoboMaster {
 
     public void setNumOfBullets(int bulletnum){
         this.numOfBullets = bulletnum;
+    }
+
+    public int getStrategyState(){
+        return this.strategyMaker.getStrategyState2Int();
     }
 }
 

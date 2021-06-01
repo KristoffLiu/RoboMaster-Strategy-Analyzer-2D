@@ -84,30 +84,35 @@ public class RoboMasterLayer extends VisualLayer {
 //        }
 
 //        System.out.println(RoboMasters.allies.get(0).strategyMaker.getPathNodes().size());
-        for(SearchNode node : RoboMasters.allies.get(0).strategyMaker.getPathNodes()){
-            Position position = node.position;
-            if(position!=null){
-                int x = position.x * 10;
-                int y = position.y * 10;
-                pathShapeRenderer.setColor(0.0f,1.0f,0f,1.0f);
-                pathShapeRenderer.circle(
-                        x / 1000f,
-                        y / 1000f,
-                        0.05f,10);
+        synchronized (RoboMasters.allies.get(0).strategyMaker.getPathNodes()){
+            for(SearchNode node : RoboMasters.allies.get(0).strategyMaker.getPathNodes()){
+                Position position = node.position;
+                if(position != null){
+                    int x = position.x * 10;
+                    int y = position.y * 10;
+                    pathShapeRenderer.setColor(0.0f,1.0f,0f,1.0f);
+                    pathShapeRenderer.circle(
+                            x / 1000f,
+                            y / 1000f,
+                            0.05f,10);
+                }
             }
         }
-        for(SearchNode node : RoboMasters.allies.get(1).strategyMaker.getPathNodes()){
-            Position position = node.position;
-            if(position!=null){
-                int x = position.x * 10;
-                int y = position.y * 10;
-                pathShapeRenderer.setColor(0.0f,0f,1f,1.0f);
-                pathShapeRenderer.circle(
-                        x / 1000f,
-                        y / 1000f,
-                        0.05f,10);
+        synchronized (RoboMasters.allies.get(1).strategyMaker.getPathNodes()){
+            for(SearchNode node : RoboMasters.allies.get(1).strategyMaker.getPathNodes()){
+                Position position = node.position;
+                if(position != null){
+                    int x = position.x * 10;
+                    int y = position.y * 10;
+                    pathShapeRenderer.setColor(0.0f,0f,1f,1.0f);
+                    pathShapeRenderer.circle(
+                            x / 1000f,
+                            y / 1000f,
+                            0.05f,10);
+                }
             }
         }
+
         pathShapeRenderer.end();
     }
 
@@ -119,7 +124,7 @@ public class RoboMasterLayer extends VisualLayer {
             for(int j = 0; j < 489; j+=10){
                 int x = i * 10;
                 int y = j * 10;
-                int cost = Allies.ally2.costMap.getCostMap()[i][j];
+                int cost = Allies.ally1.costMap.getCostMap()[i][j];
                 float colorFloat = 0;
                 if(cost <= 255f){
                     colorFloat = (255f - cost) / 255f;

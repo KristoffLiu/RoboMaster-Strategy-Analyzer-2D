@@ -1,11 +1,10 @@
-"""
-"""
-
 from py4j.java_gateway import JavaGateway
 from py4j.java_gateway import java_import
 
 from env.rosanalyzer.RoboMaster import Ally
 from env.rosanalyzer.RoboMaster import Enemy
+from env.rosanalyzer.Localization import Localization
+
 from enum import Enum
 from threading import Timer
 import sys
@@ -13,7 +12,7 @@ import os
 
 class Analyzer:
     def __init__(self):
-        self.version = "1.75 2012/05/30"
+        self.version = "1.82 2012/06/01"
         self.gateway = JavaGateway() #启动py4j服务器
         self.entrypoint = self.gateway.entry_point #获取服务器桥的入口
         java_import(self.gateway.jvm,'java.util.*') #导入java中的类的方法
@@ -21,7 +20,7 @@ class Analyzer:
         self.game_status = self.GameStatus.INITIALIZE
         self.remaining_time = 0
 
-        self.entrypoint.setAsRoamer("blue1")
+        self.entrypoint.setAsRoamer("ally1")
         self.teamColor = 0
 
         self.ally1 = Ally(self.entrypoint, self.entrypoint.getAlly("Ally1"))
@@ -29,6 +28,9 @@ class Analyzer:
         self.enemy1 = Enemy(self.entrypoint, self.entrypoint.getEnemy("Enemy1"))
         self.enemy2 = Enemy(self.entrypoint, self.entrypoint.getEnemy("Enemy2"))
         self.buff_zones = [self.BuffZone(i, self.BuffZone.BuffType.UNKNOWN, False) for i in range(6)]
+
+        self.possibleTargets = self.entrypoint.getPossibleTargets()
+        self.localizationFilter = Localization(self.ally1, self.ally2, self.enemy1, self.enemy2)
 
     def setTeamColor(self, teamColor):
         self.teamColor = teamColor
@@ -60,6 +62,13 @@ class Analyzer:
         tr = Timer(1,displayInfo)
         tr.start()
 
+    def clearPossibleTargets(self):
+        self.possibleTargets.clear()
+    
+    def addPossibleTargets(self, list):
+        self.possibleTargets.clear()
+        for i in list:
+            self.possibleTargets.add(int(i[0] * 100), int(i[1] * 100))
 
     def display(self):
         def displayInfo():
@@ -96,7 +105,6 @@ class Analyzer:
             print(str)
         print("")
 
-    
     def display_buff_zones(self):
         print("Buff Zone Status:")
         print("                  {}".format(self.buff_zones[2]))
@@ -114,7 +122,6 @@ class Analyzer:
         print("{}".format(self.enemy1))
         print("{}".format(self.enemy2))
         print("")
-
 
     class GameStatus(Enum):
         READY = 0

@@ -123,6 +123,10 @@ public class EnemiesObservationSimulator extends LoopThread {
         return current.matrix[x][y] == Enemy.getLockedEnemy().teamIndex + 1;
     }
 
+    public static boolean isInLockedEnemyView(int x, int y){
+        return isInBothEnemiesView(x, y) && !isInUnlockedEnemyViewOnly(x, y);
+    }
+
     public static boolean isInUnlockedEnemyViewOnly(int x, int y){
         return current.matrix[x][y] == Enemy.getUnlockedEnemy().teamIndex + 1;
     }

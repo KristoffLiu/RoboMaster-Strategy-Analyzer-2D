@@ -15,6 +15,7 @@ public class Allies extends Team {
     public static Ally ally1;
     public static Ally ally2;
     public static TeamColor teamColor;
+    public static PossibleTargets possibleTargets;
 
     String name;
     public FriendsObservationSimulator friendsObservationSimulator; //敌军视野模拟
@@ -24,6 +25,8 @@ public class Allies extends Team {
 
     public Allies(){
         this.name = "Allies";
+        possibleTargets = new PossibleTargets();
+
         if(this.name == "Allies"){
             friendsObservationSimulator = new FriendsObservationSimulator(this);
             enemiesObservationSimulator = new EnemiesObservationSimulator(this);
@@ -80,10 +83,10 @@ public class Allies extends Team {
                 int x = (int)(textureMapObject.getX() + halfWidth);
                 int y = (int)(textureMapObject.getY() + halfHeight);
                 if(textureMapObject.getProperties().containsKey("red")){
-                    if(i == 0){
+                    if(i == 1){
                         ally1.actor.update(x, y, (float) (Math.PI));
                     }
-                    else if(i == 1){
+                    else if(i == 0){
                         ally2.actor.update(x, y, (float) (Math.PI));
                     }
                     i ++;
