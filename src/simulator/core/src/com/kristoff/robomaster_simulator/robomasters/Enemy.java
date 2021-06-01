@@ -95,4 +95,8 @@ public class Enemy extends RoboMaster {
     public boolean isInitialized(){
         return this.detectionState == DetectionState.INITIALIZED;
     }
+
+    public int getDetectionState(){
+        return this.detectionState.ordinal();
+    }
 }

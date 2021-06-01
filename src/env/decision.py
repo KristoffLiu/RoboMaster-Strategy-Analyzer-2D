@@ -98,6 +98,8 @@ class Brain:
         if (self.analyzer.game_status == Analyzer.GameStatus.GAME):
             self.ally_make_decision(self.analyzer.ally1)
             self.ally_make_decision(self.analyzer.ally2)
+            self.analyzer.enemy1.updateDetectionState()
+            self.analyzer.enemy2.updateDetectionState()
             self.analyzer.enemy1.increaseVisualTimeStamp(0.5)
             self.analyzer.enemy2.increaseVisualTimeStamp(0.5)
 
@@ -136,13 +138,13 @@ class Brain:
         if len(enemies) == 1:
             enemy = enemies[0]
             enemyPos  = Position(enemies[0].center.x, enemies[0].center.y)
-            self.analyzer.localizationFilter.inputSignal(enemyPos)
+            self.analyzer.localizationFilter.inputSignal1(enemyPos)
 
         elif len(enemies) == 2:
             enemyPos1 = Position(enemies[0].center.x, enemies[0].center.y)
             enemyPos2 = Position(enemies[1].center.x, enemies[1].center.y)
 
-            self.analyzer.localizationFilter.inputSignal(enemyPos1, enemyPos2)
+            self.analyzer.localizationFilter.inputSignal2(enemyPos1, enemyPos2)
 
     def robotHP(self, data):
         if self.analyzer.teamColor == 0:
@@ -407,7 +409,7 @@ if __name__ == '__main__':
         brain = Brain(control_rate)
         spin_thread = threading.Thread(target=call_rosspin).start()
 
-        brain.analyzer.setTeamColor(1) #调队伍颜色的，0是蓝色，1是红色
+        brain.analyzer.setTeamColor(0) #调队伍颜色的，0是蓝色，1是红色
 
         while not rospy.core.is_shutdown():
             brain.display()

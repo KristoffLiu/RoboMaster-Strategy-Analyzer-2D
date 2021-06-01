@@ -127,7 +127,7 @@ public class StrategyAnalyzer {
             }
             node = node.parentNode;
             count ++;
-            if(count == 5){
+            if(count == 2){
                 count = 0;
             }
         }

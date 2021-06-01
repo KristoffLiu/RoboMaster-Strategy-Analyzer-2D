@@ -12,7 +12,7 @@ import os
 
 class Analyzer:
     def __init__(self):
-        self.version = "1.82 2012/06/01"
+        self.version = "1.83 2012/06/01"
         self.gateway = JavaGateway() #启动py4j服务器
         self.entrypoint = self.gateway.entry_point #获取服务器桥的入口
         java_import(self.gateway.jvm,'java.util.*') #导入java中的类的方法

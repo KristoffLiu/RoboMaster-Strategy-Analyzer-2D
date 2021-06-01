@@ -154,7 +154,8 @@ class Enemy(RoboMaster):
         super(Enemy, self).__init__(entrypoint, enemyObject)
 
     def __str__(self):
-        string = "\n      Visual Localization: " + "%.2f, %.2f, %.1f" % (self.visualX, self.visualY, self.visualTimeStamp)
+        string  = "\n      Detection State: {}".format(self.detectionState)
+        string += "\n      Visual Localization: " + "%.2f, %.2f, %.1f" % (self.visualX, self.visualY, self.visualTimeStamp)
         return super(Enemy, self).__str__() + string
 
     def setVisualPosition(self, x, y):
@@ -183,7 +184,7 @@ class Enemy(RoboMaster):
         return self._object.isLocked()
 
     def updateDetectionState(self):
-        self._object.getDetectionState
+        self.detectionState = DetectionState(self._object.getDetectionState())
 
     def setIfVisualPositionMatched(self, x, y, yaw):
         if self.visualX == -1 or self.visualY == -1:
@@ -245,21 +246,13 @@ class DetectionState(Enum):
 
     def __str__(self) -> str:
         if(self.value == 0):
-            return "Not Working At All"
+            return "INITIALIZED"
         elif(self.value == 1):
-            return "No strategy because its dead"
+            return "LOST"
         elif(self.value == 2):
-            return "Static"
+            return "IN_VIEW"
         elif(self.value == 3):
-            return "Moving"
-        elif(self.value == 4):
-            return "Attacking(Spinning Mode)"
-        elif(self.value == 5):
-            return "Getting Buff"
-        elif(self.value == 6):
-            return "Rotating"
-        elif(self.value == 7):
-            return "Patrolling"
+            return "GUESSING"
         else:
             return "Error Raised"
     

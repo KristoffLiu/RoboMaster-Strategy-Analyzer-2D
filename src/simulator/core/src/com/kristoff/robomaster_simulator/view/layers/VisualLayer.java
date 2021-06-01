@@ -4,16 +4,8 @@ import com.badlogic.gdx.graphics.Camera;
 import com.kristoff.robomaster_simulator.view.renderers.EnvRenderer;
 
 public class VisualLayer extends Layer {
-
-    Runnable runnable;
     public VisualLayer(EnvRenderer envRenderer) {
         super(envRenderer.view.getViewport(), envRenderer);
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                drawAsync();
-            }
-        };
     }
 
     @Override
@@ -23,10 +15,6 @@ public class VisualLayer extends Layer {
 
     @Override
     public void draw () {
-        runnable.run();
-    }
-
-    public void drawAsync(){
         super.draw();
     }
 

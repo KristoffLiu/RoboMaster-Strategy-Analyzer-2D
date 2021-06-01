@@ -1,14 +1,17 @@
 import sys
 import os
 import time
+
 sys.path.append(os.getcwd().rstrip("env"))
+
+from env.rosanalyzer.Localization import Position
 # os.path.abspath()
 from env.rosanalyzer.Analyzer import Analyzer
 
 if __name__ == '__main__':
     analyzer = Analyzer()
     
-    analyzer.setTeamColor(1)
+    analyzer.setTeamColor(0)
     # analyzer.updateBuffZone(0, 4, True)
     # analyzer.updateBuffZone(5, 2, True)
 
@@ -49,12 +52,19 @@ if __name__ == '__main__':
         analyzer.ally2.updateStrategyState()
         analyzer.ally1.getDecisionPath()
         analyzer.ally2.getDecisionPath()
+        analyzer.enemy1.updateDetectionState()
+        analyzer.enemy2.updateDetectionState()
+
         
         if a:
             i += 0.16
         else:
             i -= 0.16
-        analyzer.enemy2.setPosition(5.21, i, float(0))
+        pos = Position(5.21, i)
+        pos1 = Position(0.5, 4.0)
+
+        analyzer.localizationFilter.inputSignal2(position1 = pos, position2=pos1)
+        # analyzer.enemy2.setPosition(5.21, i, float(0))
 
         if a and i > 4:
             a = False

@@ -8,22 +8,21 @@ class Localization:
         self.enemy1 = enemy1
         self.enemy2 = enemy2
 
-    def allocateToEnemy(self, enemy, position):
-        enemy.x = position.x
-        enemy.y = position.y
+    def allocateToEnemy(self, enemy : Enemy, position):
+        enemy.setPosition(position.x, position.y, float(0))
 
-    def inputSignal(self, position):
-        if self.allocateByVision(position):
+    def inputSignal1(self, position):
+        if self.allocateByVisionSingle(position):
             pass
         elif self.isOneEnemyInView():
-            if self.allocateByOldPosition(position):
+            if self.allocateByOldPositionSingle(position):
                 pass
         elif self.allocate(position):
             pass
         else:
             self.allocateToEnemy(self.enemy1, position) 
 
-    def inputSignal(self, position1, position2):
+    def inputSignal2(self, position1, position2):
         if self.allocateByVision(position1, position2):
             pass
         elif self.isBothEnemiesInView():
@@ -39,8 +38,7 @@ class Localization:
         self.allocateToEnemy(self.enemy1, position1)
         self.allocateToEnemy(self.enemy2, position2)
 
-
-    def allocateByOldPosition(self, position):
+    def allocateByOldPositionSingle(self, position):
         if self.enemy1.isOldPositionMatched(position.x, position.y):
             self.allocateToEnemy(self.enemy1, position)
             return True
@@ -70,8 +68,7 @@ class Localization:
         else:
             return False
 
-
-    def allocateByVision(self, position):
+    def allocateByVisionSingle(self, position):
         if self.enemy1.isVisualPositionMatched(position.x, position.y) == 1:
             self.allocateToEnemy(self.enemy1, position)
             return True
@@ -101,7 +98,6 @@ class Localization:
         else:
             return False
 
-
     def allocate(self, position):
         if self.enemy1.isLocked():
             self.allocateToEnemy(self.enemy1, position)
@@ -111,8 +107,6 @@ class Localization:
             return True
         else:
             return False
-
-
 
     def allocateByDistance(self, position1, position2):
         if self.enemy1.isLocked():
