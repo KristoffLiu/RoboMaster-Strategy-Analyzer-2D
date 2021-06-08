@@ -72,11 +72,11 @@ public class Enemies extends Team{
                 }
             }
         }
-//        Gdx.app.postRunnable(new Runnable() {
-//            @Override
-//            public void run() {
-//                HUD.current.resetTeamColor();
-//            }
-//        });
+       Gdx.app.postRunnable(new Runnable() {
+           @Override
+           public void run() {
+               HUD.current.resetTeamColor();
+           }
+       });
     }
 }

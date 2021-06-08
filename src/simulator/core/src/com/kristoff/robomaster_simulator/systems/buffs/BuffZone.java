@@ -13,7 +13,6 @@ import com.kristoff.robomaster_simulator.utils.Position;
 import com.kristoff.robomaster_simulator.view.actors.CustomActor;
 import com.kristoff.robomaster_simulator.view.ui.controls.Image;
 import com.kristoff.robomaster_simulator.view.ui.controls.UIElement;
-import org.lwjgl.Sys;
 
 public class BuffZone {
     Buff buff;
@@ -27,7 +26,7 @@ public class BuffZone {
 
     public static int isHPRecoveryNeeded = 0;
     public static int isBulletSupplyNeeded = 0;
-    public static int isRedHPRecoveryNecessary = 0;
+    public static int isEnemyHPRecoveryNecessary = 0;
 
     public static BuffZone NotActivated    ;
     public static BuffZone RedHPRecovery   ;
@@ -63,36 +62,36 @@ public class BuffZone {
     public static void setEnemyHPRecoveryNeeded() {
         if(Allies.teamColor == TeamColor.BLUE){
             if(RedHPRecovery == null){
-                isRedHPRecoveryNecessary = 0;
+                isEnemyHPRecoveryNecessary = 0;
             }
             else if(RedHPRecovery.isActive){
                 if((Enemy.getLockedEnemy().getHealth() > 1900 || !Enemy.getLockedEnemy().isAlive) &&
                         (Enemy.getUnlockedEnemy().getHealth() > 1900 || !Enemy.getUnlockedEnemy().isAlive)){
-                    isRedHPRecoveryNecessary = setPriority(RedHPRecovery);
+                    isEnemyHPRecoveryNecessary = setPriority(RedHPRecovery);
                 }
                 else{
-
+                    isEnemyHPRecoveryNecessary = 0;
                 }
             }
             else {
-                isRedHPRecoveryNecessary = 0;
+                isEnemyHPRecoveryNecessary = 0;
             }
         }
         else{
             if(BlueHPRecovery == null){
-                isRedHPRecoveryNecessary = 0;
+                isEnemyHPRecoveryNecessary = 0;
             }
             else if(BlueHPRecovery.isActive){
                 if((Enemy.getLockedEnemy().getHealth() > 1900 || !Enemy.getLockedEnemy().isAlive) &&
                         (Enemy.getUnlockedEnemy().getHealth() > 1900 || !Enemy.getUnlockedEnemy().isAlive)){
-                    isRedHPRecoveryNecessary = setPriority(BlueHPRecovery);
+                    isEnemyHPRecoveryNecessary = setPriority(BlueHPRecovery);
                 }
                 else{
-
+                    isEnemyHPRecoveryNecessary = 0;
                 }
             }
             else {
-                isRedHPRecoveryNecessary = 0;
+                isEnemyHPRecoveryNecessary = 0;
             }
         }
     }
@@ -122,12 +121,12 @@ public class BuffZone {
     }
 
     public static boolean isEnemyHPRecoveryNeeded(Ally roboMaster){
-        if(isRedHPRecoveryNecessary == 0) return false;
+        if(isEnemyHPRecoveryNecessary == 0) return false;
         if(roboMaster == Allies.ally1){
-            return isRedHPRecoveryNecessary == 1;
+            return isEnemyHPRecoveryNecessary == 1;
         }
         else {
-            return isRedHPRecoveryNecessary == 2;
+            return isEnemyHPRecoveryNecessary == 2;
         }
     }
 
@@ -303,8 +302,6 @@ public class BuffZone {
             else if(!BlueHPRecovery.isActive()) isHPRecoveryNeeded = 0;
             else if (Allies.ally1.getHealth() > 1800 && Allies.ally2.getHealth() > 1800) {
                 isHPRecoveryNeeded = 0;
-            } else if (Allies.ally1.getHealth() > 1000 && Allies.ally2.getHealth() > 1000) {
-                isHPRecoveryNeeded = 0;
             } else {
                 isHPRecoveryNeeded = setPriority(BlueHPRecovery);
             }
@@ -315,8 +312,6 @@ public class BuffZone {
             }
             else if(!RedHPRecovery.isActive()) isHPRecoveryNeeded = 0;
             else if (Allies.ally1.getHealth() > 1800 && Allies.ally2.getHealth() > 1800) {
-                isHPRecoveryNeeded = 0;
-            } else if (Allies.ally1.getHealth() > 1000 && Allies.ally2.getHealth() > 1000) {
                 isHPRecoveryNeeded = 0;
             } else {
                 isHPRecoveryNeeded = setPriority(RedHPRecovery);
@@ -459,5 +454,17 @@ public class BuffZone {
 
     public static boolean isAnyAvailableBuffZone(){
         return AllyHPRecoveryBuffZone().isActive() || AllyBulletSupplyBuffZone().isActive() || EnemyHPRecoveryBuffZone().isActive();
+    }
+
+    public static boolean isBuffInEnemiesSide(BuffZone buffZone){
+        return buffZone.name.equals("F1") || buffZone.name.equals("F2");
+    }
+
+    public static boolean isBuffInAlliesSide(BuffZone buffZone){
+        return buffZone.name.equals("F5") || buffZone.name.equals("F6");
+    }
+
+    public static boolean isBuffInCentralArea(BuffZone buffZone){
+        return buffZone.name.equals("F3") || buffZone.name.equals("F4");
     }
 }

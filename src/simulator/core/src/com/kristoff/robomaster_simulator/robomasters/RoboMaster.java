@@ -161,10 +161,10 @@ public abstract class RoboMaster {
     public int getX() {
         return this.actor.x;
     }
+
     public int getY() {
         return this.actor.y;
     }
-
 
     public Position getLidarPosition() {
         return getPosition();

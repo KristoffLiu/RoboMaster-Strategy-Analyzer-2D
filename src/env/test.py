@@ -11,33 +11,35 @@ from env.rosanalyzer.Analyzer import Analyzer
 if __name__ == '__main__':
     analyzer = Analyzer()
     
-    analyzer.setTeamColor(0)
+    # analyzer.setTeamColor(0)
     # analyzer.updateBuffZone(0, 4, True)
     # analyzer.updateBuffZone(5, 2, True)
 
     # analyzer.updateBuffZone(2, 1, True)
     # analyzer.updateBuffZone(3, 3, True)
 
-    # analyzer.updateBuffZone(1, 5, True)
+    # analyzer.updateBuffZone(1, 5, True)False
     # analyzer.updateBuffZone(4, 6, True)
 
     analyzer.updateBuffZone(0, 4, False)
-    analyzer.updateBuffZone(5, 2, False)
+    analyzer.updateBuffZone(5, 2, True)
 
-    analyzer.updateBuffZone(2, 1, False)
+    analyzer.updateBuffZone(2, 1, True)
     analyzer.updateBuffZone(3, 3, False)
 
-    analyzer.updateBuffZone(1, 5, False)
-    analyzer.updateBuffZone(4, 6, False)
+    analyzer.updateBuffZone(1, 5, True)
+    analyzer.updateBuffZone(4, 6, True)
 
     # for i in range(2000):
     #     analyzer.allies1.setHealth(2000 - i)
     #     analyzer.allies2.setHealth(2000 - i)
-    analyzer.enemy1.setHealth(1000)
-    analyzer.enemy2.setHealth(1000)
-    analyzer.ally1.setHealth(1000)
-    analyzer.ally1.setNumOfBullets(100)
-    analyzer.ally1.setHealth(1000)
+    analyzer.enemy1.setHealth(1700)
+    analyzer.enemy2.setHealth(1700)
+    analyzer.ally1.setHealth(1700)
+    analyzer.ally1.setHealth(1700)
+
+    analyzer.ally1.setNumOfBullets(50)
+    analyzer.ally2.setNumOfBullets(0)
 
     i = 0
 

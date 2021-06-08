@@ -8,13 +8,13 @@ import com.kristoff.robomaster_simulator.robomasters.Ally;
 import com.kristoff.robomaster_simulator.systems.Systems;
 import com.kristoff.robomaster_simulator.systems.buffs.BuffZone;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointState;
-import com.kristoff.robomaster_simulator.teams.Enemies;
 import com.kristoff.robomaster_simulator.teams.allies.Allies;
 import com.kristoff.robomaster_simulator.teams.RoboMasters;
 import com.kristoff.robomaster_simulator.teams.allies.enemyobservations.EnemiesObservationSimulator;
 import com.kristoff.robomaster_simulator.systems.pointsimulator.PointSimulator;
 import com.kristoff.robomaster_simulator.utils.LoopThread;
 import com.kristoff.robomaster_simulator.utils.Position;
+import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -49,8 +49,13 @@ public class StrategyMaker extends LoopThread {
     public CopyOnWriteArrayList<SearchNode>                 resultNodes;
     public CopyOnWriteArrayList<SearchNode>                 pathNodes;
 
+    public boolean turtleModeSwitch = false;
+    public float turtleModeTimer = 0;
+    public long startedTime = 0;
+
+
     public CounterState counterState = CounterState.TwoVSTwo;
-    public StrategyState strategyState = StrategyState.NOTWORKING;
+    public StrategyState strategyState = StrategyState.INITIALIZED;
 
     public StrategyMaker(RoboMaster roboMaster){
         this.roboMaster = (Ally)roboMaster;
@@ -216,40 +221,151 @@ public class StrategyMaker extends LoopThread {
 
     private void updateStrategyState(){
         try{
-            int sizeOfPathNodes = 0;
-            synchronized (this.pathNodes){
-                sizeOfPathNodes = this.pathNodes.size();
-            }
-            if(!this.roboMaster.isAlive) this.strategyState = StrategyState.DEAD;
-            if(this.roboMaster.numOfBullets == 0 && !BuffZone.AllyBulletSupplyBuffZone().isActive() && !BuffZone.AllyHPRecoveryBuffZone().isActive()){
-                this.strategyState = StrategyState.ROTATING;
-            }
-            else if(BuffZone.isHPRecoveryNeeded != 0 || BuffZone.isBulletSupplyNeeded != 0 || BuffZone.isRedHPRecoveryNecessary != 0){
-                this.strategyState = StrategyState.GETTINGBUFF;
-            }
-            else if((!Enemies.enemy1.isAlive() || (!Enemies.enemy1.isInTheView() && !Enemies.enemy1.isInitialized()))
-                    && (!Enemies.enemy2.isAlive() || (!Enemies.enemy2.isInTheView() && !Enemies.enemy2.isInitialized())) ){
-                this.strategyState = StrategyState.ATTACKING;
-            }
-            else if(EnemiesObservationSimulator.isInLockedEnemyViewOnly(this.roboMaster.getPointPosition().x, this.roboMaster.getPointPosition().y) ||
-                    sizeOfPathNodes == 0){
-                this.strategyState = StrategyState.ATTACKING;
-            }
-            else if(sizeOfPathNodes > 0 || BuffZone.isAnyAvailableBuffZone()){
-                this.strategyState = StrategyState.MOVING;
-            }
-            else{
-                this.strategyState = StrategyState.ATTACKING;
+            switch(this.strategyState){
+                case FAILED               -> {
+
+                }
+                case DEAD                 -> {}
+                case INITIALIZED          -> {
+                    if(shouldSetAsDead()) return;
+                    if(shouldGetBuff()) return;
+                    else if(this.roboMaster.numOfBullets > 55) this.strategyState = StrategyState.TURTLE_MODE;
+                }
+                case GETTING_BUFF         -> {
+                    if(shouldSetAsDead()) return;
+                    if(shouldStartToRotate()) return;
+                    else if(shouldStartApproching()) return;
+//                    if(ifBuffingFail()) return
+                }
+                case APPROACHING          -> {
+                    if(shouldSetAsDead()) return;
+                    if(isBuffAvailable()) return;
+                    if(shouldStartAttacking()) return;
+                }
+                case ANDRE_ATTACKING_MODE -> {
+                    if(shouldSetAsDead()) return;
+                    if(isBuffAvailable()) return;
+                    else if(!shouldStartAttacking()) this.strategyState = StrategyState.APPROACHING;
+                    else if(shouldGoBack()) return;
+                }
+                case BACKING              -> {
+                    if(shouldSetAsDead()) return;
+                    if(shouldGetBuff()) return;
+                    else if(this.roboMaster.numOfBullets > 55) this.strategyState = StrategyState.APPROACHING;
+                }
+                case TURTLE_MODE          -> {
+                    if(shouldSetAsDead()) return;
+                    if(!turtleModeSwitch)
+                    {
+                        this.strategyState = StrategyState.TURTLE_MODE;
+                        turtleModeSwitch = true;
+                        this.turtleModeTimer = 0;
+                        this.startedTime = System.currentTimeMillis();
+                    }
+                    else if(this.turtleModeTimer > 30000){
+                        turtleModeTimer = 0;
+                        this.strategyState = StrategyState.APPROACHING;
+                        System.out.println(this.turtleModeTimer);
+                    }
+                    else {
+                        this.turtleModeTimer = System.currentTimeMillis() - this.startedTime;
+                        System.out.println(this.turtleModeTimer);
+                    }
+                }
             }
         }
         catch (NullPointerException e){
-            this.strategyState = StrategyState.MOVING;
+            System.out.println(e.getMessage());
+            this.strategyState = StrategyState.ANDRE_ATTACKING_MODE;
         }
+    }
+
+    private boolean shouldSetAsDead(){
+        if(!this.roboMaster.isAlive){
+            this.strategyState = StrategyState.DEAD;
+            return true;
+        }
+        else return false;
+    }
+
+    private boolean shouldGetBuff(){
+        if(isBuffAvailable()){
+            this.strategyState = StrategyState.GETTING_BUFF;
+            return true;
+        }
+        else return false;
+    }
+
+    public boolean isBuffAvailable(){
+        return this.roboMaster.numOfBullets <= 50 && (BuffZone.isHPRecoveryNeeded != 0 || BuffZone.isBulletSupplyNeeded != 0);
+    }
+
+    private boolean shouldStartToRotate(){
+        if(!isBuffAvailable()){
+            this.strategyState = StrategyState.TURTLE_MODE;
+            return true;
+        }
+        else return false;
+    }
+
+    private boolean shouldStartApproching(){
+        if(!isBuffAvailable()){
+            this.strategyState = StrategyState.APPROACHING;
+            return true;
+        }
+        else return false;
+    }
+
+    private boolean ifBuffingFail(){
+        if(BuffZone.isHPRecoveryNeeded == 0 && BuffZone.isBulletSupplyNeeded == 0 && BuffZone.isEnemyHPRecoveryNecessary == 0)
+        {
+            this.strategyState = StrategyState.TURTLE_MODE;
+        }
+        //still needs to be filled, if the car used 10S or some time still haven't get the buff
+        //turn to turtle mode, until next new buffzones.
+        return true;
+    }
+
+    private boolean shouldStartAttacking(){
+        if(!EnemiesObservationSimulator.isOutOfBothEnemiesView(this.roboMaster.getPointPosition().getX(), this.roboMaster.getPointPosition().getY())){
+            //in condition write if enemy is locked and the distance between is in th shoting range
+            this.strategyState = StrategyState.ANDRE_ATTACKING_MODE;
+            return true;
+        }
+        else return false;
+    }
+
+    private boolean shouldGoBack(){
+        if(this.roboMaster.numOfBullets == 0 && !BuffZone.AllyBulletSupplyBuffZone().isActive()){
+            this.strategyState = StrategyState.BACKING;
+            return true;
+        }
+        else return false;
+    }
+
+    private boolean shouldBecomeTurtle(){
+        if(this.roboMaster.getPointPosition().getX() > 778){
+            //true when the car is back to initial point
+            this.strategyState = StrategyState.TURTLE_MODE;
+            return true;
+        }
+        else return false;
     }
 
     public StrategyState getStrategyState(){
         return this.strategyState;
     }
+
+    public boolean isAttckingStarted(){
+        return this.roboMaster.numOfBullets >= 100 && BuffZone.AllyHPRecoveryBuffZone().isActive();
+    }
+
+    public boolean isOutOfBullet(){
+        return this.roboMaster.numOfBullets == 0 && BuffZone.AllyBulletSupplyBuffZone().isActive();
+    }
+
+    public boolean isReturned(){
+        return isOutOfBullet();    }
 
     public boolean isCollidingWithObstacle(int centreX, int centreY){
         for(int i=0;i<45;i++){

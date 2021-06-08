@@ -325,21 +325,27 @@ class Brain:
     def ally_make_decision(self, ally : Ally):
         if ally.isStrategyMakerOn:
             ally.updateStrategyState()
-            if ally.strategyState == StrategyState.ATTACKING:
+            if ally.strategyState == StrategyState.INITIALIZED:
+                pass
+            if ally.strategyState == StrategyState.ANDRE_ATTACKING_MODE:
                 self.robomaster_twist(ally.no, True)
+                # if ally.previousStrategyState != StrategyState.ANDRE_ATTACKING_MODE:
+                #     ally.startingAimingTime = time.time()
+                # elif ally.previousStrategyState == StrategyState.ANDRE_ATTACKING_MODE:
+                #     ally.aimingTime = time.time() - ally.startingAimingTime
+                #     if ally.aimingTime > 4:
+                #         ally.
             else:
                 self.robomaster_twist(ally.no, False)
-                if ally.previousStrategyState != StrategyState.ROTATING and ally.strategyState == StrategyState.ROTATING:
+                if ally.strategyState == StrategyState.TURTLE_MODE:
                     self.robomaster_spin(ally.no, True)
                 else:
                     self.robomaster_spin(ally.no, False)
-                    if ally.strategyState == StrategyState.STATIC:
-                        rawPath = ally.getDecisionPath()
-                    elif ally.strategyState == StrategyState.MOVING:
+                    # if ally.strategyState == StrategyState.:
+                    #     rawPath = ally.getDecisionPath()
+                    if ally.strategyState == StrategyState.APPROACHING:
                         self.get_next_path(ally)
-                    elif ally.strategyState == StrategyState.GETTINGBUFF:
-                        self.get_next_path(ally)
-                    elif ally.strategyState == StrategyState.PATROLLING:
+                    elif ally.strategyState == StrategyState.GETTING_BUFF:
                         self.get_next_path(ally)
                     elif ally.strategyState == StrategyState.DEAD:
                         pass
@@ -404,7 +410,7 @@ if __name__ == '__main__':
     try:
         print(__file__ + " start!!")
         rospy.init_node('decision_node', anonymous=True)
-        control_rate = 0.5
+        control_rate = 1.0
         rate = rospy.Rate(1.0 / control_rate)
         brain = Brain(control_rate)
         spin_thread = threading.Thread(target=call_rosspin).start()

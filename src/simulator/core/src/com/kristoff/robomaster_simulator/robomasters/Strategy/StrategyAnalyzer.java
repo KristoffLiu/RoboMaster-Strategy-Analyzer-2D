@@ -36,7 +36,7 @@ public class StrategyAnalyzer {
         this.queue                      = new LinkedList<>();
         this.resultNodes                = new CopyOnWriteArrayList<>();
         this.pathNodes                  = new CopyOnWriteArrayList<>();
-        this.previousStrategyState      = StrategyState.STATIC;
+        this.previousStrategyState      = StrategyState.INITIALIZED;
         resultNode = new SearchNode();
     }
 

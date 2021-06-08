@@ -54,8 +54,9 @@ class Ally(RoboMaster):
         self.strategyMaker = self._object.getStrategyMaker()
         self.isStrategyMakerOn = True
         self.pathList = []
-        self.previousStrategyState = StrategyState.STATIC
-        self.strategyState = StrategyState.STATIC
+        self.previousStrategyState = StrategyState.INITIALIZED
+        self.strategyState = StrategyState.INITIALIZED
+        self.aimingTime = 0;
     
     def __str__(self):
         if self.isStrategyMakerOn:
@@ -209,31 +210,32 @@ class DecisionNode():
 
 class StrategyState(Enum):
     ERROR = -1
-    NOTWORKING = 0
+    FAILED = 0
     DEAD = 1
-    STATIC = 2
-    MOVING = 3
-    ATTACKING = 4
-    GETTINGBUFF = 5
-    ROTATING = 6
-    PATROLLING = 7
+    INITIALIZED = 2
+    GETTING_BUFF = 3
+    APPROACHING = 4
+    ANDRE_ATTACKING_MODE = 5
+    BACKING = 6
+    TURTLE_MODE = 7
+
     def __str__(self) -> str:
         if(self.value == 0):
-            return "Not Working At All"
+            return "Failed"
         elif(self.value == 1):
-            return "No strategy because its dead"
+            return "dead, then no strategy"
         elif(self.value == 2):
-            return "Static"
+            return "initialized"
         elif(self.value == 3):
-            return "Moving"
+            return "getting buff now"
         elif(self.value == 4):
-            return "Attacking(Andrew Spinning Mode)"
+            return "approaching the enemy"
         elif(self.value == 5):
-            return "Getting Buff"
+            return "Andrew Attacking Mode"
         elif(self.value == 6):
-            return "Rotating"
+            return "Backing to the home"
         elif(self.value == 7):
-            return "Patrolling"
+            return "Turtle Mode"
         else:
             return "Error Raised"
 
